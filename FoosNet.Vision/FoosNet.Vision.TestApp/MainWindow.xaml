@@ -5,7 +5,7 @@
     
     <StackPanel>
         <Border BorderThickness="5" BorderBrush="Black">
-            <Image Height="480" Width="640"/>
+            <Image Height="480" Width="640" Name="ImageCam"/>
         </Border>
 
         <Label Width="100" Name="LabelTableStatus" Content="Unknown" />
