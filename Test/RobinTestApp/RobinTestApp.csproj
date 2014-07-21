@@ -48,11 +48,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FoosNet.Network\FoosNet.Network.csproj">
+    <ProjectReference Include="..\..\FoosNet.Network\FoosNet.Network.csproj">
       <Project>{7a10fabd-29a6-4ca5-b369-df54303fc00f}</Project>
       <Name>FoosNet.Network</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FoosNet\FoosNet.csproj">
+    <ProjectReference Include="..\..\FoosNet\FoosNet.csproj">
       <Project>{9cd11b90-9cba-4435-b51c-baeae1e7fad9}</Project>
       <Name>FoosNet</Name>
     </ProjectReference>

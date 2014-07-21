@@ -48,7 +48,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FoosNet.Network\FoosNet.Network.csproj">
+    <ProjectReference Include="..\..\FoosNet.Network\FoosNet.Network.csproj">
       <Project>{7a10fabd-29a6-4ca5-b369-df54303fc00f}</Project>
       <Name>FoosNet.Network</Name>
     </ProjectReference>
