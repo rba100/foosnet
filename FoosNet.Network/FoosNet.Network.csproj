@@ -43,6 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IFoosballNetwork.cs" />
+    <Compile Include="PeerDiscovery\UdpClientExtensions.cs" />
+    <Compile Include="PeerDiscovery\UdpPeerFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TcpServer\ClientOperation.cs" />
     <Compile Include="TcpServer\FoosballClientTcp.cs" />
