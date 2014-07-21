@@ -19,6 +19,8 @@ namespace TestAlerts
 
         public void AlertChallenge(IFoosPlayer challengingPlayer)
         {
+            SpeakerBeep();
+
             var alertColors = new []
             {
                 new Tuple<SolidColorBrush, SolidColorBrush> (Brushes.Red, Brushes.White),
@@ -83,6 +85,14 @@ namespace TestAlerts
         {
             CloseAlerts();
             ChallengeResponseReceived(response);
+        }
+
+        private void SpeakerBeep()
+        {
+            // Unfortunately 64-bit versions of windows no longer support
+            // the internal speaker beep, but they'll still play it through 
+            // the external speakers.
+            Console.Beep();
         }
     }
 }
