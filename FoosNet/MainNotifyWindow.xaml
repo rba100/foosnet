@@ -55,7 +55,7 @@
                 </Grid.RowDefinitions>
             	<local:HorizontalSeparator d:LayoutOverrides="HorizontalAlignment" Grid.Row="1"/>
                 <local:HorizontalSeparator d:LayoutOverrides="HorizontalAlignment" Grid.Row="5"/>
-                <Label Margin="5,3.395,79,15" x:Name="TitleLabel" Foreground="White" Opacity="0.9" Content="My Popup Window"/>
+                <Label Margin="5,3.395,79,15" x:Name="TitleLabel" Foreground="White" Opacity="0.9" Content="FoosNet"/>
                 <StackPanel Grid.Row="1" Margin="10,10,10,10">
                     <Label FontWeight="Bold">Set the icon colour to:</Label>
                     <RadioButton Grid.Row="1" Margin="10,0,0,0" Height="16" Name="redRadioButton" GroupName="ColourGroup" Checked="colourRadioButton_Click" Tag="Red" IsChecked="True" VerticalAlignment="Top">Red</RadioButton>
