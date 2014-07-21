@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net.Sockets;
 using System.Threading;
 using System.Net;
-using System.Xml.Serialization;
 
 namespace FoosNet.Network.TcpServer
 {
@@ -91,88 +89,6 @@ namespace FoosNet.Network.TcpServer
                 }
             }
             m_Clients.Remove(Thread.CurrentThread);
-        }
-    }
-
-    public enum ClientOperation { Register, GetPlayers }
-
-    [Serializable]
-    public class PlayerList
-    {
-        public List<PlayerDetail> Players;
-
-        public void ToXmlStream(Stream stream)
-        {
-            var memStream = new MemoryStream();
-            var serialiser = new XmlSerializer(typeof(PlayerList));
-            serialiser.Serialize(memStream, this);
-            memStream.Seek(0, SeekOrigin.Begin);
-            StreamHelper.SendMessage(memStream, stream);
-            memStream.Dispose();
-        }
-
-        public static PlayerList FromStream(Stream stream)
-        {
-            var serialiser = new XmlSerializer(typeof(PlayerList));
-            using (var message = StreamHelper.GetMessage(stream))
-            {
-                var list = serialiser.Deserialize(message) as PlayerList;
-                return list;
-            }
-        }
-    }
-
-    public static class StreamHelper
-{
-        public static MemoryStream GetMessage(Stream stream)
-        {
-            var bytes = new List<byte>
-            {
-                (byte) stream.ReadByte(),
-                (byte) stream.ReadByte(),
-                (byte) stream.ReadByte(),
-                (byte) stream.ReadByte()
-            };
-            var length = BitConverter.ToInt32(bytes.ToArray(),0);
-            var message = new byte[length];
-            stream.Read(message, 0, length);
-            var memStream = new MemoryStream(message);
-            return memStream;
-        }
-
-        public static void SendMessage(MemoryStream source, Stream stream)
-        {
-            var header = BitConverter.GetBytes((int)source.Length);
-            stream.Write(header, 0, header.Length);
-            source.CopyTo(stream);
-            stream.Flush();
-        }
-}
-
-    [Serializable]
-    public class PlayerDetail
-    {
-        public string Name;
-        public Status PlayerStatus;
-
-        public void ToXmlStream(Stream stream)
-        {
-            var memStream = new MemoryStream();
-            var serialiser = new XmlSerializer(typeof(PlayerDetail));
-            serialiser.Serialize(memStream, this);
-            memStream.Seek(0, SeekOrigin.Begin);
-            StreamHelper.SendMessage(memStream, stream);
-            memStream.Dispose();
-        }
-
-        public static PlayerDetail FromStream(Stream stream)
-        {
-            var serialiser = new XmlSerializer(typeof(PlayerDetail));
-            using (var message = StreamHelper.GetMessage(stream))
-            {
-                var player = serialiser.Deserialize(message) as PlayerDetail;
-                return player;
-            }
         }
     }
 }
