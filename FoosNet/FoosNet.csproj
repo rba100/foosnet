@@ -49,6 +49,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ConvertStatus.cs" />
     <Compile Include="Tests\ShowPlayersTest.cs" />
     <Reference Include="mscorlib" />
     <Reference Include="System" />
