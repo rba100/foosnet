@@ -5,8 +5,8 @@
 <Window
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:WpfXamlPopup"
-    x:Class="WpfXamlPopup.MainNotifyWindow" x:Name="uiMainNotifyWindow"
+    xmlns:foosNet="clr-namespace:FoosNet"
+    x:Class="FoosNet.MainNotifyWindow" x:Name="uiMainNotifyWindow"
     Title="" Height="350" Width="250"
     ShowInTaskbar="False"
     WindowStyle="None" 
@@ -18,6 +18,9 @@
     Visibility="Visible" 
     Topmost="True" 
     BorderThickness="1" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
+    <Window.DataContext>
+        <foosNet:NotifyWindowViewModel></foosNet:NotifyWindowViewModel>
+    </Window.DataContext>
     <Window.Resources>       
         <Storyboard x:Key="gridFadeInStoryBoard">
             <DoubleAnimation Storyboard.TargetName="uiGridMain" BeginTime="0:0:0.1"
@@ -42,10 +45,10 @@
             		<ColumnDefinition Width="36" />
                     <ColumnDefinition Width="42" />
                 </Grid.ColumnDefinitions>
-                <local:SlickToggleButton CornerRadius="0,0,0,4"   x:Name="PinButton" Style="{StaticResource SlickButton}" HighlightBackground="Blue" PressedBackground="DarkBlue" Grid.Column="1" Grid.Row="1" FontWeight="Bold" Click="PinButton_Click">
+                <foosNet:SlickToggleButton CornerRadius="0,0,0,4"   x:Name="PinButton" Style="{StaticResource SlickButton}" HighlightBackground="Blue" PressedBackground="DarkBlue" Grid.Column="1" Grid.Row="1" FontWeight="Bold" Click="PinButton_Click">
                         <Image x:Name="PinImage" Source="pack://application:,,/Images/Un-Pinned.png" Stretch="None"/>
-                </local:SlickToggleButton>
-                <local:SlickToggleButton CornerRadius="0,0,4,0" x:Name="CloseButton" Style="{StaticResource SlickButton}" HighlightBackground="Red" Content="X" Click="CloseButton_Click" Grid.Row="1" FontWeight="Bold" Foreground="#FFFFFFFF" Grid.Column="2" />
+                </foosNet:SlickToggleButton>
+                <foosNet:SlickToggleButton CornerRadius="0,0,4,0" x:Name="CloseButton" Style="{StaticResource SlickButton}" HighlightBackground="Red" Content="X" Click="CloseButton_Click" Grid.Row="1" FontWeight="Bold" Foreground="#FFFFFFFF" Grid.Column="2" />
             </Grid>
             <Grid>
                 <Grid.RowDefinitions>
@@ -54,21 +57,47 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="44"/>
                 </Grid.RowDefinitions>
-            	<local:HorizontalSeparator d:LayoutOverrides="HorizontalAlignment" Grid.Row="1"/>
-                <local:HorizontalSeparator d:LayoutOverrides="HorizontalAlignment" Grid.Row="5"/>
+                
+                <foosNet:HorizontalSeparator d:LayoutOverrides="HorizontalAlignment" Grid.Row="1"/>
+                <foosNet:HorizontalSeparator d:LayoutOverrides="HorizontalAlignment" Grid.Row="3"/>
                 <Label Margin="5,3.395,79,15" x:Name="TitleLabel" Foreground="White" Opacity="0.9" Content="FoosNet"/>
                 <StackPanel Grid.Row="1" Margin="10,10,10,10">
                     <Label FontWeight="Bold">Table is</Label>
                 </StackPanel>
                 <StackPanel Grid.Row="2" Margin="10,10,10,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <ListView ItemsSource="{Binding FoosPlayers}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Margin="5" Text="{Binding Name}"></TextBlock>
+                                        <Image Width="16" Height="16" Margin="5,0">
+                                            <Image.Style>
+                                                <Style TargetType="{x:Type Image}">
+                                                    
+                                                </Style>
+                                            </Image.Style>
+                                        </Image>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
                     <Label FontWeight="Bold">Player Queue</Label>
                     <RadioButton Grid.Row="1" Margin="10,0,0,0" Height="16" Name="redRadioButton" GroupName="ColourGroup" Checked="colourRadioButton_Click" Tag="Red" IsChecked="True" VerticalAlignment="Top">Red</RadioButton>
                     <RadioButton Grid.Row="1" Margin="10,0,0,0" Height="16" Name="amberRadioButton" GroupName="ColourGroup" Checked="colourRadioButton_Click" Tag="Amber" VerticalAlignment="Top">Amber</RadioButton>
                     <RadioButton Grid.Row="1" Margin="10,0,0,0" Height="16" Name="greenRadioButton" GroupName="ColourGroup" Checked="colourRadioButton_Click" Tag="Green"  VerticalAlignment="Top">Green</RadioButton>
                     <RadioButton Grid.Row="1" Margin="10,0,0,0" Height="16" Name="blueRadioButton" GroupName="ColourGroup" Checked="colourRadioButton_Click" Tag="Blue"  VerticalAlignment="Top">Blue</RadioButton>
                 </StackPanel>
-                <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal" Margin="5,5,5,5" Grid.Row="2">
-                    <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">Start new game</Button>
+                <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal" Margin="10,5,10,5" Grid.Row="3">
+                    <Button HorizontalAlignment="Stretch" Width="{Binding ElementName=uiGridMain, Path=ActualWidth}">Start new game</Button>
                 </StackPanel>
             </Grid>
         </Grid>
