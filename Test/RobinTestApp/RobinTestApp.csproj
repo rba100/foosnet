@@ -4,16 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7A10FABD-29A6-4CA5-B369-DF54303FC00F}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{9DBFDF2D-18EC-49D9-98B3-A410ACD18E4B}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FoosNet.Network</RootNamespace>
-    <AssemblyName>FoosNet.Network</AssemblyName>
+    <RootNamespace>RobinTestApp</RootNamespace>
+    <AssemblyName>RobinTestApp</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -21,16 +21,15 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -42,10 +41,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IFoosballNetwork.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TcpServer\FoosballClientTcp.cs" />
-    <Compile Include="TcpServer\FoosballServerTcp.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FoosNet.Network\FoosNet.Network.csproj">
+      <Project>{7a10fabd-29a6-4ca5-b369-df54303fc00f}</Project>
+      <Name>FoosNet.Network</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FoosNet\FoosNet.csproj">
+      <Project>{9cd11b90-9cba-4435-b51c-baeae1e7fad9}</Project>
+      <Name>FoosNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestTcpServer\TestTcpServer.csproj">
+      <Project>{6b05e065-7369-467f-8bfa-e69451354f69}</Project>
+      <Name>TestTcpServer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
