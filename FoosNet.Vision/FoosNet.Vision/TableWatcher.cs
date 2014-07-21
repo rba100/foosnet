@@ -39,9 +39,9 @@ namespace FoosNet.Vision
         public event EventHandler TableHasBecomeInUse;
         public event EventHandler TableHasBecomeFree;
 
-        public Image<Bgr, byte> LatestImage
+        public Image<Bgr, byte> DebugImage
         {
-            get { throw new ApplicationException("Can't get image"); }
+            get { return new Image<Bgr, byte>(640, 480, new Bgr(100, 10, 200)); }
         }
     }
 }

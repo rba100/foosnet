@@ -53,6 +53,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IImageStream.cs" />
+    <Compile Include="ImageProcessing.cs" />
+    <Compile Include="Test\ImageStreamFromStaticImages.cs" />
     <Compile Include="ITableWatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TableWatcher.cs" />

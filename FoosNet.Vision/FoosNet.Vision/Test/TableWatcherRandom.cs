@@ -38,9 +38,9 @@ namespace FoosNet.Vision.Test
             set { m_TableIsInUse = value; }
         }
 
-        public Image<Bgr, byte> LatestImage
+        public Image<Bgr, byte> DebugImage
         {
-            get { throw new ApplicationException("Can't get image"); }
+            get { return new Image<Bgr, byte>(640, 480, new Bgr(100, 10, 200)); }
         }
         public event EventHandler TableHasBecomeInUse;
         public event EventHandler TableHasBecomeFree;

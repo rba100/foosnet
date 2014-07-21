@@ -13,6 +13,6 @@ namespace FoosNet.Vision
         bool TableIsInUse { get; }
         event EventHandler TableHasBecomeInUse;
         event EventHandler TableHasBecomeFree;
-        Image<Bgr, byte> LatestImage { get; }
+        Image<Bgr, byte> DebugImage { get; }
     }
 }
