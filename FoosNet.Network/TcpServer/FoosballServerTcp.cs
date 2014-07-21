@@ -60,6 +60,7 @@ namespace FoosNet.Network.TcpServer
         void Worker(object tcpClient)
         {
             var client = tcpClient as TcpClient;
+            PlayerDetail currentPlayer = null;
             var stream = client.GetStream();
             while (!CancellationToken.IsCancellationRequested)
             {
@@ -70,8 +71,9 @@ namespace FoosNet.Network.TcpServer
                     {
                         case ClientOperation.Register:
                             var player = PlayerDetail.FromStream(stream);
-                            m_Players.RemoveAll(p => p.Name == player.Name);
+                            if (currentPlayer != null) m_Players.RemoveAll(p => p.Name == currentPlayer.Name);
                             m_Players.Add(player);
+                            currentPlayer = player;
                             break;
                         case ClientOperation.GetPlayers:
                             stream.WriteByte((byte)ClientOperation.GetPlayers);
@@ -88,7 +90,9 @@ namespace FoosNet.Network.TcpServer
                     break;
                 }
             }
+
             m_Clients.Remove(Thread.CurrentThread);
+            if (currentPlayer != null) m_Players.RemoveAll(p=>p.Name == currentPlayer.Name);
         }
     }
 }

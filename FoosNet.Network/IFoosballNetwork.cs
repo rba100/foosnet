@@ -26,5 +26,5 @@ namespace FoosNet.Network
         public bool Accepted { get; private set; }
     }
 
-    public enum Status { Unknown, Available, Busy, Useless }
+    public enum Status { Unknown, Available, Busy, Offline, Useless }
 }
