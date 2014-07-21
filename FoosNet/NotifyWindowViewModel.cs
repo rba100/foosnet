@@ -10,7 +10,7 @@ namespace FoosNet
         private IEnumerable<FoosPlayer> m_FoosPlayers; 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public IEnumerable<FoosPlayer> CourtLights
+        public IEnumerable<FoosPlayer> FoosPlayers
         {
             get { return m_FoosPlayers; }
             set
