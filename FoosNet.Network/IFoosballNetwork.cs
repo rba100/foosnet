@@ -23,7 +23,7 @@ namespace FoosNet.Network
 
     public class ChallengeResponse
     {
-        public bool Accepted { get; private set; }
+        public bool Accepted { get; set; }
     }
 
     public enum Status { Unknown, Available, Busy, Offline, Useless }

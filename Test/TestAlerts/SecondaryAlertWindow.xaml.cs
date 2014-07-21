@@ -10,31 +10,39 @@ namespace TestAlerts
     /// </summary>
     public partial class SecondaryAlertWindow : Window
     {
-        public SecondaryAlertWindow()
+        private readonly Tuple<SolidColorBrush, SolidColorBrush> m_CancelledColors;
+        private readonly Timer m_StrobeTimer;
+
+        public SecondaryAlertWindow
+            (Tuple<SolidColorBrush, SolidColorBrush> [] alertColors,
+             Tuple<SolidColorBrush, SolidColorBrush> cancelledColors)
         {
+            m_CancelledColors = cancelledColors;
             InitializeComponent();
 
-            var strobeTimer = new Timer {Interval = 1000};
-
-            var colours = new []
-            {
-                new Tuple<SolidColorBrush, SolidColorBrush> (Brushes.Red, Brushes.White),
-                new Tuple<SolidColorBrush, SolidColorBrush> (Brushes.Green, Brushes.Black)
-            };
+            m_StrobeTimer = new Timer {Interval = 1000};
 
             var currentColour = 0;
             
-            SecondaryAlertWindowElement.Background = colours[currentColour].Item1;
-            AlertText.Foreground = colours[currentColour].Item2;
+            SecondaryAlertWindowElement.Background = alertColors[currentColour].Item1;
+            AlertText.Foreground = alertColors[currentColour].Item2;
 
-            strobeTimer.Elapsed += (sender, elapsedEventArgs) => Dispatcher.Invoke(() =>
+            m_StrobeTimer.Elapsed += (sender, elapsedEventArgs) => Dispatcher.Invoke(() =>
             {
-                currentColour = (currentColour + 1) % colours.Length;
-                SecondaryAlertWindowElement.Background = colours[currentColour].Item1;
-                AlertText.Foreground = colours[currentColour].Item2;
+                currentColour = (currentColour + 1) % alertColors.Length;
+                SecondaryAlertWindowElement.Background = alertColors[currentColour].Item1;
+                AlertText.Foreground = alertColors[currentColour].Item2;
             });
 
-            strobeTimer.Start(); 
+            m_StrobeTimer.Start(); 
+        }
+
+        public void CancelAlert()
+        {
+            m_StrobeTimer.Stop();
+            
+            SecondaryAlertWindowElement.Background = m_CancelledColors.Item1;
+            AlertText.Foreground = m_CancelledColors.Item2;
         }
     }
 }

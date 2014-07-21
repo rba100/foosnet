@@ -55,6 +55,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="FoosAlerter.cs" />
+    <Compile Include="IFoosAlerter.cs" />
     <Compile Include="SecondaryAlertWindow.xaml.cs">
       <DependentUpon>SecondaryAlertWindow.xaml</DependentUpon>
     </Compile>
@@ -108,6 +110,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\FoosNet.Network\FoosNet.Network.csproj">
+      <Project>{7a10fabd-29a6-4ca5-b369-df54303fc00f}</Project>
+      <Name>FoosNet.Network</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
