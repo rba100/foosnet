@@ -2,7 +2,7 @@
 // Author:   Murray Foxcroft - April 2009
 // Comments: code behind for the main WPF popup window 
 //-------------------------------------------------------------------------------------
-namespace WpfXamlPopup
+namespace FoosNet
 {
     using System;
     using System.Windows;

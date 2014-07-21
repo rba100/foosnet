@@ -7,7 +7,7 @@
 //-------------------------------------------------------------------------------------
 using System.Windows.Controls.Primitives;
 
-namespace WpfXamlPopup
+namespace FoosNet
 {
     public class SlickToggleButton : ToggleButton
     {

@@ -1,17 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using FoosNet.Annotations;
 
 namespace FoosNet
 {
-    class NotifyWindowViewModel : INotifyPropertyChanged
+    public class NotifyWindowViewModel : INotifyPropertyChanged
     {
+        private IEnumerable<FoosPlayer> m_FoosPlayers; 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public IEnumerable<FoosPlayer> CourtLights
+        {
+            get { return m_FoosPlayers; }
+            set
+            {
+                m_FoosPlayers = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public NotifyWindowViewModel()
+        {
+            
+        }
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
