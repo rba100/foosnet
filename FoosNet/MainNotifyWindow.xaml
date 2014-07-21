@@ -70,21 +70,24 @@
                     <Label FontWeight="Bold">Player Queue</Label>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="30"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <ListView ItemsSource="{Binding FoosPlayers}" Grid.Column="1">
+                        <ListView Name="FoosPlayersList" 
+                                  ItemsSource="{Binding FoosPlayers}" 
+                                  Grid.Column="0" 
+                                  AllowDrop="True"
+                                  PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" 
+                                  PreviewMouseMove="List_MouseMove"
+                                  Drop="FoosPlayersList_Drop"
+                                  DragEnter="FoosPlayersList_DragEnter">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <Image Width="16" Height="16" Margin="5,0" Source="{Binding Status, Converter = {StaticResource StatusConverter}}">
-                                            
-                                        </Image>
+                                        <Image Width="16" Height="16" Margin="5,0" Source="{Binding Status, Converter = {StaticResource StatusConverter}}"></Image>
                                         <TextBlock Margin="5,1,5,1" Text="{Binding Name}"></TextBlock>
-                                        
                                     </StackPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>

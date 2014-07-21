@@ -2,6 +2,10 @@
 // Author:   Murray Foxcroft - April 2009
 // Comments: code behind for the main WPF popup window 
 //-------------------------------------------------------------------------------------
+
+using System.Windows.Input;
+using System.Windows.Media;
+
 namespace FoosNet
 {
     using System;
@@ -15,6 +19,7 @@ namespace FoosNet
         private Controls.ExtendedNotifyIcon extendedNotifyIcon; // global class scope for the icon as it needs to exist foer the lifetime of the window
         private Storyboard gridFadeInStoryBoard;
         private Storyboard gridFadeOutStoryBoard;
+        private Point startPoint;
 
         /// <summary>
         /// Sets up the popup window and instantiates the notify icon
@@ -108,8 +113,8 @@ namespace FoosNet
         private void uiWindowMainNotification_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             // Cancel the mouse leave event from firing, stop the fade out storyboard from running and enusre the grid is fully visible
-            extendedNotifyIcon.StopMouseLeaveEventFromFiring(); 
-            gridFadeOutStoryBoard.Stop(); 
+            extendedNotifyIcon.StopMouseLeaveEventFromFiring();
+            gridFadeOutStoryBoard.Stop();
             uiGridMain.Opacity = 1;
         }
 
@@ -122,7 +127,7 @@ namespace FoosNet
         {
             extendedNotifyIcon_OnHideWindow();
         }
- 
+
         /// <summary>
         /// Once the grid fades out, set the backing window to "not visible"
         /// </summary>
@@ -175,6 +180,72 @@ namespace FoosNet
         {
             extendedNotifyIcon.Dispose();
             this.Close();
+        }
+
+        private void List_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // Store the mouse position
+            startPoint = e.GetPosition(null);
+        }
+
+        private void List_MouseMove(object sender, MouseEventArgs e)
+        {
+            // Get the current mouse position
+            Point mousePos = e.GetPosition(null);
+            Vector diff = startPoint - mousePos;
+
+            if (e.LeftButton == MouseButtonState.Pressed &&
+                (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
+            {
+                // Get the dragged ListViewItem
+                ListView listView = sender as ListView;
+                ListViewItem listViewItem =
+                    FindAncestor<ListViewItem>((DependencyObject)e.OriginalSource);
+
+                // Find the data behind the ListViewItem
+                FoosPlayer contact = (FoosPlayer)listView.ItemContainerGenerator.
+                    ItemFromContainer(listViewItem);
+
+                // Initialize the drag & drop operation
+                DataObject dragData = new DataObject("myFormat", contact);
+                DragDrop.DoDragDrop(listViewItem, dragData, DragDropEffects.Move);
+            }
+        }
+
+        // Helper to search up the VisualTree
+        private static T FindAncestor<T>(DependencyObject current)
+            where T : DependencyObject
+        {
+            do
+            {
+                if (current is T)
+                {
+                    return (T)current;
+                }
+                current = VisualTreeHelper.GetParent(current);
+            }
+            while (current != null);
+            return null;
+        }
+
+        private void FoosPlayersList_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent("myFormat"))
+            {
+                FoosPlayer contact = e.Data.GetData("myFormat") as FoosPlayer;
+                ListView listView = sender as ListView;
+                listView.Items.Add(contact);
+            }
+        }
+
+        private void FoosPlayersList_DragEnter(object sender, DragEventArgs e)
+        {
+            if (!e.Data.GetDataPresent("myFormat") ||
+        sender == e.Source)
+            {
+                e.Effects = DragDropEffects.None;
+            }
         }
     }
 }

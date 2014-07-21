@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using FoosNet.Annotations;
@@ -8,10 +9,10 @@ namespace FoosNet
 {
     public class NotifyWindowViewModel : INotifyPropertyChanged
     {
-        private IEnumerable<FoosPlayer> m_FoosPlayers; 
+        private ObservableCollection<FoosPlayer> m_FoosPlayers; 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public IEnumerable<FoosPlayer> FoosPlayers
+        public ObservableCollection<FoosPlayer> FoosPlayers
         {
             get { return m_FoosPlayers; }
             set

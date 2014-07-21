@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,16 +10,16 @@ namespace FoosNet.Tests
 {
     class ShowPlayersTest
     {
-        public IEnumerable<FoosPlayer> GetPlayers()
+        public ObservableCollection<FoosPlayer> GetPlayers()
         {
-            List<FoosPlayer> players = new List<FoosPlayer>()
+            ObservableCollection<FoosPlayer> players = new ObservableCollection<FoosPlayer>()
             {
-                new FoosPlayer("Robin Anderson", Status.Available),
-                new FoosPlayer("Aaron Law", Status.Available),
-                new FoosPlayer("Ali Daw", Status.Available),
-                new FoosPlayer("Martin Podlubny", Status.Available),
-                new FoosPlayer("Kevin Boyle", Status.Busy),
-                new FoosPlayer("Chris Moore", Status.Offline),
+                new FoosPlayer("Robin Anderson", Status.Available, 1),
+                new FoosPlayer("Aaron Law", Status.Available, 2),
+                new FoosPlayer("Ali Daw", Status.Available, 3),
+                new FoosPlayer("Martin Podlubny", Status.Available, 4),
+                new FoosPlayer("Kevin Boyle", Status.Busy, 5),
+                new FoosPlayer("Chris Moore", Status.Offline, 6),
             };
             return players;
         }
