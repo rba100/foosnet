@@ -1,8 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Windows;
-using System.Windows.Forms;
+﻿using System.Windows;
+
 using FoosNet.Network;
 using FoosNet.Network.TcpServer;
 
@@ -31,7 +28,7 @@ namespace TestAlerts
 
         private void OnChallengeResponseReceived(ChallengeResponse response)
         {
-            System.Windows.MessageBox.Show("Response: "+ response.Accepted);
+            MessageBox.Show("Response: "+ response.Accepted);
         }
     }
 }
