@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -28,15 +29,19 @@ namespace FoosNet.Network.PeerDiscovery
         {
             m_Email = email;
 
-            m_BroadcastEndPoint = new IPEndPoint(IPAddress.Parse("10.120.115.255") /*IPAddress.Broadcast*/, port);
-            var localAddress = System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces()
+            var multicastAddress = IPAddress.Parse("236.133.133.225");
+
+            m_BroadcastEndPoint = new IPEndPoint(multicastAddress, port);
+            var localAddress = NetworkInterface.GetAllNetworkInterfaces()
                 .SelectMany(n => n.GetIPProperties().UnicastAddresses)
                 .First(a => a.Address.ToString().StartsWith("10."))
                 .Address;
-            m_BroadcastClient = new UdpClient(new IPEndPoint(localAddress, port)) { EnableBroadcast = true };
+            m_BroadcastClient = new UdpClient();
+            m_BroadcastClient.JoinMulticastGroup(multicastAddress, localAddress);
             m_BroadcasTimer = new Timer(Broadcast, null, TimeSpan.Zero, broadcastInterval);
 
             m_RecieveClient = new UdpClient(new IPEndPoint(IPAddress.Any, port));
+            m_RecieveClient.JoinMulticastGroup(multicastAddress, localAddress);
 
             m_Manager = new Thread(Manager);
             m_Manager.Start();
