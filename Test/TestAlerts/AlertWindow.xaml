@@ -8,15 +8,17 @@
     <DockPanel>
         <StackPanel DockPanel.Dock="Bottom"
                     Margin="0, 0, 0, 100">
-            <Button
-                Width="200"
-                Height="50"
-                Margin="0, 0, 0, 20">
+            <Button x:Name="AcceptButton"
+                    Click="AcceptButton_OnClick"
+                    Width="200"
+                    Height="50"
+                    Margin="0, 0, 0, 20">
                 Accept
             </Button>
-            <Button
-                Width="200"
-                Height="50">
+            <Button x:Name="DeclineButton"
+                    Click="DeclineButton_OnClick"
+                    Width="200"
+                    Height="50">
                 Decline
             </Button>
         </StackPanel>
