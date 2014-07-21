@@ -18,7 +18,9 @@
     MouseLeave="uiWindowMainNotification_MouseLeave" 
     Visibility="Visible" 
     Topmost="True" 
-    BorderThickness="1" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
+    BorderThickness="1" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:dragDrop="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
+    mc:Ignorable="d">
     <Window.DataContext>
         <foosNet:NotifyWindowViewModel></foosNet:NotifyWindowViewModel>
     </Window.DataContext>
@@ -78,11 +80,8 @@
                         <ListView Name="FoosPlayersList" 
                                   ItemsSource="{Binding FoosPlayers}" 
                                   Grid.Column="0" 
-                                  AllowDrop="True"
-                                  PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" 
-                                  PreviewMouseMove="List_MouseMove"
-                                  Drop="FoosPlayersList_Drop"
-                                  DragEnter="FoosPlayersList_DragEnter">
+                                  dragDrop:DragDrop.IsDragSource="True"
+                                  dragDrop:DragDrop.IsDropTarget="True">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
