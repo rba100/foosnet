@@ -8,7 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Navigation;
 
-namespace WpfXamlPopup
+namespace FoosNet
 {
 	public partial class HorizontalSeparator
 	{

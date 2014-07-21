@@ -4,8 +4,8 @@
 -->
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:WpfXamlPopup">
-    <ControlTemplate x:Key="SlickButtonTemplate" TargetType="{x:Type local:SlickToggleButton}">
+    xmlns:foosNet="clr-namespace:FoosNet">
+    <ControlTemplate x:Key="SlickButtonTemplate" TargetType="{x:Type foosNet:SlickToggleButton}">
         <Grid>
             <Border x:Name="ButtonBackgroundBorder" CornerRadius="{Binding Path=CornerRadius, RelativeSource={RelativeSource TemplatedParent}}" Background="{Binding Path=HighlightBackground, RelativeSource={RelativeSource TemplatedParent}}" Opacity="0" BorderBrush="Black" BorderThickness="1"></Border>
             <Border x:Name="ButtonEdgesBorder" CornerRadius="{Binding Path=CornerRadius, RelativeSource={RelativeSource TemplatedParent}}" Opacity="1" BorderBrush="Black" BorderThickness="1" >
