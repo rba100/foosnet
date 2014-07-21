@@ -23,7 +23,6 @@ namespace TestAlerts
             alerter.ChallengeResponseReceived += OnChallengeResponseReceived;
 
             TestWindow.Hide();
-
         }
 
         private void OnChallengeResponseReceived(ChallengeResponse response)

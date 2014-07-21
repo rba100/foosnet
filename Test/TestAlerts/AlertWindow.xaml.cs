@@ -84,7 +84,5 @@ namespace TestAlerts
         {
             ChallengeResponseReceived(new ChallengeResponse {Accepted = false});
         }
-
-
     }
 }

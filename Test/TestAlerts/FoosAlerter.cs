@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Forms;
@@ -17,8 +16,6 @@ namespace TestAlerts
         public delegate void ChallengeResponseEventHandler(ChallengeResponse response);
 
         public event ChallengeResponseEventHandler ChallengeResponseReceived;
-
-       // public delegate void ChallengeResponseDelegate(ChallengeResponse response);
 
         public void AlertChallenge(IFoosPlayer challengingPlayer)
         {
@@ -64,12 +61,6 @@ namespace TestAlerts
             }
         }
 
-        private void ChallengeResponseHandler(ChallengeResponse response)
-        {
-            CloseAlerts();
-            ChallengeResponseReceived(response);
-        }
-
         public void CancelChallenge()
         {
             m_MainAlertWindow.CancelAlert();
@@ -87,7 +78,11 @@ namespace TestAlerts
                 secondaryAlertWindow.Close();
             }
         }
-
-
+        
+        private void ChallengeResponseHandler(ChallengeResponse response)
+        {
+            CloseAlerts();
+            ChallengeResponseReceived(response);
+        }
     }
 }
