@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using FoosNet.Annotations;
+using FoosNet.Tests;
 
 namespace FoosNet
 {
@@ -22,7 +23,8 @@ namespace FoosNet
 
         public NotifyWindowViewModel()
         {
-            
+            ShowPlayersTest testObjects = new ShowPlayersTest();
+            FoosPlayers = testObjects.GetPlayers();
         }
 
         [NotifyPropertyChangedInvocator]

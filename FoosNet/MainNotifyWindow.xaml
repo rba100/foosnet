@@ -65,6 +65,7 @@
                     <Label FontWeight="Bold">Table is</Label>
                 </StackPanel>
                 <StackPanel Grid.Row="2" Margin="10,10,10,10">
+                    <Label FontWeight="Bold">Player Queue</Label>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="30"/>
@@ -73,28 +74,24 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <ListView ItemsSource="{Binding FoosPlayers}">
+                        <ListView ItemsSource="{Binding FoosPlayers}" Grid.Column="1">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Margin="5" Text="{Binding Name}"></TextBlock>
                                         <Image Width="16" Height="16" Margin="5,0">
                                             <Image.Style>
                                                 <Style TargetType="{x:Type Image}">
-                                                    
+
                                                 </Style>
                                             </Image.Style>
                                         </Image>
+                                        <TextBlock Margin="5,1,5,1" Text="{Binding Name}"></TextBlock>
+                                        
                                     </StackPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
                     </Grid>
-                    <Label FontWeight="Bold">Player Queue</Label>
-                    <RadioButton Grid.Row="1" Margin="10,0,0,0" Height="16" Name="redRadioButton" GroupName="ColourGroup" Checked="colourRadioButton_Click" Tag="Red" IsChecked="True" VerticalAlignment="Top">Red</RadioButton>
-                    <RadioButton Grid.Row="1" Margin="10,0,0,0" Height="16" Name="amberRadioButton" GroupName="ColourGroup" Checked="colourRadioButton_Click" Tag="Amber" VerticalAlignment="Top">Amber</RadioButton>
-                    <RadioButton Grid.Row="1" Margin="10,0,0,0" Height="16" Name="greenRadioButton" GroupName="ColourGroup" Checked="colourRadioButton_Click" Tag="Green"  VerticalAlignment="Top">Green</RadioButton>
-                    <RadioButton Grid.Row="1" Margin="10,0,0,0" Height="16" Name="blueRadioButton" GroupName="ColourGroup" Checked="colourRadioButton_Click" Tag="Blue"  VerticalAlignment="Top">Blue</RadioButton>
                 </StackPanel>
                 <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal" Margin="10,5,10,5" Grid.Row="3">
                     <Button HorizontalAlignment="Stretch" Width="{Binding ElementName=uiGridMain, Path=ActualWidth}">Start new game</Button>
