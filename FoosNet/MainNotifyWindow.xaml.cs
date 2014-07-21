@@ -3,6 +3,7 @@
 // Comments: code behind for the main WPF popup window 
 //-------------------------------------------------------------------------------------
 
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -200,52 +201,56 @@ namespace FoosNet
             {
                 // Get the dragged ListViewItem
                 ListView listView = sender as ListView;
-                ListViewItem listViewItem =
-                    FindAncestor<ListViewItem>((DependencyObject)e.OriginalSource);
-
-                // Find the data behind the ListViewItem
-                FoosPlayer contact = (FoosPlayer)listView.ItemContainerGenerator.
-                    ItemFromContainer(listViewItem);
+                FoosPlayer draggedPlayer = GetObjectDataFromPoint(listView, e.GetPosition(listView)) as FoosPlayer;
 
                 // Initialize the drag & drop operation
-                DataObject dragData = new DataObject("myFormat", contact);
-                DragDrop.DoDragDrop(listViewItem, dragData, DragDropEffects.Move);
+                DragDrop.DoDragDrop(listView, draggedPlayer, DragDropEffects.Move);
             }
-        }
-
-        // Helper to search up the VisualTree
-        private static T FindAncestor<T>(DependencyObject current)
-            where T : DependencyObject
-        {
-            do
-            {
-                if (current is T)
-                {
-                    return (T)current;
-                }
-                current = VisualTreeHelper.GetParent(current);
-            }
-            while (current != null);
-            return null;
         }
 
         private void FoosPlayersList_Drop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent("myFormat"))
+            ListBox parent = sender as ListBox;
+            FoosPlayer data = e.Data.GetData(typeof(FoosPlayer)) as FoosPlayer;
+            FoosPlayer objectToPlaceBefore = GetObjectDataFromPoint(parent, e.GetPosition(parent)) as FoosPlayer;
+            NotifyWindowViewModel model = parent.DataContext as NotifyWindowViewModel;
+            if (data != null && objectToPlaceBefore != null)
             {
-                FoosPlayer contact = e.Data.GetData("myFormat") as FoosPlayer;
-                ListView listView = sender as ListView;
-                listView.Items.Add(contact);
+                int index = model.FoosPlayers.IndexOf(objectToPlaceBefore);
+                model.FoosPlayers.Remove(data);
+                model.FoosPlayers.Insert(index, data);
+                FoosPlayersList.SelectedItem = data;
             }
         }
 
         private void FoosPlayersList_DragEnter(object sender, DragEventArgs e)
         {
-            if (!e.Data.GetDataPresent("myFormat") ||
+            if (!e.Data.GetDataPresent(typeof(FoosPlayer)) ||
         sender == e.Source)
             {
-                e.Effects = DragDropEffects.None;
+                e.Effects = DragDropEffects.All;
             }
+        }
+
+        private static object GetObjectDataFromPoint(ListBox source, Point point)
+        {
+            UIElement element = source.InputHitTest(point) as UIElement;
+            if (element != null)
+            {
+                object data = DependencyProperty.UnsetValue;
+                while (data == DependencyProperty.UnsetValue)
+                {
+                    data = source.ItemContainerGenerator.ItemFromContainer(element);
+                    if (data == DependencyProperty.UnsetValue)
+                        element = VisualTreeHelper.GetParent(element) as UIElement;
+                    if (element == source)
+                        return null;
+                }
+                if (data != DependencyProperty.UnsetValue)
+                    return data;
+            }
+
+            return null;
         }
     }
 }
