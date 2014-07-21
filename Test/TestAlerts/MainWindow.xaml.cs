@@ -29,18 +29,31 @@ namespace TestAlerts
 
             var screenCount = Screen.AllScreens.Count();
 
+            var mainAlertWindow = new AlertWindow
+            {
+                Top = Screen.PrimaryScreen.WorkingArea.Top,
+                Left = Screen.PrimaryScreen.WorkingArea.Left,
+                Width = Screen.PrimaryScreen.WorkingArea.Width,
+                Height = Screen.PrimaryScreen.WorkingArea.Height
+            };
+            mainAlertWindow.Show();
+            mainAlertWindow.Activate();
+            mainAlertWindow.WindowState = WindowState.Maximized;
+
             foreach (var screen in Screen.AllScreens)
             {
-                var window = new AlertWindow
-                {
-                    Top = screen.WorkingArea.Top,
-                    Left = screen.WorkingArea.Left,
-                    Width = screen.WorkingArea.Width,
-                    Height = screen.WorkingArea.Height
-                };
-                window.Show();
-                window.Activate();
-                window.WindowState = WindowState.Maximized;
+                if (!Equals(screen, Screen.PrimaryScreen)) { 
+                    var window = new SecondaryAlertWindow
+                    {
+                        Top = screen.WorkingArea.Top,
+                        Left = screen.WorkingArea.Left,
+                        Width = screen.WorkingArea.Width,
+                        Height = screen.WorkingArea.Height
+                    };
+                    window.Show();
+                    window.Activate();
+                    window.WindowState = WindowState.Maximized;
+                }
             }
             
             TestWindow.Hide();
