@@ -31,7 +31,7 @@ namespace TestAlerts
             var cancelledColors =
                 new Tuple<SolidColorBrush, SolidColorBrush> (Brushes.Gray, Brushes.White);
 
-            m_MainAlertWindow = new AlertWindow(alertColors, cancelledColors)
+            m_MainAlertWindow = new AlertWindow(alertColors, cancelledColors, challengingPlayer)
             {
                 Top = Screen.PrimaryScreen.WorkingArea.Top,
                 Left = Screen.PrimaryScreen.WorkingArea.Left,

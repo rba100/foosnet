@@ -13,6 +13,8 @@ namespace TestAlerts
     {
         private readonly Tuple<SolidColorBrush, SolidColorBrush> m_CancelledColors;
 
+        private readonly IFoosPlayer m_ChallengingPlayer;
+
         private readonly Timer m_StrobeTimer;
 
         public delegate void ChallengeResponseEventHandler(ChallengeResponse response);
@@ -28,23 +30,32 @@ namespace TestAlerts
         /// cancelled
         /// </param>
         public AlertWindow(Tuple<SolidColorBrush, SolidColorBrush> [] alertColors,
-                           Tuple<SolidColorBrush, SolidColorBrush> cancelledColors)
+                           Tuple<SolidColorBrush, SolidColorBrush> cancelledColors,
+                           IFoosPlayer challengingPlayer)
         {
-            m_CancelledColors = cancelledColors;
             InitializeComponent();
 
+            m_CancelledColors = cancelledColors;
+
+            m_ChallengingPlayer = challengingPlayer;
+
             m_StrobeTimer = new Timer {Interval = 1000};
+
+            DescriptionText.Text = "You have been challenged by " 
+                                    + m_ChallengingPlayer.Name + "!";
 
             var currentColour = 0;
             
             AlertWindowElement.Background = alertColors[currentColour].Item1;
             AlertText.Foreground = alertColors[currentColour].Item2;
+            DescriptionText.Foreground = alertColors[currentColour].Item2;
 
             m_StrobeTimer.Elapsed += (sender, elapsedEventArgs) => Dispatcher.Invoke(() =>
             {
                 currentColour = (currentColour + 1) % alertColors.Length;
                 AlertWindowElement.Background = alertColors[currentColour].Item1;
                 AlertText.Foreground = alertColors[currentColour].Item2;
+                DescriptionText.Foreground = alertColors[currentColour].Item2;
             });
 
             m_StrobeTimer.Start();
@@ -53,6 +64,9 @@ namespace TestAlerts
         public void CancelAlert()
         {
             m_StrobeTimer.Stop();
+            
+            DescriptionText.Text =  m_ChallengingPlayer.Name + " has cancelled" +
+                                    " the challenge.";
             
             AlertWindowElement.Background = m_CancelledColors.Item1;
             AlertText.Foreground = m_CancelledColors.Item2;
