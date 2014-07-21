@@ -5,7 +5,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace WpfXamlPopup.Controls
+namespace FoosNet.Controls
 {
     /// <summary>
     /// An extension of the notifyIcon Windows Forms class, unfortunately its a 
