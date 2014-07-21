@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Emgu.CV;
+using Emgu.CV.Structure;
 
 namespace FoosNet.Vision
 {
@@ -36,5 +38,10 @@ namespace FoosNet.Vision
 
         public event EventHandler TableHasBecomeInUse;
         public event EventHandler TableHasBecomeFree;
+
+        public Image<Bgr, byte> LatestImage
+        {
+            get { throw new ApplicationException("Can't get image"); }
+        }
     }
 }
