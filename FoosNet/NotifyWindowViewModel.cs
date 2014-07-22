@@ -9,7 +9,8 @@ namespace FoosNet
 {
     public class NotifyWindowViewModel : INotifyPropertyChanged
     {
-        private ObservableCollection<FoosPlayer> m_FoosPlayers; 
+        private ObservableCollection<FoosPlayer> m_FoosPlayers;
+        private bool m_IsTableFree;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ObservableCollection<FoosPlayer> FoosPlayers
@@ -18,6 +19,19 @@ namespace FoosNet
             set
             {
                 m_FoosPlayers = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsTableFree
+        {
+            get
+            {
+                return m_IsTableFree;
+            }
+            set
+            {
+                m_IsTableFree = value;
                 OnPropertyChanged();
             }
         }

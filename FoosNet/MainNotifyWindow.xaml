@@ -66,7 +66,20 @@
                 <foosNet:HorizontalSeparator d:LayoutOverrides="HorizontalAlignment" Grid.Row="3"/>
                 <Label Margin="5,3.395,79,15" x:Name="TitleLabel" Foreground="White" Opacity="0.9" Content="FoosNet"/>
                 <StackPanel Grid.Row="1" Margin="10,10,10,10">
-                    <Label FontWeight="Bold">Table is</Label>
+                    <Image Width="16" Height="16" Margin="5,0">
+                        <Image.Style>
+                            <Style TargetType="{x:Type Image}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsTableFree}" Value="false">
+                                        <Setter Property="Source" Value="Images/RedOrb.ico"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsTableFree}" Value="true">
+                                        <Setter Property="Source" Value="Images/GreenOrb.ico"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
                 </StackPanel>
                 <StackPanel Grid.Row="2" Margin="10,10,10,10">
                     <Label FontWeight="Bold">Player Queue</Label>

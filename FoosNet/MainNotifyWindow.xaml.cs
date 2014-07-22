@@ -163,16 +163,6 @@ namespace FoosNet
         }
 
         /// <summary>
-        /// Switch the icon depending on which colour is selected on the radio button group
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void colourRadioButton_Click(object sender, RoutedEventArgs e)
-        {
-            SetNotifyIcon(((RadioButton)sender).Tag.ToString());
-        }
-
-        /// <summary>
         /// Shut down the popup window and dispose the notify icon (otherwise it hangs around in the task bar until you mouse over) 
         /// </summary>
         /// <param name="sender"></param>
