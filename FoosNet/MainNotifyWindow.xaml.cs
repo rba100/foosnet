@@ -93,6 +93,7 @@ namespace FoosNet
         {
             if (PinButton.IsChecked == true) return; // Dont hide the window if its pinned open
             if (PlayerListContextMenu.IsOpen) return;
+            if (Mouse.LeftButton.HasFlag(MouseButtonState.Pressed)) return; // Drag and drop hack
 
             gridFadeInStoryBoard.Stop(); // Stop the fade in storyboard if running.
 

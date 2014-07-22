@@ -45,6 +45,7 @@
     <Compile Include="ChallengeResponse.cs" />
     <Compile Include="FoosNetworkService.cs" />
     <Compile Include="IFoosPlayer.cs" />
+    <Compile Include="IPlayerTransformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Status.cs" />
   </ItemGroup>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -26,6 +27,7 @@ namespace FoosNet
             set
             {
                 m_FoosPlayers = value;
+                m_IsTableFree = true;
                 OnPropertyChanged();
             }
         }
@@ -49,9 +51,24 @@ namespace FoosNet
 
             m_PlayerProcessors = new List<IPlayerTransformation>();
             m_NetworkService = new FoosNetworkService(); // TODO: FoosNetworkService(endpoint);
+            m_NetworkService.PlayersDiscovered += NetworkServiceOnPlayersDiscovered;
             var testObjects = new ShowPlayersTest();
             FoosPlayers = testObjects.GetPlayers();
 
+        }
+
+        private void NetworkServiceOnPlayersDiscovered(PlayerDiscoveryMessage playerDiscoveryMessage)
+        {
+            var newPlayers = new List<IFoosPlayer>();
+            foreach (var player in playerDiscoveryMessage.Players)
+            {
+                var transformedPlayer = player;
+                foreach (var playerTransformation in m_PlayerProcessors)
+                {
+                    transformedPlayer = playerTransformation.Process(transformedPlayer);
+                }
+                newPlayers.Add(transformedPlayer);
+            }
         }
 
         [NotifyPropertyChangedInvocator]
