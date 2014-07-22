@@ -13,7 +13,7 @@ namespace TestAlerts
     {
         private readonly Tuple<SolidColorBrush, SolidColorBrush> m_CancelledColors;
 
-        private readonly IFoosPlayer m_ChallengingPlayer;
+        private readonly IFoosChallenge m_Challenge;
 
         private readonly Timer m_StrobeTimer;
         
@@ -35,18 +35,18 @@ namespace TestAlerts
         /// </param>
         public AlertWindow(Tuple<SolidColorBrush, SolidColorBrush> [] alertColors,
                            Tuple<SolidColorBrush, SolidColorBrush> cancelledColors,
-                           IFoosPlayer challengingPlayer)
+                           IFoosChallenge challenge)
         {
             InitializeComponent();
 
             m_CancelledColors = cancelledColors;
 
-            m_ChallengingPlayer = challengingPlayer;
+            m_Challenge = challenge;
 
             m_StrobeTimer = new Timer {Interval = 1000};
 
             DescriptionText.Text = "You have been challenged by " 
-                                    + m_ChallengingPlayer.Name + "!";
+                                    + m_Challenge.Challenger.Name + "!";
 
             var currentColour = 0;
             
@@ -65,11 +65,11 @@ namespace TestAlerts
             m_StrobeTimer.Start();
         }
 
-        public void CancelAlert()
+        public void CancelChallenge()
         {
             m_StrobeTimer.Stop();
             
-            DescriptionText.Text =  m_ChallengingPlayer.Name + " has cancelled" +
+            DescriptionText.Text =  m_Challenge.Challenger.Name + " has cancelled" +
                                     " the challenge.";
             
             AlertWindowElement.Background = m_CancelledColors.Item1;
