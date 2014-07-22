@@ -8,7 +8,7 @@ using TestAlerts;
 
 namespace FoosNet.Controls.Alerts
 {
-    public class FoosAlerter : IFoosAlerter
+    public class FullScreenFoosAlerter : IFoosAlerter
     {
         private AlertWindow m_MainAlertWindow;
 
@@ -22,7 +22,7 @@ namespace FoosNet.Controls.Alerts
 
         public event AlertClosedEventHandler AlertClosed = delegate {};
 
-        public void ShowChallengeAlert(IFoosChallenge challenge)
+        public void ShowChallengeAlert(ChallengeRequest challenge)
         {
             // Close any alerts already open before we start
             CloseChallengeAlert();

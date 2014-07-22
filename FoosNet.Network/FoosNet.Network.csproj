@@ -42,18 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChallengeResponse.cs" />
     <Compile Include="FoosNetworkService.cs" />
-    <Compile Include="IFoosballNetwork.cs" />
-    <Compile Include="PeerDiscovery\UdpClientExtensions.cs" />
-    <Compile Include="PeerDiscovery\UdpPeerFinder.cs" />
+    <Compile Include="IFoosPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TcpServer\ClientOperation.cs" />
-    <Compile Include="TcpServer\FoosballClientTcp.cs" />
-    <Compile Include="TcpServer\FoosballServerTcp.cs" />
-    <Compile Include="TcpServer\DTO\PlayerDetail.cs" />
-    <Compile Include="TcpServer\DTO\PlayerList.cs" />
-    <Compile Include="TcpServer\StreamHelper.cs" />
-    <Compile Include="TcpServer\TcpFoosballPlayer.cs" />
+    <Compile Include="Status.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

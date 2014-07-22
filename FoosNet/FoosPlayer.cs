@@ -6,13 +6,15 @@ namespace FoosNet
 {
     public class FoosPlayer : IFoosPlayer
     {
-        public string Name { get; private set; }
-        public Status Status { get; private set; }
+        public string Email { get; set; }
+        public string DisplayName { get; set; }
+        public Status Status { get; set; }
         public int Priority { get; set; }
 
-        public FoosPlayer(string name, Status status, int priority)
+        public FoosPlayer(string email, Status status, int priority)
         {
-            Name = name;
+            Email = email;
+            DisplayName = email;
             Status = status;
             if (priority < 1 || priority > 99)
             {
@@ -20,11 +22,6 @@ namespace FoosNet
             }
 
             Priority = priority;
-        }
-
-        public Task<ChallengeResponse> ChallengePlayer()
-        {
-            throw new NotImplementedException();
         }
     }
 }

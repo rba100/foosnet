@@ -46,7 +46,7 @@ namespace TestAlerts
             m_StrobeTimer = new Timer {Interval = 1000};
 
             DescriptionText.Text = "You have been challenged by " 
-                                    + m_Challenge.Challenger.Name + "!";
+                                    + m_Challenge.Challenger.DisplayName + "!";
 
             var currentColour = 0;
             
@@ -69,7 +69,7 @@ namespace TestAlerts
         {
             m_StrobeTimer.Stop();
             
-            DescriptionText.Text =  m_Challenge.Challenger.Name + " has cancelled" +
+            DescriptionText.Text =  m_Challenge.Challenger.DisplayName + " has cancelled" +
                                     " the challenge.";
             
             AlertWindowElement.Background = m_CancelledColors.Item1;
