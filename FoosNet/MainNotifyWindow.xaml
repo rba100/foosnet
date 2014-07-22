@@ -30,7 +30,7 @@
                 Storyboard.TargetProperty="Opacity" From="0.00" To="1.00" AutoReverse="False" Duration="0:0:0.3" />
         </Storyboard>
         <Storyboard x:Key="gridFadeOutStoryBoard">
-            <DoubleAnimation Storyboard.TargetName="uiGridMain" BeginTime="0:0:0.5"
+            <DoubleAnimation Storyboard.TargetName="uiGridMain" BeginTime="0:0:0.3"
                 Storyboard.TargetProperty="Opacity" From="1.00" To="0.00" AutoReverse="False" Duration="0:0:0.3" />
         </Storyboard>
         <converters:ConvertStatus x:Key="StatusConverter"/>
@@ -99,7 +99,7 @@
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
                                         <Image Width="16" Height="16" Margin="5,0" Source="{Binding Status, Converter = {StaticResource StatusConverter}}"></Image>
-                                        <TextBlock Margin="5,1,5,1" Text="{Binding Name}"></TextBlock>
+                                        <TextBlock Margin="5,1,5,1" Text="{Binding DisplayName}"></TextBlock>
                                     </StackPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
