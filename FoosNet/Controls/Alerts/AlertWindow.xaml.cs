@@ -19,11 +19,10 @@ namespace FoosNet.Controls.Alerts
         private readonly Timer m_StrobeTimer;
         
         public delegate void ChallengeResponseEventHandler(ChallengeResponse response);
-
         public event ChallengeResponseEventHandler ChallengeResponseReceived = delegate {};
-
+        
+        // Needed so we can close the other windows from the layer above
         public delegate void AlertClosedEventHandler();
-
         public event AlertClosedEventHandler AlertClosed = delegate {};
 
         /// <param name="alertColors">

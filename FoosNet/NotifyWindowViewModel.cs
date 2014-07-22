@@ -8,6 +8,7 @@ using System.Net.Mime;
 using System.Runtime.CompilerServices;
 using System.Windows.Documents;
 using FoosNet.Annotations;
+using FoosNet.Controls.Alerts;
 using FoosNet.Network;
 using FoosNet.Tests;
 
@@ -48,13 +49,18 @@ namespace FoosNet
         public NotifyWindowViewModel()
         {
             var endpoint = ConfigurationManager.AppSettings["networkServiceEndpoint"];
-
+            
             m_PlayerProcessors = new List<IPlayerTransformation>();
             m_NetworkService = new FoosNetworkService(); // TODO: FoosNetworkService(endpoint);
             m_NetworkService.PlayersDiscovered += NetworkServiceOnPlayersDiscovered;
             var testObjects = new ShowPlayersTest();
             FoosPlayers = testObjects.GetPlayers();
-
+            
+            var alerter = new MinimalFoosAlerter();
+            alerter.ShowChallengeAlert(new ChallengeRequest
+            {
+                Challenger = new FoosPlayer("joe.bloggs@red-gate.com", Status.Available, 20)
+            });
         }
 
         private void NetworkServiceOnPlayersDiscovered(PlayerDiscoveryMessage playerDiscoveryMessage)
