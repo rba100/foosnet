@@ -12,15 +12,23 @@ namespace CommunicatorTestApp
         static void Main(string[] args)
         {
             CommunicatorIntegration ci = new CommunicatorIntegration();
-            ci.SubscribeEmail("martin.podlubny@red-gate.com");
-            ci.StatusChanged += c_StatusChanged;
+            ci.StatusChanged += StatusChanged_EventHandler;
+            ci.StatusChangedSubscribeEmail(ci.GetLocalUserEmail());
+            ci.StatusChangedSubscribeEmail("robin.anderson@red-gate.com");
             
             new System.Threading.AutoResetEvent(false).WaitOne();
         }
 
-        static void c_StatusChanged(Object sender, StatusChangedEventArgs e)
+        static void StatusChanged_EventHandler(Object sender, StatusChangedEventArgs e)
         {
-            Console.WriteLine("{0} is now {1}.", e.Email, e.CurrentStatus);
+            CommunicatorIntegration ci = (CommunicatorIntegration)sender;
+
+            string msg = string.Format("{0}: {1} is now {2}.", e.TimeOfChange, e.Email, e.CurrentStatus);
+            Console.WriteLine(msg);
+            if (e.Email.ToLower().Equals("robin.anderson@red-gate.com") || e.Email.ToLower().Equals(ci.GetLocalUserEmail()))
+            {
+                ci.OpenConversationWithRedgateEmail("robin.anderson@red-gate.com", msg);
+            }
         }
     }
 }

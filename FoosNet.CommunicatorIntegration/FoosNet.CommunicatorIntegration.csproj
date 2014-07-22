@@ -40,6 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommunicatorIntegration.cs" />
+    <Compile Include="CommunicatorNotLoggedInToRedgateException.cs" />
+    <Compile Include="CommunicatorNotOpenException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StatusChangedEventArgs.cs" />
     <Compile Include="StatusChangedEventHandler.cs" />

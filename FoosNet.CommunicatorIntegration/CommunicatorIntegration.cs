@@ -8,6 +8,17 @@ using System.Threading.Tasks;
 using CommunicatorAPI;
 using FoosNet.Network;
 
+
+//
+// Sample usage:
+// 
+// CommunicatorIntegration ci = new CommunicatorIntegration();
+// ci.StatusChanged += StatusChanged_EventHandler;
+// ci.StatusChangedSubscribeEmail("martin.podlubny@red-gate.com");
+// 
+// throws CommunicatorNotOpenException, CommunicatorNotLoggedInToRedgateException on instantiation
+// 
+ 
 namespace FoosNet.CommunicatorIntegration
 {
     public class CommunicatorIntegration
@@ -15,25 +26,106 @@ namespace FoosNet.CommunicatorIntegration
         private Messenger m_Messenger;
         private string m_ServiceID;
 
-        private HashSet<string> m_subscribedStatusChangeEmails;
+        private Dictionary<string, IMessengerContact> m_SubscribedContacts; 
 
         public CommunicatorIntegration()
         {
-            if (m_Messenger == null || m_ServiceID == null)
+            try
             {
                 m_Messenger = new Messenger();
-                m_ServiceID = m_Messenger.MyServiceId;
-                m_Messenger.OnContactStatusChange += new DMessengerEvents_OnContactStatusChangeEventHandler(communicator_OnContactStatusChange);
-                m_Messenger.OnMyStatusChange += new DMessengerEvents_OnMyStatusChangeEventHandler(communicator_OnMyStatusChange);
+            }
+            catch (Exception)
+            {
+                throw new CommunicatorNotOpenException();
+            }
+            
+            m_ServiceID = m_Messenger.MyServiceId;
+
+            try
+            {
+                m_Messenger.GetContact("red-gate@red-gate.com", m_ServiceID);
+            }
+            catch (Exception)
+            {
+                throw new CommunicatorNotLoggedInToRedgateException();
             }
 
-            m_subscribedStatusChangeEmails = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            m_SubscribedContacts = new Dictionary<string, IMessengerContact>();
+
+            m_Messenger.OnContactStatusChange += communicator_OnContactStatusChange;
+        }
+
+        public string GetLocalUserEmail()
+        {
+            return GetSelfContact().SigninName;
+        }
+
+        public string GetLocalUserFriendlyName()
+        {
+            return GetSelfContact().FriendlyName;
+        }
+
+        public Status GetLocalUserStatus()
+        {
+            return MistatusToFoosStatus(GetSelfContact().Status);
         }
 
         public Status StatusOfRedgateEmail(string email)
         {
             IMessengerContact contact = GetContactByRedGateEmail(email);
             return MistatusToFoosStatus(contact.Status);
+        }
+
+        public IMessengerConversationWndAdvanced OpenConversationWithRedgateEmail(string email)
+        {
+            return m_Messenger.InstantMessage(GetContactByRedGateEmail(email));
+        }
+
+        public IMessengerConversationWndAdvanced OpenConversationWithRedgateEmail(string email, string initialMessage)
+        {
+            IMessengerConversationWndAdvanced wnd = OpenConversationWithRedgateEmail(email);
+            wnd.SendText(initialMessage);
+            return wnd;
+        }
+        
+        public void StatusChangedSubscribeEmail(string email)
+        {
+            m_SubscribedContacts.Add(email.ToLower(), GetContactByRedGateEmail(email.ToLower()));
+        }
+
+        public void StatusChangedUnsubscribeEmail(string email)
+        {
+            m_SubscribedContacts.Remove(email.ToLower());
+        }
+
+        public event StatusChangedEventHandler StatusChanged;
+
+        protected virtual void OnStatusChanged(StatusChangedEventArgs e)
+        {
+            StatusChangedEventHandler handler = StatusChanged;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        private IMessengerContact GetContactByRedGateEmail(string email)
+        {
+            return m_Messenger.GetContact(email.ToLower(), m_ServiceID);
+        }
+
+        private void communicator_OnContactStatusChange(object pMContact, MISTATUS mStatus)
+        {
+            IMessengerContactAdvanced contact = (IMessengerContactAdvanced)pMContact;
+
+            if (m_SubscribedContacts.ContainsKey(contact.SigninName.ToLower()))
+            {
+                StatusChangedEventArgs args = new StatusChangedEventArgs();
+                args.Email = contact.SigninName.ToLower();
+                args.CurrentStatus = MistatusToFoosStatus(contact.Status);
+                args.TimeOfChange = DateTime.Now;
+                OnStatusChanged(args);
+            }
         }
 
         private static Status MistatusToFoosStatus(MISTATUS miStatus)
@@ -50,59 +142,9 @@ namespace FoosNet.CommunicatorIntegration
             }
         }
 
-        public IMessengerConversationWndAdvanced OpenConversationWithRedgateEmail(string email)
+        private IMessengerContact GetSelfContact()
         {
-            return m_Messenger.InstantMessage(GetContactByRedGateEmail(email));
+            return m_Messenger.GetContact(m_Messenger.MySigninName, m_ServiceID);
         }
-
-        public static string NameToRegateEmail(string first, string last)
-        {
-            return first + "." + last + "@red-gate.com";
-        }
-
-        private dynamic GetContactByRedGateEmail(string email)
-        {
-            return m_Messenger.GetContact(email, m_ServiceID);
-        }
-
-        public void SubscribeEmail(string email)
-        {
-            m_subscribedStatusChangeEmails.Add(email.ToLower());
-        }
-
-        public void UnsubscribeEmail(string email)
-        {
-            m_subscribedStatusChangeEmails.Remove(email.ToLower());
-        }
-
-        public void communicator_OnContactStatusChange(object pMContact, MISTATUS mStatus)
-        {
-            Console.WriteLine("on contact status change");
-            IMessengerContactAdvanced contact = (IMessengerContactAdvanced) pMContact;
-            if (m_subscribedStatusChangeEmails.Contains(contact.SigninName))
-            {
-                StatusChangedEventArgs args = new StatusChangedEventArgs();
-                args.Email = contact.SigninName.ToLower();
-                args.CurrentStatus = MistatusToFoosStatus(contact.Status);
-                args.TimeOfChange = DateTime.Now;
-                OnStatusChanged(args);
-            }
-        }
-
-        public void communicator_OnMyStatusChange(int i, MISTATUS mStatus)
-        {
-            Console.WriteLine("my status change");
-        }
-
-        protected virtual void OnStatusChanged(StatusChangedEventArgs e)
-        {
-            StatusChangedEventHandler handler = StatusChanged;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
-
-        public event StatusChangedEventHandler StatusChanged;
     }
 }
