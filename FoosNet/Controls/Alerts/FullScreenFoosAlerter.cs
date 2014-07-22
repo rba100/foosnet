@@ -8,7 +8,7 @@ using TestAlerts;
 
 namespace FoosNet.Controls.Alerts
 {
-    public class FoosAlerter : IFoosAlerter
+    public class FullScreenFoosAlerter : IFoosAlerter
     {
         private AlertWindow m_MainAlertWindow;
 
