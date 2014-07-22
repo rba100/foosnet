@@ -7,7 +7,10 @@ using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Net.Mime;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Windows;
 using System.Windows.Documents;
+using System.Windows.Threading;
 using FoosNet.Annotations;
 using FoosNet.CommunicatorIntegration;
 using FoosNet.Network;
@@ -58,8 +61,8 @@ namespace FoosNet
             m_NetworkService.PlayersDiscovered += NetworkServiceOnPlayersDiscovered;
             m_NetworkService.ChallengeReceived += NetworkServiceOnChallengeReceived;
             m_NetworkService.ChallengeResponse += NetworkServiceOnChallengeResponse;
-            var testObjects = new ShowPlayersTest();
-            FoosPlayers = testObjects.GetPlayers();
+            //var testObjects = new ShowPlayersTest();
+            FoosPlayers = new ObservableCollection<FoosPlayer>();
 
         }
 
@@ -89,8 +92,27 @@ namespace FoosNet
                 {
                     transformedPlayer = playerTransformation.Process(transformedPlayer);
                 }
-                newPlayers.Add(transformedPlayer);
+                
+                var existingPlayer = m_FoosPlayers.FirstOrDefault(p => p.Email == transformedPlayer.Email);
+                if (existingPlayer != null)
+                {
+                    existingPlayer.DisplayName = transformedPlayer.DisplayName;
+                    existingPlayer.Status = transformedPlayer.Status;
+                }
+                else
+                {
+                    newPlayers.Add(transformedPlayer);
+                }
             }
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                foreach (var foosPlayer in newPlayers)
+                {
+                    m_FoosPlayers.Add(new FoosPlayer(foosPlayer));
+                }
+            });
+
         }
 
         [NotifyPropertyChangedInvocator]

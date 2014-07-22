@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using FoosNet.Network.Annotations;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FoosNet.Network
 {
@@ -19,36 +17,21 @@ namespace FoosNet.Network
         public event Action<ChallengeRequest> ChallengeReceived;
         public event Action<ChallengeResponse> ChallengeResponse;
         public event Action<PlayerDiscoveryMessage> PlayersDiscovered;
-    }
 
-    public class LivePlayer : IFoosPlayer
-    {
-        private Status m_Status;
-        private string m_Email;
-        private string m_DisplayName;
-
-        public string Email
+        public FoosNetworkService()
         {
-            get { return m_Email; }
-            set { m_Email = value; OnPropertyChanged(); }
-        }
-
-        public string DisplayName
-        {
-            get { return m_DisplayName; }
-            set { m_DisplayName = value; OnPropertyChanged(); }
-        }
-
-        public Status Status
-        {
-            get { return m_Status; }
-            set { m_Status = value; OnPropertyChanged(); }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            Task.Factory.StartNew(() =>
+            {
+                var players = new List<IFoosPlayer>();
+                players.Add(new LivePlayer("robin.anderson@red-gate.com"));
+                players.Add(new LivePlayer("reka.burmeister@red-gate.com"));
+                players.Add(new LivePlayer("martin.podlubny@red-gate.com"));
+                players.Add(new LivePlayer("mark.raymond@red-gate.com"));
+                players.Add(new LivePlayer("jason.crease@red-gate.com"));
+                players.Add(new LivePlayer("oliver.lane@red-gate.com"));
+                Thread.Sleep(2000);
+                PlayersDiscovered(new PlayerDiscoveryMessage() { Players = players });
+            });
         }
     }
 

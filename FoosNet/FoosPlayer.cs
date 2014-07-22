@@ -30,6 +30,14 @@ namespace FoosNet
             Priority = priority;
         }
 
+        public FoosPlayer(IFoosPlayer player)
+        {
+            Email = player.Email;
+            DisplayName = player.DisplayName;
+            Status = player.Status;
+            Priority = 50;
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
