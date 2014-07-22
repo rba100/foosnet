@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 
 using FoosNet.Network;
-using FoosNet.Network.TcpServer;
 
 namespace TestAlerts
 {
@@ -10,6 +9,20 @@ namespace TestAlerts
     /// </summary>
     public partial class MainWindow : Window
     {
+        public class TestFoosPlayer : IFoosPlayer
+        {
+            public string Email { get; private set; }
+            public string DisplayName { get; private set; }
+            public Status Status { get; private set; }
+
+            public TestFoosPlayer(string email, string displayName, Status status)
+            {
+                Email = email;
+                DisplayName = displayName;
+                Status = status;
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -17,9 +30,7 @@ namespace TestAlerts
             var alerter = new FoosAlerter();
 
             alerter.ShowChallengeAlert(new FoosChallenge {
-                Challenger = new TcpFoosballPlayer("Dave", 
-                                                   Status.Available, 
-                                                   null)
+                Challenger = new TestFoosPlayer("Dave", "Dave", Status.Available)
             });
 
             alerter.ChallengeResponseReceived += OnChallengeResponseReceived;
@@ -27,9 +38,7 @@ namespace TestAlerts
             alerter.AlertClosed += onAlertClosed;
             
             alerter.ShowChallengeAlert(new FoosChallenge {
-                Challenger = new TcpFoosballPlayer("Gary", 
-                                                   Status.Available, 
-                                                   null)
+                Challenger = new TestFoosPlayer("Gary", "Gary", Status.Available)
             });
 
         }
