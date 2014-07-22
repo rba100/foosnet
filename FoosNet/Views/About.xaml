@@ -29,7 +29,7 @@
                 </controls:ScrollingContentControl.OpacityMask>
                 <StackPanel>
                     <TextBlock FontSize="20" HorizontalAlignment="Center">Foos Technology Nanosystems</TextBlock>
-                    <TextBlock FontSize="10" HorizontalAlignment="Center">Brough to you by</TextBlock>
+                    <TextBlock FontSize="10" HorizontalAlignment="Center">Brought to you by</TextBlock>
                     <TextBlock Margin="20" HorizontalAlignment="Center">Robin Anderson<LineBreak/>Reka Burmeister<LineBreak/>Jason Crease<LineBreak/>Oliver Lane<LineBreak/>Martin Podlubny<LineBreak/>Mark Raymond<LineBreak/></TextBlock>
                     <Image Source="/Images/gate.png" Width="80"></Image>
                 </StackPanel>
