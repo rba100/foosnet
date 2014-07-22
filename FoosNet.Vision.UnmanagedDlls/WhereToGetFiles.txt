@@ -1,4 +1,6 @@
-﻿There are about 20 C++ DLLs totalling 500mb that need to go in the UnmanagedDLLs directory. I didn't check them into Github because of their size.
+﻿There are about 20 C++ DLLs totalling 500mb that need to go in the UnmanagedDLLs directory. 
+
+I didn't check them into Github because of their size.
 
 You need them to run this solution.
 

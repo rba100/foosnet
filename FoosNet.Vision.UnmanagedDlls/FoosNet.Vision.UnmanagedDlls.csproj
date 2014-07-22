@@ -7,8 +7,8 @@
     <ProjectGuid>{85AD0CA3-CB03-4EEE-83EC-17CFD8DA2388}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UnmanagedDlls</RootNamespace>
-    <AssemblyName>UnmanagedDlls</AssemblyName>
+    <RootNamespace>FoosNet.Vision.UnmanagedDlls</RootNamespace>
+    <AssemblyName>FoosNet.Vision.UnmanagedDlls</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\bin\</OutputPath>
+    <OutputPath>..\FoosNet.Vision.TestApp\bin\debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
