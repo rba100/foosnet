@@ -6,6 +6,7 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows.Media;
+using FoosNet.Views;
 
 namespace FoosNet
 {
@@ -172,6 +173,12 @@ namespace FoosNet
         {
             extendedNotifyIcon.Dispose();
             this.Close();
+        }
+
+        private void TitleLabel_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var aboutView = new About();
+            aboutView.ShowDialog();
         }
     }
 }
