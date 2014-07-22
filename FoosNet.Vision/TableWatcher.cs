@@ -12,38 +12,46 @@ namespace FoosNet.Vision
 {
     public class TableWatcher : ITableWatcher
     {
-        private bool m_TableIsInUse;
+        private TableUsage m_TableUsage = TableUsage.Unknown;
+        private TableUsage m_PreviousTableUsage = TableUsage.Unknown;
         private IImageStream m_ImageStream;
         private Timer m_CheckPitchStatusTimer;
+        private Image<Bgr, byte> m_DebugImage;
+        private Image<Bgr, byte> m_Previousimage;
 
         public TableWatcher()
         {
-            m_TableIsInUse = false;
-            m_ImageStream = new ImageStreamFromStaticImages();
+            m_ImageStream = new ImageStreamFromFoosCam();
             m_ImageStream.LatestImageAvailable += LatestImageAvailable;
         }
 
         private void LatestImageAvailable(object state, Image<Bgr, byte> image)
         {
-            m_TableIsInUse = true;
-        }
-
-        public bool TableIsInUse
-        {
-            get
+            m_DebugImage = image.Clone();
+            if (m_Previousimage != null)
             {
-                return m_TableIsInUse;
+                double tableBusyProb = ImageProcessing.TableBusyProbability(image, m_Previousimage, m_DebugImage);
+                if (tableBusyProb > 0.2) m_TableUsage = TableUsage.Busy;
+                if (tableBusyProb < 0.2) m_TableUsage = TableUsage.Free;
             }
+            m_Previousimage = image.Clone();
 
-            set { m_TableIsInUse = value; }
+            if (m_TableUsage == TableUsage.Busy && m_PreviousTableUsage != TableUsage.Busy) TableNowBusy(this, null);
+            if (m_TableUsage == TableUsage.Free && m_PreviousTableUsage != TableUsage.Free) TableNowFree(this, null);
         }
 
-        public event EventHandler TableHasBecomeInUse;
-        public event EventHandler TableHasBecomeFree;
+        public TableUsage TableUsage
+        {
+            get { return m_TableUsage; }
+            set { m_TableUsage = value; }
+        }
+
+        public event EventHandler TableNowBusy;
+        public event EventHandler TableNowFree;
 
         public Image<Bgr, byte> DebugImage
         {
-            get { return new Image<Bgr, byte>(640, 480, new Bgr(100, 10, 200)); }
+            get { return m_DebugImage; }
         }
     }
 }

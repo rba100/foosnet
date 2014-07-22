@@ -11,7 +11,7 @@ namespace FoosNet.Vision.Test
 {
     public class TableWatcherRandom : ITableWatcher
     {
-        private bool m_TableIsInUse;
+        private TableUsage m_TableUsage;
         private Timer m_CheckPitchStatusTimer;
 
         public TableWatcherRandom()
@@ -21,28 +21,28 @@ namespace FoosNet.Vision.Test
 
         private void CheckPitchStatus(object state)
         {
-            bool previousTableInUse = m_TableIsInUse;
-            m_TableIsInUse = (new Random()).NextDouble() > 0.5;
+            TableUsage previousTableUsage = m_TableUsage;
+            m_TableUsage = (new Random()).NextDouble() > 0.5 ? TableUsage.Free : TableUsage.Busy;
 
-            if (m_TableIsInUse && !previousTableInUse) TableHasBecomeInUse(this, null);
-            if (!m_TableIsInUse && previousTableInUse) TableHasBecomeFree(this, null);
+            if (m_TableUsage == TableUsage.Busy && previousTableUsage != TableUsage.Busy) TableNowBusy(this, null);
+            if (m_TableUsage == TableUsage.Free && previousTableUsage != TableUsage.Free) TableNowFree(this, null);
         }
 
-        public bool TableIsInUse
+        public TableUsage TableUsage
         {
             get
             {
-                return m_TableIsInUse;
+                return m_TableUsage;
             }
 
-            set { m_TableIsInUse = value; }
+            set { m_TableUsage = value; }
         }
 
         public Image<Bgr, byte> DebugImage
         {
             get { return new Image<Bgr, byte>(640, 480, new Bgr(100, 10, 200)); }
         }
-        public event EventHandler TableHasBecomeInUse;
-        public event EventHandler TableHasBecomeFree;
+        public event EventHandler TableNowBusy;
+        public event EventHandler TableNowFree;
     }
 }

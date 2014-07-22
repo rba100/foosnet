@@ -1,9 +1,12 @@
-﻿There are about 20 C++ DLLs totalling 500mb that need to go in the UnmanagedDLLs directory. 
+﻿There are 18 C++ DLLs totalling 500mb that need to go in this project. 
 
-I didn't check them into Github because of their size.
+They are not checked into source control because of their size.
 
-You need them to run this solution.
+They are the computer vision components of the OpenCV .NET port called EmguCV.
 
-If you want them, ask me, or download EmguCV from http://sourceforge.net/projects/emgucv/  
+You need them to run the FoosNet.Vision components.
 
-Jason Crease 22 July 2014
+If you want them, either:
+(1) Copy all the DLLs in \\jason64\Shared\FoosnetUnmanagedDLLs to this directory
+(2) Download EmguCV from http://sourceforge.net/projects/emgucv/  
+(3) Ask me (Jason Crease)

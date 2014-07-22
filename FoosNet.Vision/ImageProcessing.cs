@@ -18,7 +18,7 @@ namespace FoosNet.Vision
         /// <param name="img2">Previous image</param>
         /// <param name="debugImage">Debug image. Optional. Pass null if you don't care</param>
         /// <returns>Magnitude of difference. Roughly it's the probability</returns>
-        internal static double DetectIfTableIsInUse(Image<Bgr, byte> img1, Image<Bgr, byte> img2, Image<Bgr, byte> debugImage)
+        internal static double TableBusyProbability(Image<Bgr, byte> img1, Image<Bgr, byte> img2, Image<Bgr, byte> debugImage)
         {
             int threshold = 50;
             int contourThreshold = 100;
@@ -64,6 +64,8 @@ namespace FoosNet.Vision
 
             double diffMag = (double)(totalB + totalG + totalR) / 10e5;
 
+            if (diffMag <= 1)
+                return 0.0;
             if (diffMag  > 1)
                 return 0.1;
             else if (diffMag > 2)

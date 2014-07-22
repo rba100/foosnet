@@ -6,7 +6,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="SlickButtonRD.xaml"></ResourceDictionary>
                 <ResourceDictionary Source="MainGridStyleRD.xaml"></ResourceDictionary>
-                <ResourceDictionary Source="StealthButtonRD.xaml"></ResourceDictionary> 
+                <ResourceDictionary Source="StealthButtonRD.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="Controls/Alerts/AlertBubbleGridStyleRD.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary> 
     </Application.Resources>

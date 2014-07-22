@@ -36,9 +36,9 @@ namespace FoosNet.Vision.TestApp
 
             m_ImageTimer = new Timer(UpdateImage, null, 3000, 1500);
 
-            m_TableWatcher = new Test.TableWatcherMoving();
-            m_TableWatcher.TableHasBecomeFree += delegate { Dispatcher.Invoke(() => LabelTableStatus.Content = "Table is free"); };
-            m_TableWatcher.TableHasBecomeInUse += delegate { Dispatcher.Invoke(() => LabelTableStatus.Content = "Table is in use"); };
+            m_TableWatcher = new TableWatcher();
+            m_TableWatcher.TableNowFree += delegate { Dispatcher.Invoke(() => LabelTableStatus.Content = "Table is now free"); };
+            m_TableWatcher.TableNowBusy += delegate { Dispatcher.Invoke(() => LabelTableStatus.Content = "Table is now busy"); };
         }
 
     }
