@@ -117,6 +117,7 @@
                 </Grid>
                 <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="5,0,5,0" Grid.Row="3">
                     <Button HorizontalAlignment="Stretch" Margin="5">Start new game</Button>
+                    <Button HorizontalAlignment="Stretch" Margin="5" Click="TestButtonClick_OpenPlayersJoined">TestButton</Button>
                 </StackPanel>
             </Grid>
         </Grid>
