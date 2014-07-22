@@ -80,7 +80,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Alerts\AlertBubbleGridStyleRD.xaml">
+    <Page Include="Controls\Alerts\AlertBubbleGridStyleRD.xaml"/>
     <Page Include="AllPlayersJoined.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
