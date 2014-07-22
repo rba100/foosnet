@@ -39,17 +39,17 @@
         <Grid x:Name="uiGridMain" Margin="10">
             <Border Width="Auto" Height="Auto"  Style="{StaticResource MainGridBorder}">
             </Border>
-            
+
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="27"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="70"/>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="44"/>
                 </Grid.RowDefinitions>
 
                 <Label Margin="0" x:Name="TitleLabel" Foreground="White" Opacity="0.9" Content="Foos.Net" MouseDown="TitleLabel_OnMouseDown"/>
-                <Grid Margin="5,0,12,0">
+                <Grid Grid.Row="0" Margin="5,0,12,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="0"/>
                         <RowDefinition Height="18" />
@@ -71,59 +71,58 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Label Content="Table status: " VerticalAlignment="Center" FontWeight="Bold"/>
-                    <TextBlock Grid.Column="1"  VerticalAlignment="Center" FontWeight="Bold">
-                        <TextBlock.Style>
-                            <Style TargetType="TextBlock">
+                    <Image Margin="5,0" Grid.Column="1">
+                        <Image.Style>
+                            <Style TargetType="{x:Type Image}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsTableFree}" Value="false">
-                                        <Setter Property="Text" Value="In use"/>
-                                        <Setter Property="Foreground" Value="Red"/>
+                                        <Setter Property="Source" Value="Images/TableFree.png"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IsTableFree}" Value="true">
-                                        <Setter Property="Text" Value="Free"/>
-                                        <Setter Property="Foreground" Value="ForestGreen"/>
+                                        <Setter Property="Source" Value="Images/TableFree.png"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
+                        </Image.Style>
+                    </Image>
                 </Grid>
-                <Grid Grid.Row="2" Margin="10,0,10,10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Label FontWeight="Bold">Contacts</Label>
-                    <Grid Grid.Row="1">
-                        <ListView Name="FoosPlayersList" 
+
+            <Grid Grid.Row="2" Margin="10,0,10,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label FontWeight="Bold">Contacts</Label>
+                <Grid Grid.Row="1">
+                    <ListView Name="FoosPlayersList" 
                                   ItemsSource="{Binding FoosPlayers}" 
                                   Grid.Column="0" 
                                   dragDrop:DragDrop.IsDragSource="True"
                                   dragDrop:DragDrop.IsDropTarget="True">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Width="16" Height="16" Margin="5,0" Source="{Binding Status, Converter = {StaticResource StatusConverter}}"></Image>
-                                        <TextBlock Margin="5,1,5,1" Text="{Binding Name}"></TextBlock>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                            <ListView.ContextMenu>
-                                <ContextMenu Name="PlayerListContextMenu">
-                                    <MenuItem Header="Remove">
-                                        <MenuItem.Icon>
-                                            <Image Width="16" Height="16" Source="/Foosnet;component/Images/delete.png"></Image>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                </ContextMenu>
-                            </ListView.ContextMenu>
-                        </ListView>
-                    </Grid>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Width="16" Height="16" Margin="5,0" Source="{Binding Status, Converter = {StaticResource StatusConverter}}"></Image>
+                                    <TextBlock Margin="5,1,5,1" Text="{Binding Name}"></TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.ContextMenu>
+                            <ContextMenu Name="PlayerListContextMenu">
+                                <MenuItem Header="Remove">
+                                    <MenuItem.Icon>
+                                        <Image Width="16" Height="16" Source="/Foosnet;component/Images/delete.png"></Image>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </ListView.ContextMenu>
+                    </ListView>
                 </Grid>
-                <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="5,0,5,0" Grid.Row="3">
-                    <Button HorizontalAlignment="Stretch" Margin="5">Start new game</Button>
-                </StackPanel>
             </Grid>
+            <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="5,0,5,0" Grid.Row="3">
+                <Button HorizontalAlignment="Stretch" Margin="5">Start new game</Button>
+            </StackPanel>
+        </Grid>
         </Grid>
     </Border>
 </Window>

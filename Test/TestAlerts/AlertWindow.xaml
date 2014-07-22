@@ -23,8 +23,17 @@
             <Button x:Name="DeclineButton"
                     Click="DeclineButton_OnClick"
                     Width="200"
-                    Height="50">
+                    Height="50"
+                    Margin="0, 0, 0, 20">
                 Decline
+            </Button>
+            <Button x:Name="CloseButton"
+                    Click="CloseButton_OnClick"
+                    Width="200"
+                    Height="50"
+                    Margin="0, 0, 0, 20"
+                    Visibility="Hidden">
+                Close
             </Button>
         </StackPanel>
         

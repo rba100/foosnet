@@ -15,10 +15,17 @@ namespace TestAlerts
 
         public delegate void ChallengeResponseEventHandler(ChallengeResponse response);
 
-        public event ChallengeResponseEventHandler ChallengeResponseReceived;
+        public event ChallengeResponseEventHandler ChallengeResponseReceived = delegate {};
 
-        public void AlertChallenge(IFoosPlayer challengingPlayer)
+        public delegate void AlertClosedEventHandler();
+
+        public event AlertClosedEventHandler AlertClosed = delegate {};
+
+        public void ShowChallengeAlert(IFoosChallenge challenge)
         {
+            // Close any alerts already open before we start
+            CloseChallengeAlert();
+
             SpeakerBeep();
 
             var alertColors = new []
@@ -30,7 +37,7 @@ namespace TestAlerts
             var cancelledColors =
                 new Tuple<SolidColorBrush, SolidColorBrush> (Brushes.Gray, Brushes.White);
 
-            m_MainAlertWindow = new AlertWindow(alertColors, cancelledColors, challengingPlayer)
+            m_MainAlertWindow = new AlertWindow(alertColors, cancelledColors, challenge)
             {
                 Top = Screen.PrimaryScreen.WorkingArea.Top,
                 Left = Screen.PrimaryScreen.WorkingArea.Left,
@@ -42,6 +49,7 @@ namespace TestAlerts
             m_MainAlertWindow.WindowState = WindowState.Maximized;
 
             m_MainAlertWindow.ChallengeResponseReceived += ChallengeResponseHandler;
+            m_MainAlertWindow.AlertClosed += AlertClosedHandler;
 
             m_SecondaryAlertWindows = new List<SecondaryAlertWindow>();
 
@@ -58,33 +66,51 @@ namespace TestAlerts
                     window.Show();
                     window.Activate();
                     window.WindowState = WindowState.Maximized;
+
                     m_SecondaryAlertWindows.Add(window);
                 }
             }
         }
 
-        public void CancelChallenge()
+
+        public void CancelChallengeAlert()
         {
-            m_MainAlertWindow.CancelAlert();
-            foreach (var secondaryAlertWindow in m_SecondaryAlertWindows)
+            if (m_MainAlertWindow != null) { 
+                m_MainAlertWindow.CancelChallenge();
+            }
+            if (m_SecondaryAlertWindows != null)
             {
-                secondaryAlertWindow.CancelAlert();
+                foreach (var secondaryAlertWindow in m_SecondaryAlertWindows)
+                {
+                    secondaryAlertWindow.CancelAlert();
+                }
             }
         }
 
-        public void CloseAlerts()
+        public void CloseChallengeAlert()
         {
-            m_MainAlertWindow.Close();
-            foreach (var secondaryAlertWindow in m_SecondaryAlertWindows)
+            if (m_MainAlertWindow != null) { 
+                m_MainAlertWindow.Close();
+            }
+            if (m_SecondaryAlertWindows != null)
             {
-                secondaryAlertWindow.Close();
+                foreach (var secondaryAlertWindow in m_SecondaryAlertWindows)
+                {
+                    secondaryAlertWindow.Close();
+                }
             }
         }
         
         private void ChallengeResponseHandler(ChallengeResponse response)
         {
-            CloseAlerts();
+            CloseChallengeAlert();
             ChallengeResponseReceived(response);
+        }
+
+        private void AlertClosedHandler()
+        {
+            CloseChallengeAlert();
+            AlertClosed();
         }
 
         private void SpeakerBeep()
