@@ -3,17 +3,9 @@
 // Comments: code behind for the main WPF popup window 
 //-------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
-using System.IO;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Threading;
-using FoosNet.Network;
 using FoosNet.Views;
 
 namespace FoosNet
@@ -188,58 +180,6 @@ namespace FoosNet
         {
             var aboutView = new About();
             aboutView.ShowDialog();
-        }
-
-        private void TableStatusImage_OnMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            UpdatePopupSource();
-        }
-
-        private async void UpdatePopupSource()
-        {
-            var original = FoosTableImage.Source as BitmapImage;
-            if (original != null) original.StreamSource.Dispose();
-
-            FoosTableImage.Visibility = Visibility.Collapsed;
-            FoosTablePopup.IsOpen = true;
-            var url = new Uri(@"http://10.120.115.224/snapshot.cgi?user=viewer&amp;pwd=&amp;");
-            var webRequest = WebRequest.CreateDefault(url);
-            webRequest.ContentType = "image/jpeg";
-            var response = await webRequest.GetResponseAsync();
-            var dataStream = response.GetResponseStream();
-            var memStream = new MemoryStream();
-            await dataStream.CopyToAsync(memStream);
-            memStream.Seek(0, SeekOrigin.Begin);
-
-            var image = new BitmapImage();
-            image.BeginInit();
-            image.StreamSource = memStream;
-            image.EndInit();
-            image.Freeze();
-
-            Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(delegate
-            {
-                FoosTableImage.Source = image;
-                FoosTableImage.Visibility = Visibility.Visible;
-            }));
-        }
-
-        private void FoosTablePopup_OnMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            FoosTablePopup.IsOpen = false;
-        }
-		
-        private void TestButtonClick_OpenPlayersJoined(object sender, RoutedEventArgs e)
-        {
-            Window playersJoined = new AllPlayersJoined(new List<IFoosPlayer>() 
-            { 
-                new FoosPlayer("robin.a@rg.com", Status.Available, 1), 
-                new FoosPlayer("aaron.l@rg.com", Status.Available, 1), 
-                new FoosPlayer("tom.c@rg.com", Status.Available, 1),
-                new FoosPlayer("ali.d@rg.com", Status.Available, 1)
-            });
-
-            playersJoined.Show();
         }
     }
 }

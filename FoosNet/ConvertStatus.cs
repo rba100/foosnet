@@ -15,13 +15,13 @@ namespace FoosNet
                 case Status.Available:
                     return "Images/PlayerAvailable.png";
                 case Status.Busy:
-                    return "Images/AmberOrb.ico";
+                    return "Images/PlayerBusy.png";
                 case Status.Offline:
-                    return "Images/RedOrb.ico";
+                    return "Images/PlayerOffline.png";
                 case Status.Unknown:
-                    return "Images/BlueOrb.ico";
+                    return "Images/PlayerUnavailable.png";
                 case Status.Useless:
-                    return "Images/BlueOrb.ico";
+                    return "Images/PlayerUseless.png";
                 default:
                     throw new Exception("Set new status!");
             }

@@ -3,7 +3,6 @@
 // Comments: code behind for the main WPF popup window 
 //-------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
@@ -13,7 +12,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using FoosNet.Network;
 using FoosNet.Views;
 
 namespace FoosNet
@@ -227,19 +225,6 @@ namespace FoosNet
         private void FoosTablePopup_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             FoosTablePopup.IsOpen = false;
-        }
-		
-        private void TestButtonClick_OpenPlayersJoined(object sender, RoutedEventArgs e)
-        {
-            Window playersJoined = new AllPlayersJoined(new List<IFoosPlayer>() 
-            { 
-                new FoosPlayer("robin.a@rg.com", Status.Available, 1), 
-                new FoosPlayer("aaron.l@rg.com", Status.Available, 1), 
-                new FoosPlayer("tom.c@rg.com", Status.Available, 1),
-                new FoosPlayer("ali.d@rg.com", Status.Available, 1)
-            });
-
-            playersJoined.Show();
         }
     }
 }

@@ -51,6 +51,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AllPlayersJoined.xaml.cs">
+      <DependentUpon>AllPlayersJoined.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="AllPlayersJoinedViewModel.cs" />
     <Compile Include="Controls\Alerts\AlertWindow.xaml.cs">
       <DependentUpon>AlertWindow.xaml</DependentUpon>
     </Compile>
@@ -69,6 +73,10 @@
     <Compile Include="Views\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
+    <Page Include="AllPlayersJoined.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Alerts\AlertWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -246,6 +254,12 @@
   <ItemGroup>
     <Resource Include="Images\accepted.png" />
     <Resource Include="Images\declined.png" />
+    <Resource Include="Images\PlayerBusy.png" />
+    <Resource Include="Images\PlayerOffline.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\PlayerUnavailable.png" />
+    <Resource Include="Images\PlayerUseless.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

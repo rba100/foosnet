@@ -12,8 +12,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
+<<<<<<< HEAD
 using System.Windows.Threading;
+=======
 using FoosNet.Network;
+>>>>>>> origin/master
 using FoosNet.Views;
 
 namespace FoosNet
@@ -190,6 +193,7 @@ namespace FoosNet
             aboutView.ShowDialog();
         }
 
+<<<<<<< HEAD
         private void TableStatusImage_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             UpdatePopupSource();
@@ -227,8 +231,7 @@ namespace FoosNet
         private void FoosTablePopup_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             FoosTablePopup.IsOpen = false;
-        }
-		
+=======
         private void TestButtonClick_OpenPlayersJoined(object sender, RoutedEventArgs e)
         {
             Window playersJoined = new AllPlayersJoined(new List<IFoosPlayer>() 
@@ -240,6 +243,7 @@ namespace FoosNet
             });
 
             playersJoined.Show();
+>>>>>>> origin/master
         }
     }
 }

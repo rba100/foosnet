@@ -19,6 +19,8 @@ namespace FoosNet.Tests
                 new FoosPlayer("Martin Podlubny", Status.Available, 4) {GameState = GameState.Declined},
                 new FoosPlayer("Kevin Boyle", Status.Busy, 5) {GameState = GameState.Declined},
                 new FoosPlayer("Chris Moore", Status.Offline, 6),
+                new FoosPlayer("Reka Burmeister", Status.Unknown, 6),
+                new FoosPlayer("Chris Spencer", Status.Useless, 6),
             };
             return players;
         }
