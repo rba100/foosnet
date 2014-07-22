@@ -70,6 +70,7 @@
     <Compile Include="Controls\ScrollingContentControl.xaml.cs">
       <DependentUpon>ScrollingContentControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SimpleCommand.cs" />
     <Compile Include="Controls\Spinner.cs" />
     <Compile Include="ConvertStatus.cs" />
     <Compile Include="Tests\ShowPlayersTest.cs" />
@@ -137,7 +138,7 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Controls\ExtendedNotifyIcon.cs" />
-    <Compile Include="FoosPlayer.cs" />
+    <Compile Include="FoosPlayerListItem.cs" />
     <Compile Include="HorizontalSeparatorRD.xaml.cs">
       <DependentUpon>HorizontalSeparatorRD.xaml</DependentUpon>
     </Compile>
@@ -226,6 +227,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FoosNet.CommunicatorIntegration\FoosNet.CommunicatorIntegration.csproj">
+      <Project>{d2861328-0ccc-449a-a0b5-0a181033e7f3}</Project>
+      <Name>FoosNet.CommunicatorIntegration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FoosNet.Network\FoosNet.Network.csproj">
       <Project>{7a10fabd-29a6-4ca5-b369-df54303fc00f}</Project>
       <Name>FoosNet.Network</Name>

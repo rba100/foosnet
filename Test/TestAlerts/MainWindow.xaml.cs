@@ -1,6 +1,9 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows;
 
 using FoosNet.Network;
+using FoosNet.Network.Annotations;
 
 namespace TestAlerts
 {
@@ -11,15 +14,23 @@ namespace TestAlerts
     {
         public class TestFoosPlayer : IFoosPlayer
         {
-            public string Email { get; private set; }
-            public string DisplayName { get; private set; }
-            public Status Status { get; private set; }
+            public string Email { get; set; }
+            public string DisplayName { get; set; }
+            public Status Status { get; set; }
 
             public TestFoosPlayer(string email, string displayName, Status status)
             {
                 Email = email;
                 DisplayName = displayName;
                 Status = status;
+            }
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            [NotifyPropertyChangedInvocator]
+            protected virtual void OnPropertyChanged1([CallerMemberName] string propertyName = null)
+            {
+                if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 

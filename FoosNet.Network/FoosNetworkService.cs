@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FoosNet.Network
 {
@@ -16,6 +17,21 @@ namespace FoosNet.Network
         public event Action<ChallengeRequest> ChallengeReceived;
         public event Action<ChallengeResponse> ChallengeResponse;
         public event Action<PlayerDiscoveryMessage> PlayersDiscovered;
+
+        public FoosNetworkService()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                var players = new List<IFoosPlayer>();
+                players.Add(new LivePlayer("robin.anderson@red-gate.com"));
+                players.Add(new LivePlayer("reka.burmeister@red-gate.com"));
+                players.Add(new LivePlayer("martin.podlubny@red-gate.com"));
+                players.Add(new LivePlayer("mark.raymond@red-gate.com"));
+                players.Add(new LivePlayer("jason.crease@red-gate.com"));
+                players.Add(new LivePlayer("oliver.lane@red-gate.com"));
+                PlayersDiscovered(new PlayerDiscoveryMessage() { Players = players });
+            });
+        }
     }
 
     public class ChallengeRequest

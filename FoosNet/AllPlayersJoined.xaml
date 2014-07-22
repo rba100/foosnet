@@ -12,7 +12,7 @@
     </Window.DataContext>
     <Border CornerRadius="5">
         <Grid x:Name="TopGrid">
-            <Border Width="Auto" Height="Auto"  Style="{StaticResource MainGridBorder}">
+            <Border Width="Auto" Height="Auto">
             </Border>
             
             <Grid Grid.Row="0">
