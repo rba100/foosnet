@@ -109,7 +109,6 @@ namespace FoosNet.Controls.Alerts
             {
                 base.OnPreviewKeyDown(e);
             }
-            
         }
     }
 }
