@@ -246,6 +246,10 @@
     <Resource Include="Images\PlayerBusy.png" />
     <Resource Include="Images\PlayerOffline.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\PlayerUnavailable.png" />
+    <Resource Include="Images\PlayerUseless.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
