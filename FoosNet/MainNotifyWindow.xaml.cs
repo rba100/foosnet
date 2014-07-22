@@ -233,10 +233,10 @@ namespace FoosNet
         {
             Window playersJoined = new AllPlayersJoined(new List<IFoosPlayer>() 
             { 
-                new FoosPlayer("robin.a@rg.com", Status.Available, 1), 
-                new FoosPlayer("aaron.l@rg.com", Status.Available, 1), 
-                new FoosPlayer("tom.c@rg.com", Status.Available, 1),
-                new FoosPlayer("ali.d@rg.com", Status.Available, 1)
+                new FoosPlayer("Robin Anderson", Status.Available, 1), 
+                new FoosPlayer("Aaron Law", Status.Available, 1), 
+                new FoosPlayer("Tom Crossman", Status.Available, 1),
+                new FoosPlayer("Ali Daw", Status.Available, 1)
             });
 
             playersJoined.ShowDialog();
