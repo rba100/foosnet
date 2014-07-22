@@ -41,6 +41,8 @@
   <ItemGroup>
     <Compile Include="CommunicatorIntegration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StatusChangedEventArgs.cs" />
+    <Compile Include="StatusChangedEventHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="CommunicatorAPI">
