@@ -72,7 +72,7 @@
                             <Style TargetType="{x:Type Image}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsTableFree}" Value="false">
-                                        <Setter Property="Source" Value="Images/TableFree.png"/>
+                                        <Setter Property="Source" Value="Images/TableBusy.png"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IsTableFree}" Value="true">
                                         <Setter Property="Source" Value="Images/TableFree.png"/>

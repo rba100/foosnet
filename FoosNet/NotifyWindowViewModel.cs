@@ -23,7 +23,6 @@ namespace FoosNet
             set
             {
                 m_FoosPlayers = value;
-                m_IsTableFree = true;
                 OnPropertyChanged();
             }
         }
