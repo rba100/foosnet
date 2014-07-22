@@ -55,7 +55,6 @@
       <DependentUpon>AlertWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Alerts\FoosAlerter.cs" />
-    <Compile Include="Controls\Alerts\FoosChallenge.cs" />
     <Compile Include="Controls\Alerts\IFoosAlerter.cs" />
     <Compile Include="Controls\Alerts\SecondaryAlertWindow.xaml.cs">
       <DependentUpon>SecondaryAlertWindow.xaml</DependentUpon>
