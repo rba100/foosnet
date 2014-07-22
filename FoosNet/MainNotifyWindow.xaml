@@ -87,42 +87,42 @@
                     </Image>
                 </Grid>
 
-            <Grid Grid.Row="2" Margin="10,0,10,10">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Label FontWeight="Bold">Contacts</Label>
-                <Grid Grid.Row="1">
-                    <ListView Name="FoosPlayersList" 
+                <Grid Grid.Row="2" Margin="10,0,10,10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Label FontWeight="Bold">Contacts</Label>
+                    <Grid Grid.Row="1">
+                        <ListView Name="FoosPlayersList" 
                                   ItemsSource="{Binding FoosPlayers}" 
                                   Grid.Column="0" 
                                   dragDrop:DragDrop.IsDragSource="True"
                                   dragDrop:DragDrop.IsDropTarget="True">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <Image Width="16" Height="16" Margin="5,0" Source="{Binding Status, Converter = {StaticResource StatusConverter}}"></Image>
-                                    <TextBlock Margin="5,1,5,1" Text="{Binding Name}"></TextBlock>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                        <ListView.ContextMenu>
-                            <ContextMenu Name="PlayerListContextMenu">
-                                <MenuItem Header="Remove">
-                                    <MenuItem.Icon>
-                                        <Image Width="16" Height="16" Source="/Foosnet;component/Images/delete.png"></Image>
-                                    </MenuItem.Icon>
-                                </MenuItem>
-                            </ContextMenu>
-                        </ListView.ContextMenu>
-                    </ListView>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Width="16" Height="16" Margin="5,0" Source="{Binding Status, Converter = {StaticResource StatusConverter}}"></Image>
+                                        <TextBlock Margin="5,1,5,1" Text="{Binding Name}"></TextBlock>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                            <ListView.ContextMenu>
+                                <ContextMenu Name="PlayerListContextMenu">
+                                    <MenuItem Header="Remove">
+                                        <MenuItem.Icon>
+                                            <Image Width="16" Height="16" Source="/Foosnet;component/Images/delete.png"></Image>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                </ContextMenu>
+                            </ListView.ContextMenu>
+                        </ListView>
+                    </Grid>
                 </Grid>
+                <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="5,0,5,0" Grid.Row="3">
+                    <Button HorizontalAlignment="Stretch" Margin="5">Start new game</Button>
+                </StackPanel>
             </Grid>
-            <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="5,0,5,0" Grid.Row="3">
-                <Button HorizontalAlignment="Stretch" Margin="5">Start new game</Button>
-            </StackPanel>
-        </Grid>
         </Grid>
     </Border>
 </Window>
