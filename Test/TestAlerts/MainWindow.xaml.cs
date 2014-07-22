@@ -16,22 +16,27 @@ namespace TestAlerts
 
             var alerter = new FoosAlerter();
 
-            alerter.AlertChallenge(new TcpFoosballPlayer("Dave", 
-                                                         Status.Available, 
-                                                         null));
+            alerter.ShowChallengeAlert(new FoosChallenge {
+                Challenger = new TcpFoosballPlayer("Dave", 
+                                                   Status.Available, 
+                                                   null)
+            });
 
             alerter.ChallengeResponseReceived += OnChallengeResponseReceived;
 
             alerter.AlertClosed += onAlertClosed;
-
-            alerter.CancelChallenge();
+            
+            alerter.ShowChallengeAlert(new FoosChallenge {
+                Challenger = new TcpFoosballPlayer("Gary", 
+                                                   Status.Available, 
+                                                   null)
+            });
 
         }
 
         private void OnChallengeResponseReceived(ChallengeResponse response)
         {
             MessageBox.Show("Response: "+ response.Accepted);
-            TestWindow.Show();
         }
 
         private void onAlertClosed()
