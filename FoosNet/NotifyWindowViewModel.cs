@@ -20,13 +20,13 @@ namespace FoosNet
 {
     public class NotifyWindowViewModel : INotifyPropertyChanged
     {
-        private ObservableCollection<FoosPlayer> m_FoosPlayers;
+        private ObservableCollection<FoosPlayerListItem> m_FoosPlayers;
         private bool m_IsTableFree;
         public event PropertyChangedEventHandler PropertyChanged;
         private readonly FoosNetworkService m_NetworkService;
         private List<IPlayerTransformation> m_PlayerProcessors;
 
-        public ObservableCollection<FoosPlayer> FoosPlayers
+        public ObservableCollection<FoosPlayerListItem> FoosPlayers
         {
             get { return m_FoosPlayers; }
             set
@@ -62,7 +62,7 @@ namespace FoosNet
             m_NetworkService.ChallengeReceived += NetworkServiceOnChallengeReceived;
             m_NetworkService.ChallengeResponse += NetworkServiceOnChallengeResponse;
             //var testObjects = new ShowPlayersTest();
-            FoosPlayers = new ObservableCollection<FoosPlayer>();
+            FoosPlayers = new ObservableCollection<FoosPlayerListItem>();
 
         }
 
@@ -109,10 +109,9 @@ namespace FoosNet
             {
                 foreach (var foosPlayer in newPlayers)
                 {
-                    m_FoosPlayers.Add(new FoosPlayer(foosPlayer));
+                    m_FoosPlayers.Add(new FoosPlayerListItem(foosPlayer));
                 }
             });
-
         }
 
         [NotifyPropertyChangedInvocator]

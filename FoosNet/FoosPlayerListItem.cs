@@ -8,16 +8,39 @@ namespace FoosNet
 {
     public enum GameState { None, Pending, Accepted, Declined }
 
-    public class FoosPlayer : IFoosPlayer
+    public class FoosPlayerListItem : IFoosPlayer
     {
+        private Status m_Status;
+        private string m_DisplayName;
         public string Email { get; set; }
-        public string DisplayName { get; set; }
-        public Status Status { get; set; }
+
+        public string DisplayName
+        {
+            get { return m_DisplayName; }
+            set
+            {
+                if (value == m_DisplayName) return;
+                m_DisplayName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Status Status
+        {
+            get { return m_Status; }
+            set
+            {
+                if (value == m_Status) return;
+                m_Status = value;
+                OnPropertyChanged();
+            }
+        }
+
         public int Priority { get; set; }
 
         public GameState GameState { get; set; }
 
-        public FoosPlayer(string email, Status status, int priority)
+        public FoosPlayerListItem(string email, Status status, int priority)
         {
             Email = email;
             DisplayName = email;
@@ -30,7 +53,7 @@ namespace FoosNet
             Priority = priority;
         }
 
-        public FoosPlayer(IFoosPlayer player)
+        public FoosPlayerListItem(IFoosPlayer player)
         {
             Email = player.Email;
             DisplayName = player.DisplayName;
