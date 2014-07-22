@@ -108,6 +108,15 @@
                                     </StackPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
+                            <ListView.ContextMenu>
+                                <ContextMenu Name="PlayerListContextMenu">
+                                    <MenuItem Header="Remove">
+                                        <MenuItem.Icon>
+                                            <Image Width="16" Height="16" Source="/Foosnet;component/Images/delete.png"></Image>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                </ContextMenu>
+                            </ListView.ContextMenu>
                         </ListView>
                     </Grid>
                 </Grid>

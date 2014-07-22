@@ -91,6 +91,7 @@ namespace FoosNet
         void extendedNotifyIcon_OnHideWindow()
         {
             if (PinButton.IsChecked == true) return; // Dont hide the window if its pinned open
+            if (PlayerListContextMenu.IsOpen) return;
 
             gridFadeInStoryBoard.Stop(); // Stop the fade in storyboard if running.
 
