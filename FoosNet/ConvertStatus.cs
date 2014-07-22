@@ -19,9 +19,9 @@ namespace FoosNet
                 case Status.Offline:
                     return "Images/PlayerOffline.png";
                 case Status.Unknown:
-                    return "Images/BlueOrb.ico";
+                    return "Images/PlayerUnavailable.png";
                 case Status.Useless:
-                    return "Images/BlueOrb.ico";
+                    return "Images/PlayerUseless.png";
                 default:
                     throw new Exception("Set new status!");
             }
