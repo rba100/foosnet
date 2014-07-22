@@ -6,22 +6,24 @@ using System.Threading;
 using System.Threading.Tasks;
 using Emgu.CV;
 using Emgu.CV.Structure;
+using FoosNet.Vision.Test;
 
 namespace FoosNet.Vision
 {
     public class TableWatcher : ITableWatcher
     {
         private bool m_TableIsInUse;
+        private IImageStream m_ImageStream;
         private Timer m_CheckPitchStatusTimer;
 
         public TableWatcher()
         {
             m_TableIsInUse = false;
-            m_CheckPitchStatusTimer = new Timer(CheckPitchStatus, null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10));
-            //InitializeEmgu();
+            m_ImageStream = new ImageStreamFromStaticImages();
+            m_ImageStream.LatestImageAvailable += LatestImageAvailable;
         }
 
-        private void CheckPitchStatus(object state)
+        private void LatestImageAvailable(object state, Image<Bgr, byte> image)
         {
             m_TableIsInUse = true;
         }
