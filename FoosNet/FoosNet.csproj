@@ -54,6 +54,7 @@
     <Compile Include="AllPlayersJoined.xaml.cs">
       <DependentUpon>AllPlayersJoined.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AllPlayersJoinedViewModel.cs" />
     <Compile Include="Controls\Alerts\AlertWindow.xaml.cs">
       <DependentUpon>AlertWindow.xaml</DependentUpon>
     </Compile>
