@@ -11,7 +11,7 @@ namespace FoosNet
     {
         public AllPlayersJoined()
         {
-
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
             InitializeComponent();
         }
 
