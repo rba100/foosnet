@@ -8,16 +8,32 @@
     <DockPanel>
         <StackPanel DockPanel.Dock="Bottom"
                     Margin="0, 0, 0, 100">
-            <Button
-                Width="200"
-                Height="50"
-                Margin="0, 0, 0, 20">
+            <TextBlock x:Name="DescriptionText" 
+                       Height="80"
+                       HorizontalAlignment="Center"
+                       FontSize="24"
+                       Text="Description"/>
+            <Button x:Name="AcceptButton"
+                    Click="AcceptButton_OnClick"
+                    Width="200"
+                    Height="50"
+                    Margin="0, 0, 0, 20">
                 Accept
             </Button>
-            <Button
-                Width="200"
-                Height="50">
+            <Button x:Name="DeclineButton"
+                    Click="DeclineButton_OnClick"
+                    Width="200"
+                    Height="50"
+                    Margin="0, 0, 0, 20">
                 Decline
+            </Button>
+            <Button x:Name="CloseButton"
+                    Click="CloseButton_OnClick"
+                    Width="200"
+                    Height="50"
+                    Margin="0, 0, 0, 20"
+                    Visibility="Hidden">
+                Close
             </Button>
         </StackPanel>
         

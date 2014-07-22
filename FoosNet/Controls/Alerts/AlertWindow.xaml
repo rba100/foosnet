@@ -1,0 +1,48 @@
+﻿<Window x:Class="FoosNet.Controls.Alerts.AlertWindow"
+        x:Name="AlertWindowElement"
+        WindowStyle="None"
+        BorderThickness="0"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Bottom"
+                    Margin="0, 0, 0, 100">
+            <TextBlock x:Name="DescriptionText" 
+                       Height="80"
+                       HorizontalAlignment="Center"
+                       FontSize="24"
+                       Text="Description"/>
+            <Button x:Name="AcceptButton"
+                    Click="AcceptButton_OnClick"
+                    Width="200"
+                    Height="50"
+                    Margin="0, 0, 0, 20">
+                Accept
+            </Button>
+            <Button x:Name="DeclineButton"
+                    Click="DeclineButton_OnClick"
+                    Width="200"
+                    Height="50"
+                    Margin="0, 0, 0, 20">
+                Decline
+            </Button>
+            <Button x:Name="CloseButton"
+                    Click="CloseButton_OnClick"
+                    Width="200"
+                    Height="50"
+                    Margin="0, 0, 0, 20"
+                    Visibility="Hidden">
+                Close
+            </Button>
+        </StackPanel>
+        
+        <TextBlock x:Name="AlertText"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="90">
+            FOOS ALERT
+        </TextBlock>
+    </DockPanel>
+    </Window>
+

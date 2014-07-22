@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="FoosNet.Controls.ScrollingContentControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" TextOptions.TextFormattingMode="Display"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Template>
+        <ControlTemplate TargetType="UserControl">
+            <Grid>
+                <Canvas x:Name="MainCanvas" ClipToBounds="True" SizeChanged="MainCanvas_OnSizeChanged" Background="#01fffffe" MouseUp="MainCanvas_OnMouseUp"
+                MouseDown="MainCanvas_OnMouseDown" MouseMove="MainCanvas_OnMouseMove" MouseLeave="MainCanvas_OnMouseLeave">
+                    <ContentPresenter x:Name="HostedContent" IsHitTestVisible="False" />
+                </Canvas>
+            </Grid>
+        </ControlTemplate>
+    </UserControl.Template>
+</UserControl>

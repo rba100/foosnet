@@ -2,6 +2,12 @@
 // Author:   Murray Foxcroft - April 2009
 // Comments: code behind for the main WPF popup window 
 //-------------------------------------------------------------------------------------
+
+using System.Collections.ObjectModel;
+using System.Windows.Input;
+using System.Windows.Media;
+using FoosNet.Views;
+
 namespace FoosNet
 {
     using System;
@@ -15,6 +21,7 @@ namespace FoosNet
         private Controls.ExtendedNotifyIcon extendedNotifyIcon; // global class scope for the icon as it needs to exist foer the lifetime of the window
         private Storyboard gridFadeInStoryBoard;
         private Storyboard gridFadeOutStoryBoard;
+        private Point startPoint;
 
         /// <summary>
         /// Sets up the popup window and instantiates the notify icon
@@ -85,6 +92,8 @@ namespace FoosNet
         void extendedNotifyIcon_OnHideWindow()
         {
             if (PinButton.IsChecked == true) return; // Dont hide the window if its pinned open
+            if (PlayerListContextMenu.IsOpen) return;
+            if (Mouse.LeftButton.HasFlag(MouseButtonState.Pressed)) return; // Drag and drop hack
 
             gridFadeInStoryBoard.Stop(); // Stop the fade in storyboard if running.
 
@@ -108,8 +117,8 @@ namespace FoosNet
         private void uiWindowMainNotification_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             // Cancel the mouse leave event from firing, stop the fade out storyboard from running and enusre the grid is fully visible
-            extendedNotifyIcon.StopMouseLeaveEventFromFiring(); 
-            gridFadeOutStoryBoard.Stop(); 
+            extendedNotifyIcon.StopMouseLeaveEventFromFiring();
+            gridFadeOutStoryBoard.Stop();
             uiGridMain.Opacity = 1;
         }
 
@@ -122,7 +131,7 @@ namespace FoosNet
         {
             extendedNotifyIcon_OnHideWindow();
         }
- 
+
         /// <summary>
         /// Once the grid fades out, set the backing window to "not visible"
         /// </summary>
@@ -157,16 +166,6 @@ namespace FoosNet
         }
 
         /// <summary>
-        /// Switch the icon depending on which colour is selected on the radio button group
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void colourRadioButton_Click(object sender, RoutedEventArgs e)
-        {
-            SetNotifyIcon(((RadioButton)sender).Tag.ToString());
-        }
-
-        /// <summary>
         /// Shut down the popup window and dispose the notify icon (otherwise it hangs around in the task bar until you mouse over) 
         /// </summary>
         /// <param name="sender"></param>
@@ -175,6 +174,12 @@ namespace FoosNet
         {
             extendedNotifyIcon.Dispose();
             this.Close();
+        }
+
+        private void TitleLabel_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var aboutView = new About();
+            aboutView.ShowDialog();
         }
     }
 }

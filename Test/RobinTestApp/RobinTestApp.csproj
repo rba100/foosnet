@@ -56,10 +56,6 @@
       <Project>{9cd11b90-9cba-4435-b51c-baeae1e7fad9}</Project>
       <Name>FoosNet</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TestTcpServer\TestTcpServer.csproj">
-      <Project>{6b05e065-7369-467f-8bfa-e69451354f69}</Project>
-      <Name>TestTcpServer</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
