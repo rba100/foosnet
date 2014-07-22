@@ -233,6 +233,15 @@
   <ItemGroup>
     <Resource Include="Images\TableFreeNoGrass.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\foosWireframe.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\redgate-gradient.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\gate.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
