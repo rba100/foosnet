@@ -31,9 +31,9 @@ namespace FoosNet.Vision.Test
             get
             {
                 if (m_ImageNumber == 0)
-                    return new Image<Bgr, byte>(System.IO.Path.GetFullPath(".\\..\\FoosNet.Vision\\Images\\inuse1.png"));
+                    return new Image<Bgr, byte>(System.IO.Path.GetFullPath(".\\..\\..\\..\\FoosNet.Vision\\Images\\inuse1.png"));
                 else if (m_ImageNumber == 1)
-                    return new Image<Bgr, byte>(System.IO.Path.GetFullPath(".\\..\\FoosNet.Vision\\Images\\inuse2.png"));
+                    return new Image<Bgr, byte>(System.IO.Path.GetFullPath(".\\..\\..\\..\\FoosNet.Vision\\Images\\inuse2.png"));
                 else
                     throw new ApplicationException();
             }
