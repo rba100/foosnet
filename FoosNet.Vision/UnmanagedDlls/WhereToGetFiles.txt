@@ -1,0 +1,7 @@
+﻿There are about 20 C++ DLLs totalling 500mb that need to go in the UnmanagedDLLs directory. I didn't check them into Github because of their size.
+
+You need them to run this solution.
+
+If you want them, ask me, or download EmguCV from http://sourceforge.net/projects/emgucv/  
+
+Jason Crease 22 July 2014

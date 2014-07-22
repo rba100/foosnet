@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using FoosNet.Network;
 
 namespace FoosNet.Tests
@@ -12,14 +7,20 @@ namespace FoosNet.Tests
     {
         public ObservableCollection<FoosPlayer> GetPlayers()
         {
-            ObservableCollection<FoosPlayer> players = new ObservableCollection<FoosPlayer>()
+            var players = new ObservableCollection<FoosPlayer>()
             {
-                new FoosPlayer("Robin Anderson", Status.Available, 1),
+                new FoosPlayer("Robin Anderson", Status.Available, 1){GameState = GameState.Accepted},
+                new FoosPlayer("Aaron Law", Status.Available, 2),
+                new FoosPlayer("Mark Raymond", Status.Available, 2) {GameState = GameState.Pending},
+                new FoosPlayer("Oliver Lane", Status.Available, 2),
+                new FoosPlayer("Reka Burmeister", Status.Available, 2) {GameState = GameState.Declined},
                 new FoosPlayer("Aaron Law", Status.Available, 2),
                 new FoosPlayer("Ali Daw", Status.Available, 3),
-                new FoosPlayer("Martin Podlubny", Status.Available, 4),
-                new FoosPlayer("Kevin Boyle", Status.Busy, 5),
+                new FoosPlayer("Martin Podlubny", Status.Available, 4) {GameState = GameState.Declined},
+                new FoosPlayer("Kevin Boyle", Status.Busy, 5) {GameState = GameState.Declined},
                 new FoosPlayer("Chris Moore", Status.Offline, 6),
+                new FoosPlayer("Reka Burmeister", Status.Unknown, 6),
+                new FoosPlayer("Chris Spencer", Status.Useless, 6),
             };
             return players;
         }
