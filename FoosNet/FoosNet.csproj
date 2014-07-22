@@ -51,14 +51,32 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Controls\Alerts\AlertWindow.xaml.cs">
+      <DependentUpon>AlertWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Alerts\FoosAlerter.cs" />
+    <Compile Include="Controls\Alerts\FoosChallenge.cs" />
+    <Compile Include="Controls\Alerts\IFoosAlerter.cs" />
+    <Compile Include="Controls\Alerts\SecondaryAlertWindow.xaml.cs">
+      <DependentUpon>SecondaryAlertWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ScrollingContentControl.xaml.cs">
       <DependentUpon>ScrollingContentControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ConvertStatus.cs" />
+    <Compile Include="Services\FoosNetworkService.cs" />
     <Compile Include="Tests\ShowPlayersTest.cs" />
     <Compile Include="Views\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\Alerts\AlertWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Alerts\SecondaryAlertWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\ScrollingContentControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

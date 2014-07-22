@@ -4,8 +4,9 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media;
 using FoosNet.Network;
+using TestAlerts;
 
-namespace TestAlerts
+namespace FoosNet.Controls.Alerts
 {
     public class FoosAlerter : IFoosAlerter
     {
