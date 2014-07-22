@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace FoosNet.Network
 {
@@ -23,6 +25,6 @@ namespace FoosNet.Network
 
     public class PlayerDiscoveryMessage
     {
-        IEquatable<IFoosPlayer> Players { get; set; }
+        public IEnumerable<IFoosPlayer> Players { get; set; }
     }
 }
