@@ -11,7 +11,7 @@
         <foosNet:AllPlayersJoinedViewModel></foosNet:AllPlayersJoinedViewModel>
     </Window.DataContext>
     <Border CornerRadius="5">
-        <Grid Margin="10">
+        <Grid x:Name="TopGrid" Margin="10">
             <Border Width="Auto" Height="Auto"  Style="{StaticResource MainGridBorder}">
             </Border>
             
@@ -28,6 +28,7 @@
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="25"></ColumnDefinition>
+                        <ColumnDefinition Width="50"></ColumnDefinition>
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
@@ -35,7 +36,7 @@
                         <RowDefinition Height="110"></RowDefinition>
                     </Grid.RowDefinitions>
                     <Label FontWeight="Bold" Grid.Column="1">Players</Label>
-                    <Grid Grid.Row="1" Grid.Column="1">
+                    <Grid Grid.Row="1" Grid.Column="2">
                         <ListView Name="FoosPlayersList" BorderThickness="0" BorderBrush="Transparent" ItemsSource="{Binding FoosPlayers}" >
                             <ListView.ItemTemplate>
                                 <DataTemplate>
