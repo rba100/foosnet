@@ -29,7 +29,7 @@ namespace FoosNet
         private Controls.ExtendedNotifyIcon extendedNotifyIcon; // global class scope for the icon as it needs to exist foer the lifetime of the window
         private Storyboard gridFadeInStoryBoard;
         private Storyboard gridFadeOutStoryBoard;
-        private Point startPoint;
+        //private Point startPoint;
 
         /// <summary>
         /// Sets up the popup window and instantiates the notify icon
@@ -101,6 +101,7 @@ namespace FoosNet
         {
             if (PinButton.IsChecked == true) return; // Dont hide the window if its pinned open
             if (PlayerListContextMenu.IsOpen) return;
+            if (FoosTablePopup.IsOpen) return;
             if (Mouse.LeftButton.HasFlag(MouseButtonState.Pressed)) return; // Drag and drop hack
 
             gridFadeInStoryBoard.Stop(); // Stop the fade in storyboard if running.
@@ -217,7 +218,7 @@ namespace FoosNet
             image.EndInit();
             image.Freeze();
 
-            Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(delegate
+            await Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(delegate
             {
                 FoosTableImage.Source = image;
                 FoosTableImage.Visibility = Visibility.Visible;

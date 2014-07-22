@@ -4,10 +4,12 @@ using System.Configuration;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IdentityModel.Tokens;
+using System.Linq;
 using System.Net.Mime;
 using System.Runtime.CompilerServices;
 using System.Windows.Documents;
 using FoosNet.Annotations;
+using FoosNet.CommunicatorIntegration;
 using FoosNet.Network;
 using FoosNet.Tests;
 
@@ -48,8 +50,10 @@ namespace FoosNet
         public NotifyWindowViewModel()
         {
             var endpoint = ConfigurationManager.AppSettings["networkServiceEndpoint"];
-
+            var communicator = new CommunicatorIntegration.CommunicatorIntegration();
             m_PlayerProcessors = new List<IPlayerTransformation>();
+            m_PlayerProcessors.Add(new CommunicatorPlayerFilter(communicator));
+            communicator.StatusChanged += CommunicatorOnStatusChanged;
             m_NetworkService = new FoosNetworkService(); // TODO: FoosNetworkService(endpoint);
             m_NetworkService.PlayersDiscovered += NetworkServiceOnPlayersDiscovered;
             m_NetworkService.ChallengeReceived += NetworkServiceOnChallengeReceived;
@@ -57,6 +61,12 @@ namespace FoosNet
             var testObjects = new ShowPlayersTest();
             FoosPlayers = testObjects.GetPlayers();
 
+        }
+
+        private void CommunicatorOnStatusChanged(object sender, StatusChangedEventArgs statusChangedEventArgs)
+        {
+            var player = m_FoosPlayers.FirstOrDefault(p => p.Email == statusChangedEventArgs.Email);
+            if (player != null) player.Status = statusChangedEventArgs.CurrentStatus;
         }
 
         private void NetworkServiceOnChallengeResponse(ChallengeResponse challengeResponse)

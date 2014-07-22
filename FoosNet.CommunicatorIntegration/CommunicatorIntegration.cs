@@ -76,6 +76,12 @@ namespace FoosNet.CommunicatorIntegration
             return MistatusToFoosStatus(contact.Status);
         }
 
+        public string FriendlyName(string email)
+        {
+            IMessengerContact contact = GetContactByRedGateEmail(email);
+            return contact.FriendlyName;
+        }
+
         public IMessengerConversationWndAdvanced OpenConversationWithRedgateEmail(string email)
         {
             return m_Messenger.InstantMessage(GetContactByRedGateEmail(email));

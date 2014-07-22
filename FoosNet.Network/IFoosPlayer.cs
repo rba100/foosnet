@@ -1,10 +1,12 @@
-﻿namespace FoosNet.Network
+﻿using System.ComponentModel;
+
+namespace FoosNet.Network
 {
-    public interface IFoosPlayer
+    public interface IFoosPlayer : INotifyPropertyChanged
     {
         // Properties
-        string Email { get; }
-        string DisplayName { get; }
-        Status Status { get; }
+        string Email { get; set; }
+        string DisplayName { get; set; }
+        Status Status { get; set; }
     }
 }
