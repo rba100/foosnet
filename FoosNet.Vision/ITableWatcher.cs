@@ -10,9 +10,9 @@ namespace FoosNet.Vision
 {
     public interface ITableWatcher
     {
-        bool TableIsInUse { get; }
-        event EventHandler TableHasBecomeInUse;
-        event EventHandler TableHasBecomeFree;
+        TableUsage TableUsage { get; }
+        event EventHandler TableNowBusy;
+        event EventHandler TableNowFree;
         Image<Bgr, byte> DebugImage { get; }
     }
 }

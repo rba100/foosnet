@@ -43,6 +43,8 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -52,11 +54,12 @@
   <ItemGroup>
     <Compile Include="IImageStream.cs" />
     <Compile Include="ImageProcessing.cs" />
+    <Compile Include="ImageStreamFromFoosCam.cs" />
+    <Compile Include="TableUsage.cs" />
     <Compile Include="Test\ImageStreamFromStaticImages.cs" />
     <Compile Include="ITableWatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TableWatcher.cs" />
-    <Compile Include="Test\TableWatcherMoving.cs" />
     <Compile Include="Test\TableWatcherRandom.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
