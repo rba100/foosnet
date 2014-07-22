@@ -39,21 +39,7 @@
         <Grid x:Name="uiGridMain" Margin="10">
             <Border Width="Auto" Height="Auto"  Style="{StaticResource MainGridBorder}">
             </Border>
-            <Grid Margin="5,0,12,0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="0"/>
-                    <RowDefinition Height="18" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="36" />
-                    <ColumnDefinition Width="42" />
-                </Grid.ColumnDefinitions>
-                <foosNet:SlickToggleButton CornerRadius="0,0,0,4"   x:Name="PinButton" Style="{StaticResource SlickButton}" HighlightBackground="Blue" PressedBackground="DarkBlue" Grid.Column="1" Grid.Row="1" FontWeight="Bold" Click="PinButton_Click">
-                    <Image x:Name="PinImage" Source="pack://application:,,/Images/Un-Pinned.png" Stretch="None"/>
-                </foosNet:SlickToggleButton>
-                <foosNet:SlickToggleButton CornerRadius="0,0,4,0" x:Name="CloseButton" Style="{StaticResource SlickButton}" HighlightBackground="Red" Content="X" Click="CloseButton_Click" Grid.Row="1" FontWeight="Bold" Foreground="#FFFFFFFF" Grid.Column="2" />
-            </Grid>
+            
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="27"/>
@@ -62,9 +48,23 @@
                     <RowDefinition Height="44"/>
                 </Grid.RowDefinitions>
 
-                <!--<foosNet:HorizontalSeparator d:LayoutOverrides="HorizontalAlignment" Grid.Row="1"/>
-                <foosNet:HorizontalSeparator d:LayoutOverrides="HorizontalAlignment" Grid.Row="3"/>-->
                 <Label Margin="0" x:Name="TitleLabel" Foreground="White" Opacity="0.9" Content="Foos.Net"/>
+                <Grid Margin="5,0,12,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0"/>
+                        <RowDefinition Height="18" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="36" />
+                        <ColumnDefinition Width="42" />
+                    </Grid.ColumnDefinitions>
+                    <foosNet:SlickToggleButton CornerRadius="0,0,0,4"   x:Name="PinButton" Style="{StaticResource SlickButton}" HighlightBackground="Gray" PressedBackground="DarkBlue" Grid.Column="1" Grid.Row="1" FontWeight="Bold" Click="PinButton_Click">
+                        <Image x:Name="PinImage" Source="pack://application:,,/Images/Un-Pinned.png" Stretch="None"/>
+                    </foosNet:SlickToggleButton>
+                    <foosNet:SlickToggleButton CornerRadius="0,0,4,0" x:Name="CloseButton" Style="{StaticResource SlickButton}" HighlightBackground="Gray" Content="X" Click="CloseButton_Click" Grid.Row="1" FontWeight="Bold" Foreground="#FFFFFFFF" Grid.Column="2" />
+                </Grid>
+
                 <Grid Grid.Row="1" Margin="10,10,10,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
