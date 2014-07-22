@@ -72,7 +72,7 @@ namespace FoosNet.Controls
         private readonly TimeSpan m_MinInterval = TimeSpan.FromSeconds(1.0 / 60);
 
         private DispatcherTimer m_Timer;
-        private double m_ContentOffset = 20;
+        private double m_ContentOffset = 75;
 
         private bool m_IsDragging;
         private Point m_LastDragPoint;
