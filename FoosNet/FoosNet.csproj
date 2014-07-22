@@ -67,6 +67,7 @@
     <Compile Include="Controls\ScrollingContentControl.xaml.cs">
       <DependentUpon>ScrollingContentControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Spinner.cs" />
     <Compile Include="ConvertStatus.cs" />
     <Compile Include="Tests\ShowPlayersTest.cs" />
     <Compile Include="Views\About.xaml.cs">
@@ -251,6 +252,8 @@
     <Resource Include="Images\gate.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\accepted.png" />
+    <Resource Include="Images\declined.png" />
     <Resource Include="Images\PlayerBusy.png" />
     <Resource Include="Images\PlayerOffline.png" />
   </ItemGroup>

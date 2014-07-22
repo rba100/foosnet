@@ -52,9 +52,21 @@ namespace FoosNet
             m_PlayerProcessors = new List<IPlayerTransformation>();
             m_NetworkService = new FoosNetworkService(); // TODO: FoosNetworkService(endpoint);
             m_NetworkService.PlayersDiscovered += NetworkServiceOnPlayersDiscovered;
+            m_NetworkService.ChallengeReceived += NetworkServiceOnChallengeReceived;
+            m_NetworkService.ChallengeResponse += NetworkServiceOnChallengeResponse;
             var testObjects = new ShowPlayersTest();
             FoosPlayers = testObjects.GetPlayers();
 
+        }
+
+        private void NetworkServiceOnChallengeResponse(ChallengeResponse challengeResponse)
+        {
+            
+        }
+
+        private void NetworkServiceOnChallengeReceived(ChallengeRequest challengeRequest)
+        {
+            
         }
 
         private void NetworkServiceOnPlayersDiscovered(PlayerDiscoveryMessage playerDiscoveryMessage)

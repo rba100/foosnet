@@ -20,6 +20,8 @@
     Topmost="True" 
     BorderThickness="1" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:dragDrop="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
+    xmlns:controls="clr-namespace:FoosNet.Controls"
+    xmlns:drawing="clr-namespace:System.Drawing;assembly=System.Drawing"
     mc:Ignorable="d">
     <Window.DataContext>
         <foosNet:NotifyWindowViewModel></foosNet:NotifyWindowViewModel>
@@ -67,7 +69,7 @@
 
                 <Grid Grid.Row="1" Margin="10,10,10,0">
 
-                    <Image Margin="5,0" Grid.Column="1">
+                    <Image Margin="5,0" Grid.Column="1" Name="TableStatusImage" MouseDown="TableStatusImage_OnMouseDown">
                         <Image.Style>
                             <Style TargetType="{x:Type Image}">
                                 <Style.Triggers>
@@ -81,6 +83,15 @@
                             </Style>
                         </Image.Style>
                     </Image>
+                    <Popup Name="FoosTablePopup" Placement="Left" MouseDown="FoosTablePopup_OnMouseDown"
+                        PlacementTarget="{Binding ElementName=TableStatusImage}">
+                        <Border Background="WhiteSmoke" BorderBrush="DarkGray" BorderThickness="1" Width="160" Height="120">
+                            <Grid>
+                                <controls:Spinner Width="16" Height="16" ></controls:Spinner>
+                                <Image Name="FoosTableImage" Width="160" Height="120"></Image>
+                            </Grid>
+                        </Border>
+                    </Popup>
                 </Grid>
 
                 <Grid Grid.Row="2" Margin="10,0,10,10">
@@ -95,12 +106,58 @@
                                   Grid.Column="0" 
                                   dragDrop:DragDrop.IsDragSource="True"
                                   dragDrop:DragDrop.IsDropTarget="True">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                </Style>
+                            </ListView.ItemContainerStyle>
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Width="16" Height="16" Margin="5,0" Source="{Binding Status, Converter = {StaticResource StatusConverter}}"></Image>
-                                        <TextBlock Margin="5,1,5,1" Text="{Binding DisplayName}"></TextBlock>
-                                    </StackPanel>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="20"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Image      Grid.Column="0" Width="16" Height="16" Margin="5,0" Source="{Binding Status, Converter = {StaticResource StatusConverter}}"></Image>
+                                        <TextBlock  Grid.Column="1"  Margin="5,1,5,1" Text="{Binding DisplayName}"></TextBlock>
+                                        <controls:Spinner x:Name="LoadingSpinner" Grid.Column="2"  Width="16">
+                                            <controls:Spinner.Style>
+                                                <Style TargetType="controls:Spinner">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding GameState}" Value="Pending">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </controls:Spinner.Style>
+                                        </controls:Spinner>
+                                        <Image Grid.Column="2" Width="16" Height="16" Source="/Images/accepted.png">
+                                            <Image.Style>
+                                                <Style TargetType="Image">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding GameState}" Value="Accepted">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
+                                        </Image>
+                                        <Image Grid.Column="2" Width="16" Height="16" Source="/Images/declined.png">
+                                            <Image.Style>
+                                                <Style TargetType="Image">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding GameState}" Value="Declined">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
+                                        </Image>
+                                    </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                             <ListView.ContextMenu>
