@@ -67,6 +67,7 @@
     <Compile Include="Controls\ScrollingContentControl.xaml.cs">
       <DependentUpon>ScrollingContentControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SimpleCommand.cs" />
     <Compile Include="Controls\Spinner.cs" />
     <Compile Include="ConvertStatus.cs" />
     <Compile Include="Tests\ShowPlayersTest.cs" />

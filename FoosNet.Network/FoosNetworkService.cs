@@ -29,7 +29,6 @@ namespace FoosNet.Network
                 players.Add(new LivePlayer("mark.raymond@red-gate.com"));
                 players.Add(new LivePlayer("jason.crease@red-gate.com"));
                 players.Add(new LivePlayer("oliver.lane@red-gate.com"));
-                Thread.Sleep(2000);
                 PlayersDiscovered(new PlayerDiscoveryMessage() { Players = players });
             });
         }

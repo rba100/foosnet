@@ -101,8 +101,8 @@
                     </Grid.RowDefinitions>
                     <Label FontWeight="Bold">Contacts</Label>
                     <Grid Grid.Row="1">
-                        <ListView Name="FoosPlayersList" 
-                                  ItemsSource="{Binding FoosPlayers}" 
+                        <ListView Name="FoosPlayersList"
+                                  ItemsSource="{Binding FoosPlayers}"
                                   Grid.Column="0" 
                                   dragDrop:DragDrop.IsDragSource="True"
                                   dragDrop:DragDrop.IsDropTarget="True">
@@ -162,11 +162,15 @@
                             </ListView.ItemTemplate>
                             <ListView.ContextMenu>
                                 <ContextMenu Name="PlayerListContextMenu">
-                                    <MenuItem Header="Remove">
-                                        <MenuItem.Icon>
-                                            <Image Width="16" Height="16" Source="/Foosnet;component/Images/delete.png"></Image>
-                                        </MenuItem.Icon>
+                                    <MenuItem Header="Send invite"
+                                              Command="{Binding ChallengeSelectedPlayer}">
                                     </MenuItem>
+                                    <ContextMenu.ItemContainerStyle>
+                                        <Style TargetType="{x:Type MenuItem}">
+                                            <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}},
+                                    Path=PlacementTarget.SelectedItems}" />
+                                        </Style>
+                                    </ContextMenu.ItemContainerStyle>
                                 </ContextMenu>
                             </ListView.ContextMenu>
                         </ListView>

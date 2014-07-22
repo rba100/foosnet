@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Collections.ObjectModel;
@@ -9,10 +10,13 @@ using System.Net.Mime;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Threading;
 using FoosNet.Annotations;
 using FoosNet.CommunicatorIntegration;
+using FoosNet.Controls;
 using FoosNet.Network;
 using FoosNet.Tests;
 
@@ -32,9 +36,33 @@ namespace FoosNet
             set
             {
                 m_FoosPlayers = value;
-                m_IsTableFree = true;
                 OnPropertyChanged();
             }
+        }
+
+        private ICommand m_ChallengeSelectedPlayer;
+
+        public ICommand ChallengeSelectedPlayer
+        {
+            get
+            {
+                return m_ChallengeSelectedPlayer ?? (m_ChallengeSelectedPlayer = new SimpleCommand(ChallengePlayer, CanChallengePlayer));
+            }
+        }
+
+        private bool CanChallengePlayer(object arg)
+        {
+            var list = (arg as IList);
+            if (list == null) return false;
+            return list.Count > 0 && list.Count < 4;
+        }
+
+        private void ChallengePlayer(object obj)
+        {
+            var list = (obj as IList);
+            if (list == null) return;
+            var players = list.Cast<FoosPlayerListItem>();
+            MessageBox.Show(String.Join(", ", players.Select(p=>p.DisplayName)));
         }
 
         public bool IsTableFree
