@@ -66,11 +66,7 @@
                 </Grid>
 
                 <Grid Grid.Row="1" Margin="10,10,10,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Label Content="Table status: " VerticalAlignment="Center" FontWeight="Bold"/>
+
                     <Image Margin="5,0" Grid.Column="1">
                         <Image.Style>
                             <Style TargetType="{x:Type Image}">
