@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IdentityModel.Tokens;
 using System.Net.Mime;
 using System.Runtime.CompilerServices;
 using System.Windows.Documents;
