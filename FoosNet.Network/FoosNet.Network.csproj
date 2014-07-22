@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FoosNetworkService.cs" />
     <Compile Include="IFoosballNetwork.cs" />
     <Compile Include="PeerDiscovery\UdpClientExtensions.cs" />
     <Compile Include="PeerDiscovery\UdpPeerFinder.cs" />

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FoosNet.Network;
-
-namespace FoosNet.Services
+﻿namespace FoosNet.Network
 {
     public class FoosNetworkService
     {

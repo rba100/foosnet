@@ -64,7 +64,6 @@
       <DependentUpon>ScrollingContentControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ConvertStatus.cs" />
-    <Compile Include="Services\FoosNetworkService.cs" />
     <Compile Include="Tests\ShowPlayersTest.cs" />
     <Compile Include="Views\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
