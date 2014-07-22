@@ -13,7 +13,7 @@ namespace FoosNet
             switch (status)
             {
                 case Status.Available:
-                    return "Images/GreenOrb.ico";
+                    return "Images/PlayerAvailable.png";
                 case Status.Busy:
                     return "Images/AmberOrb.ico";
                 case Status.Offline:
