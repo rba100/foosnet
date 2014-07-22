@@ -19,5 +19,10 @@ namespace FoosNet
         {
             this.DataContext = new AllPlayersJoinedViewModel{FoosPlayers = foosPlayers};
         }
+
+        private void AckButtonClicked(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

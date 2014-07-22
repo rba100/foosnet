@@ -194,7 +194,7 @@ namespace FoosNet
                 new FoosPlayer("ali.d@rg.com", Status.Available, 1)
             });
 
-            playersJoined.Show();
+            playersJoined.ShowDialog();
         }
     }
 }
