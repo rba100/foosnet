@@ -85,7 +85,7 @@ namespace FoosNet
             m_PlayerProcessors = new List<IPlayerTransformation>();
             m_PlayerProcessors.Add(new CommunicatorPlayerFilter(communicator));
             communicator.StatusChanged += CommunicatorOnStatusChanged;
-            m_NetworkService = new FoosNetworkService(); // TODO: FoosNetworkService(endpoint);
+            m_NetworkService = new FoosNetworkService(endpoint, communicator.GetLocalUserEmail());
             m_NetworkService.PlayersDiscovered += NetworkServiceOnPlayersDiscovered;
             m_NetworkService.ChallengeReceived += NetworkServiceOnChallengeReceived;
             m_NetworkService.ChallengeResponse += NetworkServiceOnChallengeResponse;
