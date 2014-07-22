@@ -26,6 +26,9 @@ namespace FoosNet.Web.Handlers
                 case "respond":
                     Respond(m.challenger, m.response);
                     break;
+                case "gametime":
+                    Gametime(m.players);
+                    break;
                 case "players":
                     Players();
                     break;
@@ -56,6 +59,17 @@ namespace FoosNet.Web.Handlers
         private void Respond(string challengedBy, string response)
         {
             SendTo(challengedBy, new { type = "response", player = m_Email, response = response });
+        }
+
+        private void Gametime(string[] otherPlayers)
+        {
+            var allPlayers = new string[otherPlayers.Length + 1];
+            allPlayers[0] = m_Email;
+            otherPlayers.CopyTo(allPlayers, 1);
+            foreach (var player in otherPlayers)
+            {
+                SendTo(player, new { type = "gametime", players = allPlayers });
+            }
         }
 
         private void Players()
