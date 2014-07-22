@@ -63,6 +63,7 @@
     <Compile Include="Controls\ScrollingContentControl.xaml.cs">
       <DependentUpon>ScrollingContentControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Spinner.cs" />
     <Compile Include="ConvertStatus.cs" />
     <Compile Include="Tests\ShowPlayersTest.cs" />
     <Compile Include="Views\About.xaml.cs">
@@ -241,6 +242,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\gate.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\accepted.png" />
+    <Resource Include="Images\declined.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
