@@ -16,10 +16,14 @@ namespace TestAlerts
         private readonly IFoosPlayer m_ChallengingPlayer;
 
         private readonly Timer m_StrobeTimer;
-
+        
         public delegate void ChallengeResponseEventHandler(ChallengeResponse response);
 
-        public event ChallengeResponseEventHandler ChallengeResponseReceived;
+        public event ChallengeResponseEventHandler ChallengeResponseReceived = delegate {};
+
+        public delegate void AlertClosedEventHandler();
+
+        public event AlertClosedEventHandler AlertClosed = delegate {};
 
         /// <param name="alertColors">
         /// List of (backgroundColor, foregroundColor) tuples to cycle through
@@ -73,6 +77,8 @@ namespace TestAlerts
 
             AcceptButton.IsEnabled = false;
             DeclineButton.IsEnabled = false;
+
+            CloseButton.Visibility = Visibility.Visible;
         }
 
         private void AcceptButton_OnClick(object sender, RoutedEventArgs e)
@@ -83,6 +89,11 @@ namespace TestAlerts
         private void DeclineButton_OnClick(object sender, RoutedEventArgs e)
         {
             ChallengeResponseReceived(new ChallengeResponse {Accepted = false});
+        }
+
+        private void CloseButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            AlertClosed();
         }
     }
 }

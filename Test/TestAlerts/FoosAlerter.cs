@@ -15,7 +15,11 @@ namespace TestAlerts
 
         public delegate void ChallengeResponseEventHandler(ChallengeResponse response);
 
-        public event ChallengeResponseEventHandler ChallengeResponseReceived;
+        public event ChallengeResponseEventHandler ChallengeResponseReceived = delegate {};
+
+        public delegate void AlertClosedEventHandler();
+
+        public event AlertClosedEventHandler AlertClosed = delegate {};
 
         public void AlertChallenge(IFoosPlayer challengingPlayer)
         {
@@ -42,6 +46,7 @@ namespace TestAlerts
             m_MainAlertWindow.WindowState = WindowState.Maximized;
 
             m_MainAlertWindow.ChallengeResponseReceived += ChallengeResponseHandler;
+            m_MainAlertWindow.AlertClosed += AlertClosedHandler;
 
             m_SecondaryAlertWindows = new List<SecondaryAlertWindow>();
 
@@ -62,6 +67,7 @@ namespace TestAlerts
                 }
             }
         }
+
 
         public void CancelChallenge()
         {
@@ -85,6 +91,12 @@ namespace TestAlerts
         {
             CloseAlerts();
             ChallengeResponseReceived(response);
+        }
+
+        private void AlertClosedHandler()
+        {
+            CloseAlerts();
+            AlertClosed();
         }
 
         private void SpeakerBeep()

@@ -22,12 +22,21 @@ namespace TestAlerts
 
             alerter.ChallengeResponseReceived += OnChallengeResponseReceived;
 
-            TestWindow.Hide();
+            alerter.AlertClosed += onAlertClosed;
+
+            alerter.CancelChallenge();
+
         }
 
         private void OnChallengeResponseReceived(ChallengeResponse response)
         {
             MessageBox.Show("Response: "+ response.Accepted);
+            TestWindow.Show();
+        }
+
+        private void onAlertClosed()
+        {
+            MessageBox.Show("Alert was closed");
         }
     }
 }
