@@ -28,8 +28,8 @@ namespace FoosNet
         private ObservableCollection<FoosPlayerListItem> m_FoosPlayers;
         private bool m_IsTableFree;
         public event PropertyChangedEventHandler PropertyChanged;
-        private readonly FoosNetworkService m_NetworkService;
-        private List<IPlayerTransformation> m_PlayerProcessors;
+        private readonly IFoosNetworkService m_NetworkService;
+        private readonly List<IPlayerTransformation> m_PlayerProcessors;
 
         public ObservableCollection<FoosPlayerListItem> FoosPlayers
         {
@@ -42,7 +42,6 @@ namespace FoosNet
         }
 
         private ICommand m_ChallengeSelectedPlayer;
-
         public ICommand ChallengeSelectedPlayer
         {
             get
@@ -97,7 +96,8 @@ namespace FoosNet
                 m_PlayerProcessors.Add(new DefaultNameTransformation());
                 m_PlayerProcessors.Add(new StatusToUnknownTransformation());
             }
-            m_NetworkService = new FoosNetworkService(endpoint, localEmail);
+            m_NetworkService = new TestFoosNetworkService();
+            //m_NetworkService = new FoosNetworkService(endpoint, localEmail);
             m_NetworkService.PlayersDiscovered += NetworkServiceOnPlayersDiscovered;
             m_NetworkService.ChallengeReceived += NetworkServiceOnChallengeReceived;
             m_NetworkService.ChallengeResponse += NetworkServiceOnChallengeResponse;

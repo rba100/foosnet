@@ -56,7 +56,7 @@ namespace FoosNet.Network
                     if (PlayersDiscovered != null) PlayersDiscovered(new PlayerDiscoveryMessage(new LivePlayer(m.player as string)));
                     break;
                 case "player":
-                    if (PlayersDiscovered != null) PlayersDiscovered(new PlayerDiscoveryMessage(((string[]) m.players).Select(p => new LivePlayer(p))));
+                    if (PlayersDiscovered != null) PlayersDiscovered(new PlayerDiscoveryMessage(((string[])m.players).Select(p => new LivePlayer(p))));
                     break;
                 case "gametime":
                     break;
@@ -93,7 +93,7 @@ namespace FoosNet.Network
 
         public PlayerDiscoveryMessage(IFoosPlayer player)
         {
-            m_Players = new [] { player };
+            m_Players = new[] { player };
         }
 
         public PlayerDiscoveryMessage(IEnumerable<IFoosPlayer> players)
