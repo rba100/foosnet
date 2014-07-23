@@ -12,39 +12,69 @@ namespace FoosNet.Controls.Alerts
     public partial class AlertBubble : Window
     {
         private readonly ChallengeRequest m_Challenge;
+        private int? m_AutoDeclineTimeLeft;
         private readonly Timer m_AutoDeclineTimer;
         private Timer m_ClosePopupTimer;
 
         public delegate void ChallengeResponseEventHandler(ChallengeResponse response);
         public event ChallengeResponseEventHandler ChallengeResponseReceived = delegate {};
 
-        public AlertBubble(ChallengeRequest challenge, bool autoDecline)
+
+        /// <param name="autoDeclineTimeLeft">
+        /// Time, in seconds, before the challenge is auto declined.
+        /// If null, message will not be auto declined.
+        /// </param>
+        public AlertBubble(ChallengeRequest challenge, int? autoDeclineTimeLeft)
         {
             InitializeComponent();
 
             if (challenge == null) throw new ArgumentNullException("challenge");
 
             m_Challenge = challenge;
+            m_AutoDeclineTimeLeft = autoDeclineTimeLeft;
 
+            SetDescriptionText(challenge, autoDeclineTimeLeft);
+
+            if (autoDeclineTimeLeft != null)
+            {
+                m_AutoDeclineTimer = new Timer {Interval = 1000};
+                m_AutoDeclineTimer.Elapsed += (s, e) =>
+                {
+                    m_AutoDeclineTimeLeft--;
+
+                    Dispatcher.Invoke
+                        (() => SetDescriptionText(m_Challenge, 
+                                                  m_AutoDeclineTimeLeft));
+
+                    if (m_AutoDeclineTimeLeft == 0)
+                    {
+                        m_AutoDeclineTimer.Stop();
+                        Dispatcher.Invoke(() =>
+                        {
+                            Decline();
+                            Close();
+                        });
+                    }
+                };
+                m_AutoDeclineTimer.Start();
+            }
+        }
+
+
+        /// <param name="autoDeclineTimeLeft">
+        /// If null, auto decline message will not be shown
+        /// </param>
+        private void SetDescriptionText(ChallengeRequest challenge,
+                                        int? autoDeclineTimeLeft)
+        {
             DescriptionText.Text = challenge.Challenger.DisplayName + 
                                    " challenged you to a match!";
 
-            if (autoDecline)
+            if (autoDeclineTimeLeft != null)
             {
                 DescriptionText.Text += "\r\nThis request will be auto-" +
-                                        "declined after 20 seconds.";
-                
-                m_AutoDeclineTimer = new Timer {Interval = 20000};
-                m_AutoDeclineTimer.Elapsed += (s, e) =>
-                {
-                    m_AutoDeclineTimer.Stop();
-                    Dispatcher.Invoke(() =>
-                    {
-                        Decline();
-                        Close();
-                    });
-                };
-                m_AutoDeclineTimer.Start();
+                                        "declined after " + autoDeclineTimeLeft
+                                        + " seconds.";
             }
         }
 
