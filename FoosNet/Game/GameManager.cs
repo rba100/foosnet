@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using FoosNet.Annotations;
 using FoosNet.Controls.Alerts;
 using FoosNet.Network;
@@ -98,8 +99,13 @@ namespace FoosNet.Game
             else
             {
                 m_IsJoiningRemoteGame = true;
-                var alert = m_Alerter.GetAlerter();
-                alert.ShowChallengeAlert(challengeRequest);
+
+                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    var alert = m_Alerter.GetAlerter();
+                    alert.ShowChallengeAlert(challengeRequest);
+                }));
+
                 Task.Factory.StartNew(() =>
                 {
                     Thread.Sleep(1500);
