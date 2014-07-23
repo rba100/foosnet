@@ -29,7 +29,7 @@ namespace FoosNet.Controls.Alerts
         
         // Needed so we can close the other windows from the layer above
         public delegate void AlertClosedEventHandler();
-        public event AlertClosedEventHandler AlertClosed = delegate {};
+        public event AlertWindow.AlertClosedEventHandler AlertClosed = delegate {};
 
         /// <param name="alertColorSequence">
         /// List of (backgroundColor, foregroundColor) tuples to cycle through

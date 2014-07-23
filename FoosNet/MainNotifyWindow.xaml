@@ -183,6 +183,18 @@
                                                 </Style>
                                             </Image.Style>
                                         </Image>
+                                        <Image Grid.Column="2" Width="16" Height="16" Source="/Images/unknown.png">
+                                            <Image.Style>
+                                                <Style TargetType="Image">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding GameState}" Value="Timeout">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
+                                        </Image>
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>

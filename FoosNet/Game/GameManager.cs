@@ -4,11 +4,11 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using FoosNet.Annotations;
+using FoosNet.Controls.Alerts;
 using FoosNet.Network;
 
 namespace FoosNet.Game
@@ -18,10 +18,11 @@ namespace FoosNet.Game
         private const int c_PlayersPerGame = 4;
 
         private readonly IFoosNetworkService m_NetworkService;
+        private readonly IFoosAlerterProvider m_Alerter;
         private readonly ObservableCollection<FoosPlayerListItem> m_PlayerList;
 
         private readonly List<FoosPlayerListItem> m_PlayerLineUp = new List<FoosPlayerListItem>();
-        private readonly string m_SelfEmail;
+        private readonly FoosPlayerListItem m_Self;
         private bool m_IsOrganisingGame;
         private bool m_IsJoiningRemoteGame;
         private CancellationTokenSource m_Cts = new CancellationTokenSource();
@@ -39,11 +40,12 @@ namespace FoosNet.Game
 
         private Thread m_Worker = null;
 
-        public GameManager(IFoosNetworkService networkService, ObservableCollection<FoosPlayerListItem> playerList, string selfEmail)
+        public GameManager(IFoosNetworkService networkService, IFoosAlerterProvider alerter, ObservableCollection<FoosPlayerListItem> playerList, FoosPlayerListItem self)
         {
             m_NetworkService = networkService;
+            m_Alerter = alerter;
             m_PlayerList = playerList;
-            m_SelfEmail = selfEmail;
+            m_Self = self;
 
             m_NetworkService.ChallengeReceived += NetworkServiceOnChallengeReceived;
             m_NetworkService.ChallengeResponse += NetworkServiceOnChallengeResponse;
@@ -74,15 +76,16 @@ namespace FoosNet.Game
             }
         }
 
-        private void BeginGame()
+        public void BeginGame()
         {
-            //m_NetworkService.
+            if(!IsGameReadyToStart) throw new InvalidOperationException("Need four accepted players to start a game.");
+            m_NetworkService.StartGame(m_PlayerLineUp.ToArray());
             Reset();
         }
 
         private void AddSelf()
         {
-            var self = m_PlayerList.FirstOrDefault(p => p.Email == m_SelfEmail);
+            var self = m_PlayerList.FirstOrDefault(p => p.Email == m_Self.Email);
             if (self != null)
             {
                 self.GameState = GameState.Accepted;
@@ -90,22 +93,40 @@ namespace FoosNet.Game
             }
             else
             {
-                m_PlayerLineUp.Add(new FoosPlayerListItem(m_SelfEmail, Status.Available, 1) { GameState = GameState.Accepted });
+                m_PlayerLineUp.Add(new FoosPlayerListItem(m_Self.Email, Status.Available, 1) { GameState = GameState.Accepted });
             }
         }
 
         private void NetworkServiceOnChallengeReceived(ChallengeRequest challengeRequest)
         {
-            if (m_IsOrganisingGame)
+            if (m_IsOrganisingGame || m_IsJoiningRemoteGame)
             {
                 m_NetworkService.Respond(new ChallengeResponse(challengeRequest.Challenger, false));
             }
+            else
+            {
+                //m_Alerter.GetAlerter().ShowChallengeAlert(challengeRequest, accepted =>
+                //{
+                //    try
+                //    {
+                //        if (IsJoiningRemoteGame || m_IsOrganisingGame) return;
+                //        m_NetworkService.Respond(new ChallengeResponse(m_Self, accepted));
+                //        if (accepted)
+                //        {
+                //            IsJoiningRemoteGame = true;
+                //            OnPropertyChanged("CanCreateGameAuto");
+                //            OnPropertyChanged("CanAddPlayer");
+                //            StatusMessage = c_Accepted;
+                //        }
+                //    }
+                //    catch { }
+                //});
+            }
         }
 
-        public bool IsGameReadyToStart { get { return m_PlayerLineUp.Count(p => p.GameState== GameState.Accepted) == c_PlayersPerGame; } }
+        public bool IsGameReadyToStart { get { return m_PlayerLineUp.Count(p => p.GameState == GameState.Accepted) == c_PlayersPerGame; } }
         public bool GameCreationInProgress { get { return m_IsOrganisingGame; } set { m_IsOrganisingGame = value; OnPropertyChanged(); } }
         public bool IsJoiningRemoteGame { get { return m_IsJoiningRemoteGame; } set { m_IsJoiningRemoteGame = value; OnPropertyChanged(); } }
-
         public bool CanAddPlayer { get { return !IsGameReadyToStart; } }
         public bool CanCreateGameAuto { get { return !m_IsOrganisingGame; } }
 
@@ -131,6 +152,7 @@ namespace FoosNet.Game
             if (m_PlayerLineUp.Count >= c_PlayersPerGame) throw new InvalidOperationException("Cannot add another player, max players reached");
             m_PlayerLineUp.Add(player);
             player.GameState = GameState.Pending;
+            Task.Factory.StartNew(() => PlayerTimeOutWatcher(player, CancellationToken));
         }
 
         public void Reset()
@@ -138,7 +160,7 @@ namespace FoosNet.Game
             StatusMessage = c_Idle;
             foreach (var player in m_PlayerLineUp)
             {
-                if (player.Email != m_SelfEmail && player.GameState == GameState.Accepted)
+                if (!player.Email.Equals(m_Self.Email, StringComparison.OrdinalIgnoreCase) && player.GameState == GameState.Accepted)
                 {
                     //TODO: m_NetworkService.UnChallenge(player);
                 }
@@ -169,6 +191,7 @@ namespace FoosNet.Game
 
         private void CreateGameAutoWorker(object prefferedPlayers)
         {
+            var token = CancellationToken;
             try
             {
                 var orderedPlayerList = new List<FoosPlayerListItem>(
@@ -177,14 +200,16 @@ namespace FoosNet.Game
 
                 foreach (var player in orderedPlayerList)
                 {
-                    Task.Delay(TimeSpan.FromSeconds(1), CancellationToken);
+                    if(!PlayableStatus(player)) continue;
 
-                    if (CancellationToken.IsCancellationRequested) return;
-
-                    if (player.Status == Status.Available)
+                    while (!IsGameReadyToStart && m_PlayerLineUp.Count == c_PlayersPerGame)
                     {
-                        InvitePlayer(player);
+                        Task.Delay(TimeSpan.FromSeconds(1), token).Wait(token);
+                        if (token.IsCancellationRequested) return;
                     }
+
+                    if (IsGameReadyToStart) break;
+                    InvitePlayer(player);
                 }
 
                 if (!IsGameReadyToStart) StatusMessage = c_FindingFailed;
@@ -194,6 +219,23 @@ namespace FoosNet.Game
                 if (OnError != null) OnError(this, new ErrorEventArgs(ex));
                 Reset();
             }
+        }
+
+        private void PlayerTimeOutWatcher(object playerObj, CancellationToken token)
+        {
+            var player = playerObj as FoosPlayerListItem;
+            Task.Delay(TimeSpan.FromSeconds(20)).Wait();
+            if (token.IsCancellationRequested) return;
+            if (player.GameState == GameState.Pending)
+            {
+                player.GameState = GameState.Timeout;
+                m_PlayerLineUp.RemoveAll(p=>p.Email.Equals(player.Email));
+            }
+        }
+
+        private bool PlayableStatus(IFoosPlayer player)
+        {
+            return player.Status == Status.Available || player.Status == Status.Unknown;
         }
 
         public event ErrorEventHandler OnError;
