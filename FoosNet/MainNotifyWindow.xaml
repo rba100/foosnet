@@ -66,10 +66,28 @@
                         <ColumnDefinition Width="36" />
                         <ColumnDefinition Width="42" />
                     </Grid.ColumnDefinitions>
-                    <foosNet:SlickToggleButton x:Name="PinButton" Style="{StaticResource SlickButton}" HighlightBackground="#FF2299EE" PressedBackground="#FF1188DD" Grid.Column="1" Grid.Row="1" FontWeight="Bold" Click="PinButton_Click">
+                    <foosNet:SlickToggleButton x:Name="PinButton" 
+                                               Style="{StaticResource SlickButton}" 
+                                               HighlightBackground="#FF2299EE" 
+                                               PressedBackground="#FF1188DD"
+                                               BorderThickness="1,0,0,1"
+                                               Grid.Column="1" 
+                                               Grid.Row="1" 
+                                               FontWeight="Bold" 
+                                               Click="PinButton_Click">
                         <Image x:Name="PinImage" Source="pack://application:,,/Images/Un-Pinned.png" Stretch="None"/>
                     </foosNet:SlickToggleButton>
-                    <foosNet:SlickToggleButton x:Name="CloseButton" Style="{StaticResource SlickButton}" HighlightBackground="#FF2299EE" PressedBackground="#FF1188DD" Content="X" Click="CloseButton_Click" Grid.Row="1" FontWeight="Bold" Foreground="#FFFFFFFF" Grid.Column="2" />
+                    <foosNet:SlickToggleButton x:Name="CloseButton" 
+                                               Style="{StaticResource SlickButton}" 
+                                               HighlightBackground="#FF2299EE" 
+                                               BorderThickness="1,0,1,1"
+                                               PressedBackground="#FF1188DD" 
+                                               Content="X" 
+                                               Click="CloseButton_Click" 
+                                               Grid.Row="1" 
+                                               FontWeight="Bold" 
+                                               Foreground="#FFFFFFFF" 
+                                               Grid.Column="2" />
                 </Grid>
 
                 <Grid Grid.Row="1" Margin="10,5,10,10">
