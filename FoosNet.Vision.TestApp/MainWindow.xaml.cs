@@ -27,7 +27,8 @@ namespace FoosNet.Vision.TestApp
 
         private void UpdateImage(object state)
         {
-            Dispatcher.Invoke(() => ImageCam.Source = Utils.ToBitmapSource(m_TableWatcher.DebugImage));
+            if (m_TableWatcher.DebugImage != null)
+                Dispatcher.Invoke(() => ImageCam.Source = Utils.ToBitmapSource(m_TableWatcher.DebugImage));
         }
 
         public MainWindow()
