@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Web.Helpers;
+using FoosNet.Utils;
 using WebSocket4Net;
 
 namespace FoosNet.Network
@@ -18,7 +19,7 @@ namespace FoosNet.Network
         void StartGame(IEnumerable<IFoosPlayer> players);
     }
 
-    public class FoosNetworkService : IFoosNetworkService
+    public class FoosNetworkService : Disposable, IFoosNetworkService
     {
         private readonly string m_Email;
         private readonly WebSocket m_WebSocket;
@@ -92,7 +93,7 @@ namespace FoosNet.Network
             m_WebSocket.Send(json);
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
             try
             {

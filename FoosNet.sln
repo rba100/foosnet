@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoosNet.Vision.UnmanagedDll
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkTestApp", "MarkTestApp\MarkTestApp.csproj", "{BA92F689-BE33-434A-B77E-6BC522770859}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoosNet.Utils", "FoosNet.Utils\FoosNet.Utils.csproj", "{6F092BB2-8099-431B-8136-01596FE050E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +86,10 @@ Global
 		{BA92F689-BE33-434A-B77E-6BC522770859}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA92F689-BE33-434A-B77E-6BC522770859}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA92F689-BE33-434A-B77E-6BC522770859}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F092BB2-8099-431B-8136-01596FE050E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F092BB2-8099-431B-8136-01596FE050E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F092BB2-8099-431B-8136-01596FE050E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F092BB2-8099-431B-8136-01596FE050E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
