@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Timers;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using FoosNet.Network;
 
 namespace FoosNet.Controls.Alerts
@@ -101,11 +103,13 @@ namespace FoosNet.Controls.Alerts
 
         private void Decline()
         {
+            AlertBubbleBorder.Background = Brushes.Gray;
             ChallengeResponseReceived(new ChallengeResponse(m_Challenge.Challenger, false));
         }
 
         private void Accept()
         {
+            AlertBubbleBorder.Background = Brushes.Green;
             ChallengeResponseReceived(new ChallengeResponse(m_Challenge.Challenger, true));
         }
 
@@ -119,6 +123,15 @@ namespace FoosNet.Controls.Alerts
         {
             Decline();
             Close();
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            Closing -= Window_Closing;
+            e.Cancel = true;
+            var anim = new DoubleAnimation(0, TimeSpan.FromSeconds(1));
+            anim.Completed += (s, _) => Close();
+            BeginAnimation(OpacityProperty, anim);
         }
     }
 }
