@@ -20,8 +20,8 @@ namespace FoosNet.Vision
         /// <returns>Magnitude of difference. Roughly it's the probability</returns>
         internal static double TableBusyProbability(Image<Bgr, byte> img1, Image<Bgr, byte> img2, Image<Bgr, byte> debugImage)
         {
-            int threshold = 50;
-            int contourThreshold = 100;
+            int threshold = 40;
+            int contourThreshold = 70;
 
             Image<Bgr, byte> diffPic = img1.AbsDiff(img2);
 
@@ -67,7 +67,7 @@ namespace FoosNet.Vision
                     new PointF(actionCentreLeft, actionCentreTop), 8),
                     new Bgr(0, 100, 200), 3);
 
-                if (actionCentreLeft < 300 && actionCentreTop < 300) return 0.9;
+                if (actionCentreLeft < 350 && actionCentreTop < 300) return 0.9;
             }
 
             return 0.0;
