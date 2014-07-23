@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
+	<Product Id="*" Name="FoosNet Installer" Language="1033" Version="1.0.0.0" Manufacturer="Down Tools Week 2014" UpgradeCode="1e6db7a7-6f5a-460a-9f07-53cd2e97431a">
+    
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perUser" InstallPrivileges="elevated" />
+    <Icon Id="icon" SourceFile="$(var.SolutionDir)\FoosNet\Images\Icons\Icon-Small@2x.ico" />
+    <Property Id="ARPPRODUCTICON" Value="icon" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes" />
+
+		<Feature Id="ProductFeature" Title="FoosNet" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+      <ComponentRef Id="ApplicationShortcut" />
+      <ComponentRef Id="FoosNetAutostart" />
+		</Feature>
+  
+    <PropertyRef Id="NETFRAMEWORK20"/>
+    <Condition Message="This application requires .NET Framework 2.0. Please install the .NET Framework then run this installer again.">
+      <![CDATA[Installed OR NETFRAMEWORK20]]>
+    </Condition>
+    
+    
+    <WixVariable Id="WixUIDialogBmp" Value="$(var.SolutionDir)\FoosNet\Images\InstallerImages\dialog.bmp" />
+    <WixVariable Id="WixUIBannerBmp" Value="$(var.SolutionDir)\FoosNet\Images\InstallerImages\banner.bmp" />
+    
+    <UI>
+      <UIRef Id="WixUI_InstallDir" />
+      
+      <!-- Skip license dialog -->
+      <Publish Dialog="WelcomeDlg"
+               Control="Next"
+               Event="NewDialog"
+               Value="InstallDirDlg"
+               Order="2">1</Publish>
+      <Publish Dialog="InstallDirDlg"
+               Control="Back"
+               Event="NewDialog"
+               Value="WelcomeDlg"
+               Order="2">1</Publish>
+      <Publish  Dialog="ExitDialog"
+                Control="Finish" 
+                Event="DoAction" 
+                Value="LaunchApplication"
+                >WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
+    </UI>
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch FoosNet" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1"/>
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    
+    <Property Id="WixShellExecTarget" Value="[#FoosNet.exe]" />
+    <CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
+  
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="FoosNet" />
+			</Directory>
+    <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="FoosNet"/>
+    </Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <Component Guid="{E53A2BCE-AF98-4C70-B750-87027AF07C71}">
+        <File Source="$(var.FoosNet.TargetPath)" KeyPath="yes" />
+      </Component>
+      <Component Guid="{E53A2BCE-AF98-4C70-B750-87027AF07C72}">
+        <File Source="$(var.FoosNet.CommunicatorIntegration.TargetPath)" KeyPath="yes" />
+      </Component>
+      <Component Guid="{E53A2BCE-AF98-4C70-B750-87027AF07C73}">
+        <File Source="$(var.FoosNet.Network.TargetPath)" KeyPath="yes" />
+      </Component>
+      <Component Guid="{E53A2BCE-AF98-4C70-B750-87027AF07C74}">
+        <File Source="$(var.SolutionDir)\packages\gong-wpf-dragdrop.0.1.4.1\lib\net40\GongSolutions.Wpf.DragDrop.dll" KeyPath="yes" />
+      </Component>
+      <Component Guid="{E53A2BCE-AF98-4C70-B750-87027AF07C75}">
+        <File Source="$(var.SolutionDir)\packages\WebSocket4Net.0.9\lib\net40\WebSocket4Net.dll" KeyPath="yes" />
+      </Component>
+			<!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
+			<!-- <Component Id="ProductComponent"> -->
+				<!-- TODO: Insert files, registry keys, and other resources here. -->
+			<!-- </Component> -->
+		</ComponentGroup>
+	</Fragment>
+  
+  <Fragment>
+    <DirectoryRef Id="ApplicationProgramsFolder">
+      <Component Id="ApplicationShortcut" Guid="E53A2BCE-AF98-4C70-B750-87027AF07C76">
+          <Shortcut Id="ApplicationStartMenuShortcut" 
+                    Name="FoosNet"
+                    Description="Launches FoosNet"
+                    Target="[#FoosNet.exe]"
+                    WorkingDirectory="INSTALLFOLDER"
+                    Icon="icon" />
+          <Shortcut Id="UninstallProduct"             
+                    Name="Uninstall FoosNet"
+                    Target="[SystemFolder]msiexec.exe"
+                    Arguments="/x [ProductCode]"
+                    Description="Uninstalls FoosNet" />
+          <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+          <RegistryValue Root="HKCU" Key="Software\Microsoft\FoosNet" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="ApplicationProgramsFolder">
+      <!-- Auto-start via Registry -->
+      <Component Id="FoosNetAutostart" Guid="E53A2BCE-AF98-4C70-B750-87027AF07C77">
+        <RegistryValue Id="FoosNet" Root="HKCU" Action="write"
+                       Key="Software\Microsoft\Windows\CurrentVersion\Run"
+                       Name="FoosNet"
+                       Value="[INSTALLFOLDER]FoosNet.exe"
+                       Type="string" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+
+</Wix>

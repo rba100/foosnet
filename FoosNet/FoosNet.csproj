@@ -281,6 +281,26 @@
   <ItemGroup>
     <Resource Include="Images\unknown.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Icons\Icon-40%402x.ico" />
+    <Resource Include="Images\Icons\Icon-40%402x.png" />
+    <Resource Include="Images\Icons\Icon-40.ico" />
+    <Resource Include="Images\Icons\Icon-40.png" />
+    <Resource Include="Images\Icons\Icon-60%402x.ico" />
+    <Resource Include="Images\Icons\Icon-60%402x.png" />
+    <Resource Include="Images\Icons\Icon-60.ico" />
+    <Resource Include="Images\Icons\Icon-60.png" />
+    <Resource Include="Images\Icons\Icon-Small%402x.ico" />
+    <Resource Include="Images\Icons\Icon-Small%402x.png" />
+    <Resource Include="Images\Icons\Icon-Small.ico" />
+    <Resource Include="Images\Icons\Icon-Small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\InstallerImages\dialog.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\InstallerImages\banner.bmp" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
