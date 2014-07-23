@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IdentityModel.Tokens;
+using System.IO;
 using System.Linq;
 using System.Net.Mime;
 using System.Runtime.CompilerServices;
@@ -17,6 +18,7 @@ using System.Windows.Threading;
 using FoosNet.Annotations;
 using FoosNet.CommunicatorIntegration;
 using FoosNet.Controls;
+using FoosNet.Game;
 using FoosNet.Network;
 using FoosNet.PlayerFilters;
 using FoosNet.Tests;
@@ -28,8 +30,10 @@ namespace FoosNet
         private ObservableCollection<FoosPlayerListItem> m_FoosPlayers;
         private bool m_IsTableFree;
         public event PropertyChangedEventHandler PropertyChanged;
-        private readonly FoosNetworkService m_NetworkService;
-        private List<IPlayerTransformation> m_PlayerProcessors;
+        private readonly IFoosNetworkService m_NetworkService;
+        private readonly List<IPlayerTransformation> m_PlayerProcessors;
+        public GameManager GameManager { get; set; }
+
 
         public ObservableCollection<FoosPlayerListItem> FoosPlayers
         {
@@ -42,7 +46,6 @@ namespace FoosNet
         }
 
         private ICommand m_ChallengeSelectedPlayer;
-
         public ICommand ChallengeSelectedPlayer
         {
             get
@@ -97,12 +100,21 @@ namespace FoosNet
                 m_PlayerProcessors.Add(new DefaultNameTransformation());
                 m_PlayerProcessors.Add(new StatusToUnknownTransformation());
             }
-            m_NetworkService = new FoosNetworkService(endpoint, localEmail);
+            m_NetworkService = new TestFoosNetworkService();
+            //m_NetworkService = new FoosNetworkService(endpoint, localEmail);
             m_NetworkService.PlayersDiscovered += NetworkServiceOnPlayersDiscovered;
             m_NetworkService.ChallengeReceived += NetworkServiceOnChallengeReceived;
             m_NetworkService.ChallengeResponse += NetworkServiceOnChallengeResponse;
             //var testObjects = new ShowPlayersTest();
             FoosPlayers = new ObservableCollection<FoosPlayerListItem>();
+
+            GameManager = new GameManager(m_NetworkService, m_FoosPlayers, localEmail);
+            GameManager.OnError += GameManagerOnOnError;
+        }
+
+        private void GameManagerOnOnError(object sender, ErrorEventArgs errorEventArgs)
+        {
+            MessageBox.Show(errorEventArgs.ToString(), "Error creating game");
         }
 
         private void CommunicatorOnStatusChanged(object sender, StatusChangedEventArgs statusChangedEventArgs)

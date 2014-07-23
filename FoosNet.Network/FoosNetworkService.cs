@@ -15,6 +15,7 @@ namespace FoosNet.Network
         event Action<GameStartingMessage> GameStarting;
         void Challenge(IFoosPlayer playerToChallenge);
         void Respond(ChallengeResponse response);
+        void StartGame(IEnumerable<IFoosPlayer> players);
     }
 
     public class FoosNetworkService : IFoosNetworkService
@@ -22,6 +23,7 @@ namespace FoosNet.Network
         private readonly string m_Email;
         private readonly WebSocket m_WebSocket;
         private Timer m_Timer;
+        private readonly TimeSpan m_SubscribeInterval;
 
         public event Action<ChallengeRequest> ChallengeReceived;
         public event Action<ChallengeResponse> ChallengeResponse;
@@ -38,7 +40,12 @@ namespace FoosNet.Network
             SendJson(new { action = "respond", challenger = response.Player.Email, response = response.Accepted.ToString() });
         }
 
-        public FoosNetworkService(string endpoint, string email)
+        public void StartGame(IEnumerable<IFoosPlayer> players)
+        {
+            SendJson(new { action = "gametime", players = players.Select(p => p.Email).ToArray() });
+        }
+
+        public FoosNetworkService(string endpoint, string email, TimeSpan subscribeInterval)
         {
             m_Email = email;
             m_WebSocket = new WebSocket(endpoint);
@@ -46,6 +53,7 @@ namespace FoosNet.Network
             m_WebSocket.MessageReceived += OnMessageReceived;
             m_WebSocket.Error += (sender, args) => Console.WriteLine("Error!{0}{1}", Environment.NewLine, args.Exception);
             m_WebSocket.Open();
+            m_SubscribeInterval = subscribeInterval;
         }
 
         void OnMessageReceived(object sender, MessageReceivedEventArgs e)
@@ -67,7 +75,7 @@ namespace FoosNet.Network
                     if (PlayersDiscovered != null) PlayersDiscovered(new PlayerDiscoveryMessage(((string[]) m.players).Select(p => new LivePlayer(p))));
                     break;
                 case "gametime":
-                    if (GameStarting != null) GameStarting(new GameStartingMessage(((string[])m.players).Select(p => new LivePlayer(p))));
+                    if (GameStarting != null) GameStarting(new GameStartingMessage(((DynamicJsonArray)m.players).Select(p => new LivePlayer((string)p))));
                     break;
             }
         }
@@ -75,7 +83,7 @@ namespace FoosNet.Network
         private void OnOpen(object sender, EventArgs e)
         {
             var subscribe = new { action = "subscribe", email = m_Email };
-            m_Timer = new Timer(SendJson, subscribe, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+            m_Timer = new Timer(SendJson, subscribe, TimeSpan.Zero, m_SubscribeInterval);
         }
 
         private void SendJson(object message)
@@ -115,7 +123,7 @@ namespace FoosNet.Network
 
         public PlayerDiscoveryMessage(IFoosPlayer player)
         {
-            m_Players = new [] { player };
+            m_Players = new[] { player };
         }
 
         public PlayerDiscoveryMessage(IEnumerable<IFoosPlayer> players)

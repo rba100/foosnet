@@ -5,14 +5,22 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow">
+    
+    <Window.Resources>
+        
+    </Window.Resources>
+    
     <DockPanel>
+        
         <StackPanel DockPanel.Dock="Bottom"
                     Margin="0, 0, 0, 100">
+            
             <TextBlock x:Name="DescriptionText" 
                        Height="80"
                        HorizontalAlignment="Center"
                        FontSize="24"
                        Text="Description"/>
+            
             <Button x:Name="AcceptButton"
                     Click="AcceptButton_OnClick"
                     Width="200"
@@ -42,6 +50,27 @@
                    VerticalAlignment="Center"
                    FontSize="90">
             FOOS ALERT
+
+            <TextBlock.Triggers>
+                <EventTrigger RoutedEvent="TextBlock.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetName="AlertText" 
+                                Storyboard.TargetProperty="Opacity"
+                                From="1.0" To="0.5" Duration="0:0:2" 
+                                AutoReverse="True" RepeatBehavior="Forever" />
+
+                            <DoubleAnimation
+                                Storyboard.TargetName="AlertText" 
+                                Storyboard.TargetProperty="FontSize"
+                                From="90" To="250" Duration="0:0:10" 
+                                AutoReverse="True" RepeatBehavior="Forever" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </TextBlock.Triggers>
+            
         </TextBlock>
     </DockPanel>
     </Window>
