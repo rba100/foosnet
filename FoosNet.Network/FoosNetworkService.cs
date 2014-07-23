@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Helpers;
 using FoosNet.Utils;
 using WebSocket4Net;
@@ -46,6 +47,11 @@ namespace FoosNet.Network
             m_WebSocket.SendAsJson(new { action = "gametime", players = players.Select(p => p.Email).ToArray() });
         }
 
+        public void RequestPlayers()
+        {
+            m_WebSocket.SendAsJson(new { action = "players" });
+        }
+
         public FoosNetworkService(string endpoint, string email, TimeSpan subscribeInterval)
         {
             m_Email = email;
@@ -85,6 +91,7 @@ namespace FoosNet.Network
         {
             var subscribe = new { action = "subscribe", email = m_Email };
             m_Timer = new Timer(m_WebSocket.SendAsJson, subscribe, TimeSpan.Zero, m_SubscribeInterval);
+            Task.Factory.StartNew(RequestPlayers);
         }
 
         protected override void Dispose(bool disposing)
