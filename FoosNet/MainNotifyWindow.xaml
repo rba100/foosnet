@@ -130,6 +130,7 @@
                     <TextBlock FontWeight="Bold" Margin="0,0,0,5">Contacts</TextBlock>
                     <Grid Grid.Row="1">
                         <ListView Name="FoosPlayersList"
+                                  Padding="0,5,0,0"
                                   ItemsSource="{Binding FoosPlayers}"
                                   Grid.Column="0" 
                                   dragDrop:DragDrop.IsDragSource="True"
