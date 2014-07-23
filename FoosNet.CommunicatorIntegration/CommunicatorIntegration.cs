@@ -139,6 +139,8 @@ namespace FoosNet.CommunicatorIntegration
             switch (miStatus)
             {
                 case MISTATUS.MISTATUS_ONLINE:
+                case MISTATUS.MISTATUS_IDLE:
+                case MISTATUS.MISTATUS_IN_A_MEETING:
                 case MISTATUS.MISTATUS_MAY_BE_AVAILABLE:
                     return Status.Available;
                 case MISTATUS.MISTATUS_OFFLINE:
