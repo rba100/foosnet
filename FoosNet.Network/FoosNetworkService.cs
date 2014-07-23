@@ -7,7 +7,7 @@ using WebSocket4Net;
 
 namespace FoosNet.Network
 {
-    public interface IFoosNetworkService
+    public interface IFoosNetworkService : IDisposable
     {
         event Action<ChallengeRequest> ChallengeReceived;
         event Action<ChallengeResponse> ChallengeResponse;
@@ -33,7 +33,7 @@ namespace FoosNet.Network
 
         public void Respond(ChallengeResponse response)
         {
-            SendJson(new { action = "respond", challengedBy = response.Player.Email, response = response.Accepted });
+            SendJson(new { action = "respond", challenger = response.Player.Email, response = response.Accepted.ToString() });
         }
 
         public FoosNetworkService(string endpoint, string email)
@@ -53,7 +53,7 @@ namespace FoosNet.Network
             switch (type)
             {
                 case "challenge":
-                    if (ChallengeReceived != null) ChallengeReceived(new ChallengeRequest(new LivePlayer(m.email as string)));
+                    if (ChallengeReceived != null) ChallengeReceived(new ChallengeRequest(new LivePlayer(m.challengedBy as string)));
                     break;
                 case "response":
                     if (ChallengeResponse != null) ChallengeResponse(new ChallengeResponse(new LivePlayer(m.player as string), bool.Parse(m.response)));
@@ -77,7 +77,20 @@ namespace FoosNet.Network
 
         private void SendJson(object message)
         {
-            m_WebSocket.Send(Json.Encode(message));
+            var json = Json.Encode(message);
+            m_WebSocket.Send(json);
+        }
+
+        public void Dispose()
+        {
+            try
+            {
+                m_Timer.Dispose();
+                m_WebSocket.Close();
+            }
+            catch
+            {
+            }
         }
     }
 
