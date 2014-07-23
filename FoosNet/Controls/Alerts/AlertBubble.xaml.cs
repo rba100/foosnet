@@ -32,9 +32,9 @@ namespace FoosNet.Controls.Alerts
             if (autoDecline)
             {
                 DescriptionText.Text += "\r\nThis request will be auto-" +
-                                        "declined after 15 seconds.";
+                                        "declined after 20 seconds.";
                 
-                m_AutoDeclineTimer = new Timer {Interval = 15000};
+                m_AutoDeclineTimer = new Timer {Interval = 20000};
                 m_AutoDeclineTimer.Elapsed += (s, e) =>
                 {
                     m_AutoDeclineTimer.Stop();

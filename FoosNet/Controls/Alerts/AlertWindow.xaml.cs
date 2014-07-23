@@ -16,6 +16,8 @@ namespace FoosNet.Controls.Alerts
     /// </summary>
     public partial class AlertWindow : Window
     {
+        private readonly Tuple<SolidColorBrush, SolidColorBrush>[] m_AlertColorSequence;
+        private readonly string[] m_AlertTextSequence;
         private readonly Tuple<SolidColorBrush, SolidColorBrush> m_CancelledColors;
 
         private readonly ChallengeRequest m_Challenge;
@@ -44,7 +46,7 @@ namespace FoosNet.Controls.Alerts
         /// cancelled
         /// </param>
         /// 
-        /// <param name="discTrayAnnoyance">
+        /// <param name="discTrayAnnoyanceChance">
         /// Chance (number between 0 and 1) that the disc tray will open
         /// </param>
         public AlertWindow(Tuple<SolidColorBrush, SolidColorBrush> [] alertColorSequence,
@@ -55,6 +57,8 @@ namespace FoosNet.Controls.Alerts
         {
             InitializeComponent();
 
+            m_AlertColorSequence = alertColorSequence;
+            m_AlertTextSequence = alertTextSequence;
             m_CancelledColors = cancelledColors;
 
             m_Challenge = challenge;
@@ -68,23 +72,12 @@ namespace FoosNet.Controls.Alerts
 
             var currentFrame = 0;
             
-            AlertWindowElement.Background = alertColorSequence[0].Item1;
-            AlertText.Foreground = alertColorSequence[0].Item2;
-            DescriptionText.Foreground = alertColorSequence[0].Item2;
-
-            AlertText.Text = alertTextSequence[0];
+            SetStrobeFrame(currentFrame);
 
             m_StrobeTimer.Elapsed += (sender, elapsedEventArgs) => Dispatcher.Invoke(() =>
             {
                 currentFrame++;
-                var colorIndex = currentFrame % alertColorSequence.Length;
-                var textIndex = currentFrame % alertTextSequence.Length;
-
-                AlertWindowElement.Background = alertColorSequence[colorIndex].Item1;
-                AlertText.Foreground = alertColorSequence[colorIndex].Item2;
-                DescriptionText.Foreground = alertColorSequence[colorIndex].Item2;
-
-                AlertText.Text = alertTextSequence[textIndex];
+                Dispatcher.Invoke(() => SetStrobeFrame(currentFrame));
             });
 
             m_StrobeTimer.Start();
@@ -103,6 +96,18 @@ namespace FoosNet.Controls.Alerts
                     // opening the disc tray for a notification?
                 }
             }
+        }
+
+        private void SetStrobeFrame(int currentFrame)
+        {
+                var colorIndex = currentFrame % m_AlertColorSequence.Length;
+                var textIndex = currentFrame % m_AlertTextSequence.Length;
+
+                AlertWindowElement.Background = m_AlertColorSequence[colorIndex].Item1;
+                AlertText.Foreground = m_AlertColorSequence[colorIndex].Item2;
+                DescriptionText.Foreground = m_AlertColorSequence[colorIndex].Item2;
+
+                AlertText.Text = m_AlertTextSequence[textIndex];
         }
 
         public void CancelChallenge()

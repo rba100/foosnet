@@ -11,6 +11,8 @@ namespace TestAlerts
     /// </summary>
     public partial class SecondaryAlertWindow : Window
     {
+        private readonly Tuple<SolidColorBrush, SolidColorBrush>[] m_AlertColorSequence;
+        private readonly string[] m_AlertTextSequence;
         private readonly Tuple<SolidColorBrush, SolidColorBrush> m_CancelledColors;
         private readonly Timer m_StrobeTimer;
 
@@ -19,6 +21,8 @@ namespace TestAlerts
              String [] alertTextSequence,
              Tuple<SolidColorBrush, SolidColorBrush> cancelledColors)
         {
+            m_AlertColorSequence = alertColorSequence;
+            m_AlertTextSequence = alertTextSequence;
             m_CancelledColors = cancelledColors;
             InitializeComponent();
             
@@ -26,26 +30,28 @@ namespace TestAlerts
 
             m_StrobeTimer = new Timer {Interval = 1000 + random.Next(10)};
 
-            var currentFrame = 0;
+            var currentFrame = 1;
             
-            SecondaryAlertWindowElement.Background = alertColorSequence[0].Item1;
-            AlertText.Foreground = alertColorSequence[0].Item2;
-
-            AlertText.Text = alertTextSequence[0];
+            SetStrobeFrame(currentFrame);
 
             m_StrobeTimer.Elapsed += (sender, elapsedEventArgs) => Dispatcher.Invoke(() =>
             {
                 currentFrame++;
-                var colorIndex = currentFrame % alertColorSequence.Length;
-                var textIndex = currentFrame % alertTextSequence.Length;
-
-                SecondaryAlertWindowElement.Background = alertColorSequence[colorIndex].Item1;
-                AlertText.Foreground = alertColorSequence[colorIndex].Item2;
-
-                AlertText.Text = alertTextSequence[textIndex];
+                Dispatcher.Invoke(() => SetStrobeFrame(currentFrame));
             });
 
             m_StrobeTimer.Start(); 
+        }
+
+        private void SetStrobeFrame(int currentFrame)
+        {
+                var colorIndex = currentFrame % m_AlertColorSequence.Length;
+                var textIndex = currentFrame % m_AlertTextSequence.Length;
+
+                SecondaryAlertWindowElement.Background = m_AlertColorSequence[colorIndex].Item1;
+                AlertText.Foreground = m_AlertColorSequence[colorIndex].Item2;
+
+                AlertText.Text = m_AlertTextSequence[textIndex];
         }
 
         public void CancelAlert()
