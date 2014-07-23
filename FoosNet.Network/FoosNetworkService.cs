@@ -22,7 +22,7 @@ namespace FoosNet.Network
     public class FoosNetworkService : Disposable, IFoosNetworkService
     {
         private readonly string m_Email;
-        private readonly WebSocket m_WebSocket;
+        private readonly ReconnectingWebSocket m_WebSocket;
         private Timer m_Timer;
         private readonly TimeSpan m_SubscribeInterval;
 
@@ -33,33 +33,33 @@ namespace FoosNet.Network
 
         public void Challenge(IFoosPlayer playerToChallenge)
         {
-            SendJson(new { action = "challenge", toChallenge = playerToChallenge.Email });
+            m_WebSocket.SendAsJson(new { action = "challenge", toChallenge = playerToChallenge.Email });
         }
 
         public void Respond(ChallengeResponse response)
         {
-            SendJson(new { action = "respond", challenger = response.Player.Email, response = response.Accepted.ToString() });
+            m_WebSocket.SendAsJson(new { action = "respond", challenger = response.Player.Email, response = response.Accepted.ToString() });
         }
 
         public void StartGame(IEnumerable<IFoosPlayer> players)
         {
-            SendJson(new { action = "gametime", players = players.Select(p => p.Email).ToArray() });
+            m_WebSocket.SendAsJson(new { action = "gametime", players = players.Select(p => p.Email).ToArray() });
         }
 
         public FoosNetworkService(string endpoint, string email, TimeSpan subscribeInterval)
         {
             m_Email = email;
-            m_WebSocket = new WebSocket(endpoint);
-            m_WebSocket.Opened += OnOpen;
+            m_WebSocket = new ReconnectingWebSocket(endpoint);
+            m_WebSocket.Connect += OnConnect;
             m_WebSocket.MessageReceived += OnMessageReceived;
-            m_WebSocket.Error += (sender, args) => Console.WriteLine("Error!{0}{1}", Environment.NewLine, args.Exception);
+            m_WebSocket.Error += (exception) => Console.WriteLine("Error!{0}{1}", Environment.NewLine, exception);
             m_WebSocket.Open();
             m_SubscribeInterval = subscribeInterval;
         }
 
-        void OnMessageReceived(object sender, MessageReceivedEventArgs e)
+        void OnMessageReceived(string message)
         {
-            var m = Json.Decode(e.Message);
+            var m = Json.Decode(message);
             var type = m.type as string;
             switch (type)
             {
@@ -81,16 +81,10 @@ namespace FoosNet.Network
             }
         }
 
-        private void OnOpen(object sender, EventArgs e)
+        private void OnConnect()
         {
             var subscribe = new { action = "subscribe", email = m_Email };
-            m_Timer = new Timer(SendJson, subscribe, TimeSpan.Zero, m_SubscribeInterval);
-        }
-
-        private void SendJson(object message)
-        {
-            var json = Json.Encode(message);
-            m_WebSocket.Send(json);
+            m_Timer = new Timer(m_WebSocket.SendAsJson, subscribe, TimeSpan.Zero, m_SubscribeInterval);
         }
 
         protected override void Dispose(bool disposing)
@@ -98,7 +92,7 @@ namespace FoosNet.Network
             try
             {
                 m_Timer.Dispose();
-                m_WebSocket.Close();
+                m_WebSocket.Dispose();
             }
             catch
             {
