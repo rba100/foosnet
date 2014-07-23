@@ -14,6 +14,7 @@ namespace FoosNet
         private string m_DisplayName;
         private GameState m_GameState;
         public string Email { get; set; }
+        public volatile int InviteMarker = 0;
 
         public string DisplayName
         {

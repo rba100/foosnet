@@ -116,11 +116,18 @@ namespace FoosNet.Game
             }
         }
 
-        public bool IsGameReadyToStart { get { return m_PlayerLineUp.Count(p => p.GameState == GameState.Accepted) == c_PlayersPerGame; } }
+        public bool IsGameReadyToStart
+        {
+            get
+            {
+                lock(m_PlayerLineUp) return m_PlayerLineUp.Count(p => p.GameState == GameState.Accepted) == c_PlayersPerGame;
+            }
+        }
+
         public bool GameCreationInProgress { get { return m_IsOrganisingGame; } set { m_IsOrganisingGame = value; OnPropertyChanged(); } }
         public bool IsJoiningRemoteGame { get { return m_IsJoiningRemoteGame; } set { m_IsJoiningRemoteGame = value; OnPropertyChanged(); } }
         public bool CanAddPlayer { get { return !IsGameReadyToStart; } }
-        public int FreeSlots { get { return Math.Max(c_PlayersPerGame - m_PlayerLineUp.Count, 3); } }
+        public int FreeSlots { get { return Math.Min(c_PlayersPerGame - m_PlayerLineUp.Count, 3); } }
         public bool CanCreateGameAuto { get { return !m_IsOrganisingGame; } }
 
         public string StatusMessage
@@ -142,37 +149,44 @@ namespace FoosNet.Game
                 StatusMessage = c_CustomGame;
                 AddSelf();
             }
-            if (m_PlayerLineUp.Count >= c_PlayersPerGame) throw new InvalidOperationException("Cannot add another player, max players reached");
-            player.GameState = GameState.Pending;
-            m_PlayerLineUp.Add(player);
-            OnPropertyChanged("IsGameReadyToStart");
+            lock (m_PlayerLineUp)
+            {
+                if (m_PlayerLineUp.Count >= c_PlayersPerGame)
+                    throw new InvalidOperationException("Cannot add another player, max players reached");
+                player.GameState = GameState.Pending;
+                m_PlayerLineUp.Add(player);
+            }
             m_NetworkService.Challenge(player);
             Task.Factory.StartNew(() => PlayerTimeOutWatcher(player, CancellationToken));
         }
 
         public void Reset()
         {
-            StatusMessage = c_Idle;
-            m_Self.GameState = GameState.None;
-            foreach (var player in m_PlayerLineUp)
+            lock (m_PlayerLineUp)
             {
-                if (!player.Email.Equals(m_Self.Email, StringComparison.OrdinalIgnoreCase) && player.GameState == GameState.Accepted)
+                StatusMessage = c_Idle;
+                m_Self.GameState = GameState.None;
+                foreach (var player in m_PlayerLineUp)
                 {
-                    //TODO: m_NetworkService.UnChallenge(player);
+                    if (!player.Email.Equals(m_Self.Email, StringComparison.OrdinalIgnoreCase) &&
+                        player.GameState == GameState.Accepted)
+                    {
+                        //TODO: m_NetworkService.UnChallenge(player);
+                    }
                 }
-            }
-            m_PlayerLineUp.Clear();
-            GameCreationInProgress = false;
-            m_IsJoiningRemoteGame = false;
-            m_Cts.Cancel();
+                m_PlayerLineUp.Clear();
+                GameCreationInProgress = false;
+                m_IsJoiningRemoteGame = false;
+                m_Cts.Cancel();
 
-            foreach (var item in m_PlayerList)
-            {
-                item.GameState = GameState.None;
-            }
+                foreach (var item in m_PlayerList)
+                {
+                    item.GameState = GameState.None;
+                }
 
-            m_Cts.Dispose();
-            m_Cts = new CancellationTokenSource();
+                m_Cts.Dispose();
+                m_Cts = new CancellationTokenSource();
+            }
         }
 
         public void CreateGameAuto(List<FoosPlayerListItem> prefferedPlayers = null)
@@ -220,12 +234,13 @@ namespace FoosNet.Game
         private void PlayerTimeOutWatcher(object playerObj, CancellationToken token)
         {
             var player = playerObj as FoosPlayerListItem;
+            var marker = ++player.InviteMarker;
             Task.Delay(TimeSpan.FromSeconds(20), token).Wait();
-            if (token.IsCancellationRequested) return;
+            if (token.IsCancellationRequested || player.InviteMarker != marker) return;
             if (player.GameState == GameState.Pending)
             {
                 player.GameState = GameState.Timeout;
-                m_PlayerLineUp.RemoveAll(p => p.Email.Equals(player.Email));
+                lock (m_PlayerLineUp) m_PlayerLineUp.RemoveAll(p => p.Email.Equals(player.Email));
             }
         }
 
