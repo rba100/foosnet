@@ -7,12 +7,14 @@ using WebSocket4Net;
 
 namespace FoosNet.Network
 {
-    public interface IFoosNetworkService
+    public interface IFoosNetworkService : IDisposable
     {
         event Action<ChallengeRequest> ChallengeReceived;
         event Action<ChallengeResponse> ChallengeResponse;
         event Action<PlayerDiscoveryMessage> PlayersDiscovered;
+        event Action<GameStartingMessage> GameStarting;
         void Challenge(IFoosPlayer playerToChallenge);
+        void Respond(ChallengeResponse response);
     }
 
     public class FoosNetworkService : IFoosNetworkService
@@ -24,10 +26,16 @@ namespace FoosNet.Network
         public event Action<ChallengeRequest> ChallengeReceived;
         public event Action<ChallengeResponse> ChallengeResponse;
         public event Action<PlayerDiscoveryMessage> PlayersDiscovered;
+        public event Action<GameStartingMessage> GameStarting;
 
         public void Challenge(IFoosPlayer playerToChallenge)
         {
             SendJson(new { action = "challenge", toChallenge = playerToChallenge.Email });
+        }
+
+        public void Respond(ChallengeResponse response)
+        {
+            SendJson(new { action = "respond", challenger = response.Player.Email, response = response.Accepted.ToString() });
         }
 
         public FoosNetworkService(string endpoint, string email)
@@ -47,18 +55,19 @@ namespace FoosNet.Network
             switch (type)
             {
                 case "challenge":
-                    if (ChallengeReceived != null) ChallengeReceived(new ChallengeRequest(new LivePlayer(m.email as string)));
+                    if (ChallengeReceived != null) ChallengeReceived(new ChallengeRequest(new LivePlayer(m.challengedBy as string)));
                     break;
                 case "response":
-                    if (ChallengeResponse != null) ChallengeResponse(new ChallengeResponse());
-                    break;
-                case "players":
-                    if (PlayersDiscovered != null) PlayersDiscovered(new PlayerDiscoveryMessage(new LivePlayer(m.player as string)));
+                    if (ChallengeResponse != null) ChallengeResponse(new ChallengeResponse(new LivePlayer(m.player as string), bool.Parse(m.response)));
                     break;
                 case "player":
+                    if (PlayersDiscovered != null) PlayersDiscovered(new PlayerDiscoveryMessage(new LivePlayer(m.player as string)));
+                    break;
+                case "players":
                     if (PlayersDiscovered != null) PlayersDiscovered(new PlayerDiscoveryMessage(((string[])m.players).Select(p => new LivePlayer(p))));
                     break;
                 case "gametime":
+                    if (GameStarting != null) GameStarting(new GameStartingMessage(((string[])m.players).Select(p => new LivePlayer(p))));
                     break;
             }
         }
@@ -71,7 +80,20 @@ namespace FoosNet.Network
 
         private void SendJson(object message)
         {
-            m_WebSocket.Send(Json.Encode(message));
+            var json = Json.Encode(message);
+            m_WebSocket.Send(json);
+        }
+
+        public void Dispose()
+        {
+            try
+            {
+                m_Timer.Dispose();
+                m_WebSocket.Close();
+            }
+            catch
+            {
+            }
         }
     }
 
@@ -97,6 +119,18 @@ namespace FoosNet.Network
         }
 
         public PlayerDiscoveryMessage(IEnumerable<IFoosPlayer> players)
+        {
+            m_Players = players;
+        }
+
+        public IEnumerable<IFoosPlayer> Players { get { return m_Players; } }
+    }
+
+    public class GameStartingMessage
+    {
+        private readonly IEnumerable<IFoosPlayer> m_Players;
+
+        public GameStartingMessage(IEnumerable<IFoosPlayer> players)
         {
             m_Players = players;
         }
