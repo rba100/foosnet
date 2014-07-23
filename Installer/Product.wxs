@@ -3,7 +3,7 @@
      xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
 	<Product Id="*" Name="FoosNet Installer" Language="1033" Version="1.0.0.0" Manufacturer="Down Tools Week 2014" UpgradeCode="1e6db7a7-6f5a-460a-9f07-53cd2e97431a">
     
-		<Package InstallerVersion="200" Compressed="yes" InstallScope="perUser" InstallPrivileges="elevated" />
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" InstallPrivileges="elevated" />
     <Icon Id="icon" SourceFile="$(var.SolutionDir)\FoosNet\Images\Icons\Icon-Small@2x.ico" />
     <Property Id="ARPPRODUCTICON" Value="icon" />
 
