@@ -33,7 +33,10 @@ namespace FoosNet.Controls.Alerts
             var cancelledColors =
                 new Tuple<SolidColorBrush, SolidColorBrush> (Brushes.Gray, Brushes.White);
 
+            var textSequence = new [] {"FOOS", "ALERT"};
+
             m_MainAlertWindow = new AlertWindow(alertColors, 
+                                                textSequence,
                                                 cancelledColors, 
                                                 challenge,
                                                 false)
@@ -55,7 +58,9 @@ namespace FoosNet.Controls.Alerts
             foreach (var screen in Screen.AllScreens)
             {
                 if (!Equals(screen, Screen.PrimaryScreen)) { 
-                    var window = new SecondaryAlertWindow(alertColors, cancelledColors)
+                    var window = new SecondaryAlertWindow(alertColors,
+                                                          textSequence,
+                                                          cancelledColors)
                     {
                         Top = screen.WorkingArea.Top,
                         Left = screen.WorkingArea.Left,

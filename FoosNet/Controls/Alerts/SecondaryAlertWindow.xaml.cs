@@ -15,7 +15,8 @@ namespace TestAlerts
         private readonly Timer m_StrobeTimer;
 
         public SecondaryAlertWindow
-            (Tuple<SolidColorBrush, SolidColorBrush> [] alertColors,
+            (Tuple<SolidColorBrush, SolidColorBrush> [] alertColorSequence,
+             String [] alertTextSequence,
              Tuple<SolidColorBrush, SolidColorBrush> cancelledColors)
         {
             m_CancelledColors = cancelledColors;
@@ -23,18 +24,25 @@ namespace TestAlerts
             
             var random = new Random();
 
-            m_StrobeTimer = new Timer {Interval = 1000 + random.Next(100)};
+            m_StrobeTimer = new Timer {Interval = 1000 + random.Next(10)};
 
-            var currentColour = 0;
+            var currentFrame = 0;
             
-            SecondaryAlertWindowElement.Background = alertColors[currentColour].Item1;
-            AlertText.Foreground = alertColors[currentColour].Item2;
+            SecondaryAlertWindowElement.Background = alertColorSequence[0].Item1;
+            AlertText.Foreground = alertColorSequence[0].Item2;
+
+            AlertText.Text = alertTextSequence[0];
 
             m_StrobeTimer.Elapsed += (sender, elapsedEventArgs) => Dispatcher.Invoke(() =>
             {
-                currentColour = (currentColour + 1) % alertColors.Length;
-                SecondaryAlertWindowElement.Background = alertColors[currentColour].Item1;
-                AlertText.Foreground = alertColors[currentColour].Item2;
+                currentFrame++;
+                var colorIndex = currentFrame % alertColorSequence.Length;
+                var textIndex = currentFrame % alertTextSequence.Length;
+
+                SecondaryAlertWindowElement.Background = alertColorSequence[colorIndex].Item1;
+                AlertText.Foreground = alertColorSequence[colorIndex].Item2;
+
+                AlertText.Text = alertTextSequence[textIndex];
             });
 
             m_StrobeTimer.Start(); 
