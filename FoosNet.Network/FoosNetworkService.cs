@@ -64,7 +64,11 @@ namespace FoosNet.Network
                     if (PlayersDiscovered != null) PlayersDiscovered(new PlayerDiscoveryMessage(new LivePlayer(m.player as string)));
                     break;
                 case "players":
+<<<<<<< HEAD
                     if (PlayersDiscovered != null) PlayersDiscovered(new PlayerDiscoveryMessage(((string[])m.players).Select(p => new LivePlayer(p))));
+=======
+                    if (PlayersDiscovered != null) PlayersDiscovered(new PlayerDiscoveryMessage(((string[]) m.players).Select(p => new LivePlayer(p))));
+>>>>>>> origin/master
                     break;
                 case "gametime":
                     if (GameStarting != null) GameStarting(new GameStartingMessage(((string[])m.players).Select(p => new LivePlayer(p))));
