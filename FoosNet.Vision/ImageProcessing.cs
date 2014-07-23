@@ -58,45 +58,19 @@ namespace FoosNet.Vision
                     }
                 }
 
-            if(contourCount>0 && debugImage != null)
+            if (contourCount > 0 && debugImage != null)
             {
                 float actionCentreLeft = contourLeftTotal / contourCount;
                 float actionCentreTop = contourTopTotal / contourCount;
 
-                            debugImage.Draw(new CircleF(
-                                new PointF(actionCentreLeft, actionCentreTop), 8),
-                                new Bgr(0, 100, 200), 3);
+                debugImage.Draw(new CircleF(
+                    new PointF(actionCentreLeft, actionCentreTop), 8),
+                    new Bgr(0, 100, 200), 3);
 
-               if (actionCentreLeft < 300 && actionCentreTop < 300) return 0.5;
+                if (actionCentreLeft < 300 && actionCentreTop < 300) return 0.9;
             }
 
-            byte[, ,] data = diffPic.Data;
-            long totalB = 0, totalG = 0, totalR = 0;
-
-            for (int i = diffPic.Rows - 1; i >= 0; i--)
-                for (int j = diffPic.Cols - 1; j >= 0; j--)
-                {
-                    totalB += data[i, j, 0];
-                    totalG += data[i, j, 1];
-                    totalR += data[i, j, 2];
-                }
-
-            double diffMag = (double)(totalB + totalG + totalR) / 10e5;
-
-            if (diffMag <= 1)
-                return 0.0;
-            if (diffMag  > 1)
-                return 0.1;
-            else if (diffMag > 2)
-                return 0.3;
-            else if (diffMag > 4)
-                return 0.5;
-            else if (diffMag > 8)
-                return 0.7;
-            else if (diffMag > 16)
-                return 0.9;
-            else return
-                1.0;
+            return 0.0;
         }
     }
 }
