@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Timers;
 using System.Windows;
@@ -138,7 +139,7 @@ namespace FoosNet.Controls.Alerts
 
         private void OpenDiscDrive()
         {
-            string driveLetter = GetCDDriveLetter();
+            string driveLetter = GetEmptyCdDriveLetter();
             string returnString = String.Empty;
             
             if(driveLetter.Equals(string.Empty)) return;
@@ -152,7 +153,7 @@ namespace FoosNet.Controls.Alerts
 
         private void CloseDiscDrive()
         {
-            string driveLetter = GetCDDriveLetter();
+            string driveLetter = GetEmptyCdDriveLetter();
             string returnString = String.Empty;
 
             if(driveLetter.Equals(string.Empty)) return;
@@ -164,15 +165,14 @@ namespace FoosNet.Controls.Alerts
                            returnString, 0, 0);
         }
 
-        private string GetCDDriveLetter()
+        private string GetEmptyCdDriveLetter()
         {
             var drives = DriveInfo.GetDrives();
-            foreach (var drive in drives)
+            foreach (var drive 
+                     in drives.Where(drive => drive.DriveType == DriveType.CDRom
+                                           && !drive.IsReady))
             {
-                if (drive.DriveType == DriveType.CDRom)
-                {
-                    return drive.Name.Substring(0, 1);
-                }
+                return drive.Name.Substring(0, 1);
             }
             return String.Empty;
         }

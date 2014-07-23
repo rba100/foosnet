@@ -36,7 +36,7 @@ namespace FoosNet.Controls.Alerts
             m_MainAlertWindow = new AlertWindow(alertColors, 
                                                 cancelledColors, 
                                                 challenge,
-                                                true)
+                                                false)
             {
                 Top = Screen.PrimaryScreen.WorkingArea.Top,
                 Left = Screen.PrimaryScreen.WorkingArea.Left,
