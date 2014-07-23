@@ -36,9 +36,14 @@ namespace FoosNet.Controls.Alerts
         /// (backgroundColor, foregroundColor) tuple, used if the challenge is
         /// cancelled
         /// </param>
+        /// <param name="discTrayAnnoyance">
+        /// If true, open and close the disc tray once when the notification
+        /// starts.
+        /// </param>
         public AlertWindow(Tuple<SolidColorBrush, SolidColorBrush> [] alertColors,
                            Tuple<SolidColorBrush, SolidColorBrush> cancelledColors,
-                           ChallengeRequest challenge)
+                           ChallengeRequest challenge,
+                           bool discTrayAnnoyance)
         {
             InitializeComponent();
 
@@ -66,16 +71,18 @@ namespace FoosNet.Controls.Alerts
             });
 
             m_StrobeTimer.Start();
-            
-            // ReSharper disable once EmptyGeneralCatchClause
-            try { 
-                OpenDiscDrive();
-                CloseDiscDrive();
-            }
-            catch (Exception e)
-            {
-                //what's a little more evil when we're already opening the disc
-                //tray for a notification?
+
+            if (discTrayAnnoyance) { 
+                // ReSharper disable once EmptyGeneralCatchClause
+                try { 
+                    OpenDiscDrive();
+                    CloseDiscDrive();
+                }
+                catch (Exception e)
+                {
+                    // what's the harm in a little more evil when we're already 
+                    // opening the disc tray for a notification?
+                }
             }
         }
 

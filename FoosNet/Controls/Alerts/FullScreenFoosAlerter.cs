@@ -33,7 +33,10 @@ namespace FoosNet.Controls.Alerts
             var cancelledColors =
                 new Tuple<SolidColorBrush, SolidColorBrush> (Brushes.Gray, Brushes.White);
 
-            m_MainAlertWindow = new AlertWindow(alertColors, cancelledColors, challenge)
+            m_MainAlertWindow = new AlertWindow(alertColors, 
+                                                cancelledColors, 
+                                                challenge,
+                                                true)
             {
                 Top = Screen.PrimaryScreen.WorkingArea.Top,
                 Left = Screen.PrimaryScreen.WorkingArea.Left,
