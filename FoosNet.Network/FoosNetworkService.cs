@@ -13,6 +13,7 @@ namespace FoosNet.Network
         event Action<ChallengeResponse> ChallengeResponse;
         event Action<PlayerDiscoveryMessage> PlayersDiscovered;
         void Challenge(IFoosPlayer playerToChallenge);
+        void Respond(ChallengeResponse response);
     }
 
     public class FoosNetworkService : IFoosNetworkService
@@ -28,6 +29,11 @@ namespace FoosNet.Network
         public void Challenge(IFoosPlayer playerToChallenge)
         {
             SendJson(new { action = "challenge", toChallenge = playerToChallenge.Email });
+        }
+
+        public void Respond(ChallengeResponse response)
+        {
+            SendJson(new { action = "respond", challengedBy = response.Player.Email, response = response.Accepted });
         }
 
         public FoosNetworkService(string endpoint, string email)
@@ -50,7 +56,7 @@ namespace FoosNet.Network
                     if (ChallengeReceived != null) ChallengeReceived(new ChallengeRequest(new LivePlayer(m.email as string)));
                     break;
                 case "response":
-                    if (ChallengeResponse != null) ChallengeResponse(new ChallengeResponse());
+                    if (ChallengeResponse != null) ChallengeResponse(new ChallengeResponse(new LivePlayer(m.player as string), bool.Parse(m.response)));
                     break;
                 case "players":
                     if (PlayersDiscovered != null) PlayersDiscovered(new PlayerDiscoveryMessage(new LivePlayer(m.player as string)));

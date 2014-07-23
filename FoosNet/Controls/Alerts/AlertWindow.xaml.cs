@@ -107,12 +107,12 @@ namespace FoosNet.Controls.Alerts
 
         private void AcceptButton_OnClick(object sender, RoutedEventArgs e)
         {
-            ChallengeResponseReceived(new ChallengeResponse {Accepted = true});
+            ChallengeResponseReceived(new ChallengeResponse(m_Challenge.Challenger, true));
         }
 
         private void DeclineButton_OnClick(object sender, RoutedEventArgs e)
         {
-            ChallengeResponseReceived(new ChallengeResponse {Accepted = false});
+            ChallengeResponseReceived(new ChallengeResponse(m_Challenge.Challenger, false));
         }
 
         private void CloseButton_OnClick(object sender, RoutedEventArgs e)
