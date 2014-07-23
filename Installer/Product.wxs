@@ -3,7 +3,7 @@
      xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
 	<Product Id="*" Name="FoosNet Installer" Language="1033" Version="1.0.0.0" Manufacturer="Down Tools Week 2014" UpgradeCode="1e6db7a7-6f5a-460a-9f07-53cd2e97431a">
     
-		<Package InstallerVersion="200" Compressed="yes" InstallScope="perUser" />
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perUser" InstallPrivileges="elevated" />
     <Icon Id="icon" SourceFile="$(var.SolutionDir)\FoosNet\Images\Icons\Icon-Small@2x.ico" />
     <Property Id="ARPPRODUCTICON" Value="icon" />
 
@@ -13,6 +13,7 @@
 		<Feature Id="ProductFeature" Title="FoosNet" Level="1">
 			<ComponentGroupRef Id="ProductComponents" />
       <ComponentRef Id="ApplicationShortcut" />
+      <ComponentRef Id="FoosNetAutostart" />
 		</Feature>
   
     <PropertyRef Id="NETFRAMEWORK20"/>
@@ -104,6 +105,19 @@
                     Description="Uninstalls FoosNet" />
           <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
           <RegistryValue Root="HKCU" Key="Software\Microsoft\FoosNet" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="ApplicationProgramsFolder">
+      <!-- Auto-start via Registry -->
+      <Component Id="FoosNetAutostart" Guid="E53A2BCE-AF98-4C70-B750-87027AF07C77">
+        <RegistryValue Id="FoosNet" Root="HKCU" Action="write"
+                       Key="Software\Microsoft\Windows\CurrentVersion\Run"
+                       Name="FoosNet"
+                       Value="[INSTALLFOLDER]FoosNet.exe"
+                       Type="string" />
       </Component>
     </DirectoryRef>
   </Fragment>
