@@ -12,6 +12,7 @@ namespace FoosNet.Network
         event Action<ChallengeRequest> ChallengeReceived;
         event Action<ChallengeResponse> ChallengeResponse;
         event Action<PlayerDiscoveryMessage> PlayersDiscovered;
+        event Action<GameStartingMessage> GameStarting;
         void Challenge(IFoosPlayer playerToChallenge);
         void Respond(ChallengeResponse response);
     }
@@ -25,6 +26,7 @@ namespace FoosNet.Network
         public event Action<ChallengeRequest> ChallengeReceived;
         public event Action<ChallengeResponse> ChallengeResponse;
         public event Action<PlayerDiscoveryMessage> PlayersDiscovered;
+        public event Action<GameStartingMessage> GameStarting;
 
         public void Challenge(IFoosPlayer playerToChallenge)
         {
@@ -65,6 +67,7 @@ namespace FoosNet.Network
                     if (PlayersDiscovered != null) PlayersDiscovered(new PlayerDiscoveryMessage(((string[]) m.players).Select(p => new LivePlayer(p))));
                     break;
                 case "gametime":
+                    if (GameStarting != null) GameStarting(new GameStartingMessage(((string[])m.players).Select(p => new LivePlayer(p))));
                     break;
             }
         }
@@ -116,6 +119,18 @@ namespace FoosNet.Network
         }
 
         public PlayerDiscoveryMessage(IEnumerable<IFoosPlayer> players)
+        {
+            m_Players = players;
+        }
+
+        public IEnumerable<IFoosPlayer> Players { get { return m_Players; } }
+    }
+
+    public class GameStartingMessage
+    {
+        private readonly IEnumerable<IFoosPlayer> m_Players;
+
+        public GameStartingMessage(IEnumerable<IFoosPlayer> players)
         {
             m_Players = players;
         }
