@@ -24,13 +24,4 @@ namespace FoosNet.PlayerFilters
             return player;
         }
     }
-
-    public class StatusToUnknownTransformation : IPlayerTransformation
-    {
-        public IFoosPlayer Process(IFoosPlayer player)
-        {
-            player.Status = Status.Unknown;
-            return player;
-        }
-    }
 }

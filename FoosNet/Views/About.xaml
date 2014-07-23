@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:FoosNet.Controls"
         WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="NoResize"
-        Title="About" Height="308" Width="610">
+        Title="About" Height="326" Width="611">
     <Border BorderThickness="1" BorderBrush="Black">
         <Grid>
             <Grid.RowDefinitions>

@@ -74,6 +74,7 @@
     <Compile Include="Controls\Spinner.cs" />
     <Compile Include="ConvertStatus.cs" />
     <Compile Include="PlayerFilters\DefaultNameTransformation.cs" />
+    <Compile Include="PlayerFilters\StatusToUnknownTransformation.cs" />
     <Compile Include="Tests\ShowPlayersTest.cs" />
     <Compile Include="Views\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
