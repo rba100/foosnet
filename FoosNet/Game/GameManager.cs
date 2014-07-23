@@ -258,7 +258,7 @@ namespace FoosNet.Game
         {
             var player = playerObj as FoosPlayerListItem;
             var marker = ++player.InviteMarker;
-            Task.Delay(TimeSpan.FromSeconds(20), token).Wait();
+            Thread.Sleep(TimeSpan.FromSeconds(20));
             if (token.IsCancellationRequested || player.InviteMarker != marker) return;
             if (player.GameState == GameState.Pending)
             {
