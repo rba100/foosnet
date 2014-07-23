@@ -51,6 +51,12 @@ namespace FoosNet.Game
 
             m_NetworkService.ChallengeReceived += NetworkServiceOnChallengeReceived;
             m_NetworkService.ChallengeResponse += NetworkServiceOnChallengeResponse;
+            m_NetworkService.CancelGameReceived += NetworkServiceOnCancelGameReceived;
+        }
+
+        private void NetworkServiceOnCancelGameReceived()
+        {
+            Reset(false);
         }
 
         private void NetworkServiceOnChallengeResponse(ChallengeResponse challengeResponse)
@@ -82,7 +88,7 @@ namespace FoosNet.Game
         {
             if (!IsGameReadyToStart) throw new InvalidOperationException("Need four accepted players to start a game.");
             m_NetworkService.StartGame(m_PlayerLineUp.ToArray());
-            Reset();
+            Reset(false);
         }
 
         private void AddSelf()
@@ -180,7 +186,7 @@ namespace FoosNet.Game
             Task.Factory.StartNew(() => PlayerTimeOutWatcher(player, CancellationToken));
         }
 
-        public void Reset()
+        public void Reset(bool sendCancel)
         {
             lock (m_PlayerLineUp)
             {
@@ -189,7 +195,7 @@ namespace FoosNet.Game
 
                 if (m_IsJoiningRemoteGame && m_Challenger != null)
                 {
-                    m_NetworkService.Respond(new ChallengeResponse(m_Challenger, false));
+                    if (sendCancel) m_NetworkService.Respond(new ChallengeResponse(m_Challenger, false));
                     m_Challenger = null;
                 }
                 else if (m_IsOrganisingGame)
@@ -250,7 +256,7 @@ namespace FoosNet.Game
             catch (Exception ex)
             {
                 if (OnError != null) OnError(this, new ErrorEventArgs(ex));
-                Reset();
+                Reset(true);
             }
         }
 

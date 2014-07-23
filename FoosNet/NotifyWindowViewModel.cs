@@ -75,7 +75,7 @@ namespace FoosNet
 
         private void CancelGame(object obj)
         {
-            GameManager.Reset();
+            GameManager.Reset(true);
         }
 
 
