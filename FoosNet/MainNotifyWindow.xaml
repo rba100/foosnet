@@ -8,7 +8,7 @@
     xmlns:foosNet="clr-namespace:FoosNet"
     xmlns:converters="clr-namespace:FoosNet"
     x:Class="FoosNet.MainNotifyWindow" x:Name="uiMainNotifyWindow"
-    Title="" Height="350" Width="250"
+    Title="" Height="502" Width="256"
     ShowInTaskbar="False"
     WindowStyle="None" 
     AllowsTransparency="True" 
@@ -45,7 +45,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="27"/>
-                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="50"/>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="44"/>
                 </Grid.RowDefinitions>
@@ -67,9 +67,31 @@
                     <foosNet:SlickToggleButton CornerRadius="0,0,4,0" x:Name="CloseButton" Style="{StaticResource SlickButton}" HighlightBackground="Gray" Content="X" Click="CloseButton_Click" Grid.Row="1" FontWeight="Bold" Foreground="#FFFFFFFF" Grid.Column="2" />
                 </Grid>
 
-                <Grid Grid.Row="1" Margin="10,10,10,0">
-
-                    <Image Margin="5,0" Grid.Column="1" Name="TableStatusImage" MouseDown="TableStatusImage_OnMouseDown">
+                <Grid Grid.Row="1" Margin="10,0,10,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock VerticalAlignment="Center" Text="{Binding Path=GameManager.StatusMessage}" FontWeight="Bold" Foreground="Gray"/>
+                    </StackPanel>
+                    <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" FontWeight="Bold" FontFamily="Global User Interface"  MouseDown="TableStatusImage_OnMouseDown">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsTableFree}" Value="false">
+                                        <Setter Property="Text" Value="Table busy"/>
+                                        <Setter Property="Foreground" Value="DarkRed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsTableFree}" Value="true">
+                                        <Setter Property="Text" Value="Table free"/>
+                                        <Setter Property="Foreground" Value="ForestGreen"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <!--<Image Margin="5,0" Grid.Row="1" Name="TableStatusImage" MouseDown="TableStatusImage_OnMouseDown">
                         <Image.Style>
                             <Style TargetType="{x:Type Image}">
                                 <Style.Triggers>
@@ -82,7 +104,7 @@
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>
-                    </Image>
+                    </Image>-->
                     <Popup Name="FoosTablePopup" Placement="Left" MouseDown="FoosTablePopup_OnMouseDown" MouseEnter="FoosTablePopup_OnMouseEnter"
                         PlacementTarget="{Binding ElementName=TableStatusImage}">
                         <Border Background="WhiteSmoke" BorderBrush="DarkGray" BorderThickness="1" Width="160" Height="120">
@@ -99,7 +121,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <Label FontWeight="Bold">Contacts</Label>
+                    <TextBlock FontWeight="Bold" Margin="0,0,0,5">Contacts</TextBlock>
                     <Grid Grid.Row="1">
                         <ListView Name="FoosPlayersList"
                                   ItemsSource="{Binding FoosPlayers}"

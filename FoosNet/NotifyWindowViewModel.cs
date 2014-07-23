@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IdentityModel.Tokens;
+using System.IO;
 using System.Linq;
 using System.Net.Mime;
 using System.Runtime.CompilerServices;
@@ -17,6 +18,7 @@ using System.Windows.Threading;
 using FoosNet.Annotations;
 using FoosNet.CommunicatorIntegration;
 using FoosNet.Controls;
+using FoosNet.Game;
 using FoosNet.Network;
 using FoosNet.PlayerFilters;
 using FoosNet.Tests;
@@ -30,6 +32,8 @@ namespace FoosNet
         public event PropertyChangedEventHandler PropertyChanged;
         private readonly IFoosNetworkService m_NetworkService;
         private readonly List<IPlayerTransformation> m_PlayerProcessors;
+        public GameManager GameManager { get; set; }
+
 
         public ObservableCollection<FoosPlayerListItem> FoosPlayers
         {
@@ -103,6 +107,14 @@ namespace FoosNet
             m_NetworkService.ChallengeResponse += NetworkServiceOnChallengeResponse;
             //var testObjects = new ShowPlayersTest();
             FoosPlayers = new ObservableCollection<FoosPlayerListItem>();
+
+            GameManager = new GameManager(m_NetworkService, m_FoosPlayers, localEmail);
+            GameManager.OnError += GameManagerOnOnError;
+        }
+
+        private void GameManagerOnOnError(object sender, ErrorEventArgs errorEventArgs)
+        {
+            MessageBox.Show(errorEventArgs.ToString(), "Error creating game");
         }
 
         private void CommunicatorOnStatusChanged(object sender, StatusChangedEventArgs statusChangedEventArgs)

@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using FoosNet.Annotations;
 using FoosNet.Network;
@@ -13,12 +16,25 @@ namespace FoosNet.Game
     public class GameManager : INotifyPropertyChanged
     {
         private const int c_PlayersPerGame = 4;
-        private readonly List<FoosPlayerListItem> m_MatchingPlayers = new List<FoosPlayerListItem>();
 
         private readonly IFoosNetworkService m_NetworkService;
-        private ObservableCollection<FoosPlayerListItem> m_PlayerList;
+        private readonly ObservableCollection<FoosPlayerListItem> m_PlayerList;
+
+        private readonly List<FoosPlayerListItem> m_PlayerLineUp = new List<FoosPlayerListItem>();
         private string m_SelfEmail;
         private bool m_IsOrganisingGame;
+
+        // Messages
+        private const string c_Idle = "Waiting for game";
+        private const string c_ReadyToStart = "Ready to start!";
+        private const string c_Accepted = "Waiting for game to start...";
+        private const string c_Finding = "Finding players...";
+        private const string c_FindingFailed = "Not enough players!";
+        private const string c_CustomGame = "Creating custom game...";
+
+        private string m_StatusMessage = c_Idle;
+
+        private Thread m_Worker = null;
 
         public GameManager(IFoosNetworkService networkService, ObservableCollection<FoosPlayerListItem> playerList, string selfEmail)
         {
@@ -32,15 +48,15 @@ namespace FoosNet.Game
 
         private void NetworkServiceOnChallengeResponse(ChallengeResponse challengeResponse)
         {
-            var player = m_MatchingPlayers.FirstOrDefault(p => p.Email.Equals(challengeResponse.Player.Email, StringComparison.OrdinalIgnoreCase));
+            var player = m_PlayerLineUp.FirstOrDefault(p => p.Email.Equals(challengeResponse.Player.Email, StringComparison.OrdinalIgnoreCase));
             if (player != null)
             {
                 if (player.GameState == GameState.Pending) player.GameState = challengeResponse.Accepted ? GameState.Accepted : GameState.Declined;
-                if (player.GameState == GameState.Declined) m_MatchingPlayers.Remove(player);
+                if (player.GameState == GameState.Declined) m_PlayerLineUp.Remove(player);
 
-                if (m_MatchingPlayers.Count == c_PlayersPerGame)
+                if (m_PlayerLineUp.Count == c_PlayersPerGame)
                 {
-                    if (m_MatchingPlayers.All(p => p.GameState == GameState.Accepted))
+                    if (m_PlayerLineUp.All(p => p.GameState == GameState.Accepted))
                     {
                         BeginGame();
                     }
@@ -58,6 +74,20 @@ namespace FoosNet.Game
             Reset();
         }
 
+        private void AddSelf()
+        {
+            var self = m_PlayerList.FirstOrDefault(p => p.Email == m_SelfEmail);
+            if (self != null)
+            {
+                self.GameState = GameState.Accepted;
+                m_PlayerLineUp.Add(self);
+            }
+            else
+            {
+                m_PlayerLineUp.Add(new FoosPlayerListItem(m_SelfEmail, Status.Available, 1) { GameState = GameState.Accepted });
+            }
+        }
+
         private void NetworkServiceOnChallengeReceived(ChallengeRequest challengeRequest)
         {
             if (m_IsOrganisingGame)
@@ -66,23 +96,40 @@ namespace FoosNet.Game
             }
         }
 
-        public bool IsGameReadyToStart { get { return m_MatchingPlayers.Count == c_PlayersPerGame; } }
-        public bool GameCreationInProgress { get { return m_IsOrganisingGame; } set { m_IsOrganisingGame = value;OnPropertyChanged(); }}
+        public bool IsGameReadyToStart { get { return m_PlayerLineUp.Count == c_PlayersPerGame; } }
+        public bool GameCreationInProgress { get { return m_IsOrganisingGame; } set { m_IsOrganisingGame = value; OnPropertyChanged(); } }
 
         public bool CanAddPlayer { get { return !IsGameReadyToStart; } }
         public bool CanCreateGameAuto { get { return !m_IsOrganisingGame; } }
 
-        public void AddPlayer(FoosPlayerListItem player)
+        public string StatusMessage
         {
-            if (!m_IsOrganisingGame) GameCreationInProgress = true;
-            if(m_MatchingPlayers.Count >= c_PlayersPerGame) throw new InvalidOperationException("Cannot add another player, max players reached");
-            m_MatchingPlayers.Add(player);
+            get { return m_StatusMessage; }
+            set
+            {
+                if (value == m_StatusMessage) return;
+                m_StatusMessage = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public void InvitePlayer(FoosPlayerListItem player)
+        {
+            if (!m_IsOrganisingGame)
+            {
+                GameCreationInProgress = true;
+                StatusMessage = c_CustomGame;
+                AddSelf();
+            }
+            if (m_PlayerLineUp.Count >= c_PlayersPerGame) throw new InvalidOperationException("Cannot add another player, max players reached");
+            m_PlayerLineUp.Add(player);
             player.GameState = GameState.Pending;
         }
 
         public void Reset()
         {
-            m_MatchingPlayers.Clear();
+            StatusMessage = c_Idle;
+            m_PlayerLineUp.Clear();
             GameCreationInProgress = false;
             foreach (var item in m_PlayerList)
             {
@@ -92,18 +139,38 @@ namespace FoosNet.Game
 
         public void CreateGameAuto(List<FoosPlayerListItem> prefferedPlayers = null)
         {
-            if(m_IsOrganisingGame) throw new InvalidOperationException("Already creating a game");
+            if (m_IsOrganisingGame) throw new InvalidOperationException("Already creating a game");
             GameCreationInProgress = true;
-            var exceptionCatcher = Task.Factory.StartNew(() => { CreateGameAutoInternal(prefferedPlayers); });
+            AddSelf();
+            StatusMessage = c_Finding;
+            m_Worker = new Thread(CreateGameAutoWorker);
+            m_Worker.Start(prefferedPlayers);
         }
 
-        private bool CreateGameAutoInternal(List<FoosPlayerListItem> prefferedPlayers = null)
+        private void CreateGameAutoWorker(object prefferedPlayers)
         {
-            var remainingPlayers = new List<FoosPlayerListItem>(m_PlayerList);
-            remainingPlayers.RemoveAll(prefferedPlayers.Contains);
-            return true;
+            try
+            {
+                var orderedPlayerList = new List<FoosPlayerListItem>(
+                    (prefferedPlayers as List<FoosPlayerListItem>) ?? new List<FoosPlayerListItem>());
+                orderedPlayerList.AddRange(m_PlayerList.Where(p => !orderedPlayerList.Contains(p)).ToList());
+
+                foreach (var player in orderedPlayerList)
+                {
+                    if (player.Status == Status.Available)
+                    {
+                        InvitePlayer(player);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (OnError != null) OnError(this, new ErrorEventArgs(ex));
+                Reset();
+            }
         }
 
+        public event ErrorEventHandler OnError;
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]

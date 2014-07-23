@@ -12,13 +12,12 @@
         <Setter Property="Background" >
             <Setter.Value>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FF000000" Offset="0.033"/>
-                    <GradientStop Color="#FFEBEBEB" Offset="0.09"/>
-                    <GradientStop Color="#FFE4DCDC" Offset="0.003"/>
-                    <GradientStop Color="#FFFFFFFF" Offset="0.253"/>
-                    <GradientStop Color="#FFFFFFFF" Offset="1"/>
+                    <GradientStop Color="#FFE4DCDC" Offset="0.001"/>
+                    <GradientStop Color="#FF000000" Offset="0.014"/>
+                    <GradientStop Color="#FFEBEBEB" Offset="0.06"/>
+                    <GradientStop Color="#FFFFFFFF" Offset="0.06"/>
+                    <GradientStop Color="#FFFFFFFF" Offset="0.9"/>
                     <GradientStop Color="#FFD6D0D0" Offset="0.945"/>
-                    <GradientStop Color="#FFFFFFFF" Offset="0.852"/>
                 </LinearGradientBrush>
             </Setter.Value>
         </Setter>
