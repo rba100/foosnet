@@ -27,7 +27,7 @@ namespace FoosNet.Controls.Alerts
             var alertColors = new []
             {
                 new Tuple<SolidColorBrush, SolidColorBrush> (Brushes.Red, Brushes.White),
-                new Tuple<SolidColorBrush, SolidColorBrush> (Brushes.Green, Brushes.Black)
+                new Tuple<SolidColorBrush, SolidColorBrush> (Brushes.Green, Brushes.White)
             };
 
             var cancelledColors =
