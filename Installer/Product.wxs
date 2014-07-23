@@ -8,6 +8,7 @@
 
 		<Feature Id="ProductFeature" Title="FoosNet" Level="1">
 			<ComponentGroupRef Id="ProductComponents" />
+      <ComponentRef Id="ApplicationShortcut" />
 		</Feature>
 	</Product>
 
@@ -16,6 +17,9 @@
 			<Directory Id="ProgramFilesFolder">
 				<Directory Id="INSTALLFOLDER" Name="FoosNet" />
 			</Directory>
+    <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="FoosNet"/>
+    </Directory>
 		</Directory>
 	</Fragment>
 
@@ -30,10 +34,31 @@
       <Component Guid="{E53A2BCE-AF98-4C70-B750-87027AF07C73}">
         <File Source="$(var.FoosNet.Network.TargetPath)" KeyPath="yes" />
       </Component>
+      <Component Guid="{E53A2BCE-AF98-4C70-B750-87027AF07C74}">
+        <File Source="$(var.SolutionDir)\packages\gong-wpf-dragdrop.0.1.4.1\lib\net40\GongSolutions.Wpf.DragDrop.dll" KeyPath="yes" />
+      </Component>
+      <Component Guid="{E53A2BCE-AF98-4C70-B750-87027AF07C75}">
+        <File Source="$(var.SolutionDir)\packages\WebSocket4Net.0.9\lib\net40\WebSocket4Net.dll" KeyPath="yes" />
+      </Component>
 			<!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
 			<!-- <Component Id="ProductComponent"> -->
 				<!-- TODO: Insert files, registry keys, and other resources here. -->
 			<!-- </Component> -->
 		</ComponentGroup>
 	</Fragment>
+  
+  <Fragment>
+    <DirectoryRef Id="ApplicationProgramsFolder">
+      <Component Id="ApplicationShortcut" Guid="E53A2BCE-AF98-4C70-B750-87027AF07C76">
+          <Shortcut Id="ApplicationStartMenuShortcut" 
+                    Name="FoosNet"
+                    Description="FoosNet"
+                    Target="[#FoosNet.exe]"
+                    WorkingDirectory="INSTALLFOLDER"/>
+          <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+          <RegistryValue Root="HKCU" Key="Software\Microsoft\MyApplicationName" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+
 </Wix>
