@@ -3,7 +3,7 @@
      xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
 	<Product Id="*" Name="FoosNet Installer" Language="1033" Version="1.0.0.0" Manufacturer="Down Tools Week 2014" UpgradeCode="1e6db7a7-6f5a-460a-9f07-53cd2e97431a">
     
-		<Package InstallerVersion="200" Compressed="yes" InstallScope="perUser" InstallPrivileges="elevated" />
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" InstallPrivileges="elevated" />
     <Icon Id="icon" SourceFile="$(var.SolutionDir)\FoosNet\Images\Icons\Icon-Small@2x.ico" />
     <Property Id="ARPPRODUCTICON" Value="icon" />
 
@@ -16,9 +16,10 @@
       <ComponentRef Id="FoosNetAutostart" />
 		</Feature>
   
-    <PropertyRef Id="NETFRAMEWORK20"/>
-    <Condition Message="This application requires .NET Framework 2.0. Please install the .NET Framework then run this installer again.">
-      <![CDATA[Installed OR NETFRAMEWORK20]]>
+    <PropertyRef Id="NETFRAMEWORK40FULL"/>
+    <PropertyRef Id="NETFRAMEWORK45"/>
+    <Condition Message="This application requires .NET Framework 4.0 or 4.5. Please install the .NET Framework then run this installer again.">
+      <![CDATA[Installed OR NETFRAMEWORK40FULL OR NETFRAMEWORK45]]>
     </Condition>
     
     
