@@ -11,6 +11,7 @@ using System.Net.Mime;
 using System.Runtime.CompilerServices;
 using System.Security.Policy;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -185,7 +186,16 @@ namespace FoosNet
             FoosPlayers = new ObservableCollection<FoosPlayerListItem>();
 
             GameManager = new GameManager(m_NetworkService, this, m_FoosPlayers, m_Self);
+            GameManager.PropertyChanged += GameManagerOnPropertyChanged;
             GameManager.OnError += GameManagerOnOnError;
+        }
+
+        private void GameManagerOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            if (args.PropertyName == "IsGameReadyToStart")
+            {
+                Application.Current.Dispatcher.BeginInvoke(new Action(CommandManager.InvalidateRequerySuggested));
+            }
         }
 
         private void NetworkServiceOnGameStarting(GameStartingMessage gameStartingMessage)
