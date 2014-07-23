@@ -38,12 +38,29 @@
             <DockPanel Margin="0, 15, 0, 5">
                 <TextBlock x:Name="AlertTitle" 
                            Foreground="White"
-                           FontSize="20"
+                           FontSize="25"
                            FontWeight="Bold"
                            HorizontalAlignment="Center"
                            DockPanel.Dock="Top"
                            Height="30"
-                    >FOOS ALERT</TextBlock>
+                    >FOOS ALERT
+
+                    <TextBlock.Triggers>
+                        <EventTrigger RoutedEvent="TextBlock.Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever">
+
+                                    <DoubleAnimation
+                                Storyboard.TargetName="AlertTitle" 
+                                Storyboard.TargetProperty="Opacity"
+                                From="1.0" To="0.5" Duration="0:0:2" 
+                                RepeatBehavior="Forever" AutoReverse="True" />
+
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </TextBlock.Triggers>
+                </TextBlock>
 
                 <StackPanel Orientation="Horizontal"
                             DockPanel.Dock="Bottom"
