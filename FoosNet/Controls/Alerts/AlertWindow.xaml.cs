@@ -45,14 +45,13 @@ namespace FoosNet.Controls.Alerts
         /// </param>
         /// 
         /// <param name="discTrayAnnoyance">
-        /// If true, open and close the disc tray once when the notification
-        /// starts.
+        /// Chance (number between 0 and 1) that the disc tray will open
         /// </param>
         public AlertWindow(Tuple<SolidColorBrush, SolidColorBrush> [] alertColorSequence,
                            String [] alertTextSequence,
                            Tuple<SolidColorBrush, SolidColorBrush> cancelledColors,
                            ChallengeRequest challenge,
-                           bool discTrayAnnoyance)
+                           double discTrayAnnoyanceChance)
         {
             InitializeComponent();
 
@@ -90,11 +89,13 @@ namespace FoosNet.Controls.Alerts
 
             m_StrobeTimer.Start();
 
-            if (discTrayAnnoyance) { 
+            if (random.NextDouble() < discTrayAnnoyanceChance) { 
                 // ReSharper disable once EmptyGeneralCatchClause
                 try { 
                     OpenDiscDrive();
-                    CloseDiscDrive();
+                    if (random.NextDouble() < 0.5) { 
+                        CloseDiscDrive();
+                    }
                 }
                 catch (Exception e)
                 {

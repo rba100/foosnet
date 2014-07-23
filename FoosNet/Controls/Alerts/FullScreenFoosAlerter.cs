@@ -39,7 +39,7 @@ namespace FoosNet.Controls.Alerts
                                                 textSequence,
                                                 cancelledColors, 
                                                 challenge,
-                                                false)
+                                                0.1)
             {
                 Top = Screen.PrimaryScreen.WorkingArea.Top,
                 Left = Screen.PrimaryScreen.WorkingArea.Left,
