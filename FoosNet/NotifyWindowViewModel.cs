@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Mime;
 using System.Runtime.CompilerServices;
+using System.Security.Policy;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -53,6 +54,71 @@ namespace FoosNet
                 return m_ChallengeSelectedPlayer ?? (m_ChallengeSelectedPlayer = new SimpleCommand(ChallengePlayer, CanChallengePlayer));
             }
         }
+
+        private ICommand m_CancelGameCommand;
+        public ICommand CancelGameCommand
+        {
+            get
+            {
+                return m_CancelGameCommand ?? (m_CancelGameCommand = new SimpleCommand(CancelGame, CanCancelGame));
+            }
+        }
+
+        private bool CanCancelGame(object arg)
+        {
+            return true;
+        }
+
+        private void CancelGame(object obj)
+        {
+            
+        }
+
+
+        private ICommand m_StartGameCommand;
+        public ICommand StartGameCommand
+        {
+            get
+            {
+                return m_StartGameCommand ?? (m_StartGameCommand = new SimpleCommand(StartGame, CanStartGame));
+            }
+        }
+
+        private ICommand m_CreateGameAutoCommand;
+        public ICommand CreateGameAutoCommand
+        {
+            get
+            {
+                return m_CreateGameAutoCommand ?? (m_CreateGameAutoCommand = new SimpleCommand(CreateGameAuto, CanCreateGameAuto));
+            }
+        }
+
+        private bool CanCreateGameAuto(object arg)
+        {
+            return GameManager.CanCreateGameAuto;
+        }
+
+        private void CreateGameAuto(object obj)
+        {
+            var param = obj as IList;
+            var prefferedPlayers = new List<FoosPlayerListItem>();
+            foreach (FoosPlayerListItem p in param)
+            {
+                prefferedPlayers.Add(p);
+            }
+            GameManager.CreateGameAuto(prefferedPlayers);
+        }
+
+        private bool CanStartGame(object arg)
+        {
+            return GameManager.IsGameReadyToStart;
+        }
+
+        private void StartGame(object obj)
+        {
+            
+        }
+
 
         private bool CanChallengePlayer(object arg)
         {
@@ -114,7 +180,7 @@ namespace FoosNet
 
         private void GameManagerOnOnError(object sender, ErrorEventArgs errorEventArgs)
         {
-            MessageBox.Show(errorEventArgs.ToString(), "Error creating game");
+            MessageBox.Show(errorEventArgs.GetException().ToString(), "Error creating game");
         }
 
         private void CommunicatorOnStatusChanged(object sender, StatusChangedEventArgs statusChangedEventArgs)

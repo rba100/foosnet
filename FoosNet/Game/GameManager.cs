@@ -21,8 +21,11 @@ namespace FoosNet.Game
         private readonly ObservableCollection<FoosPlayerListItem> m_PlayerList;
 
         private readonly List<FoosPlayerListItem> m_PlayerLineUp = new List<FoosPlayerListItem>();
-        private string m_SelfEmail;
+        private readonly string m_SelfEmail;
         private bool m_IsOrganisingGame;
+        private bool m_IsJoiningRemoteGame;
+        private CancellationTokenSource m_Cts = new CancellationTokenSource();
+        private CancellationToken CancellationToken { get { return m_Cts.Token; } }
 
         // Messages
         private const string c_Idle = "Waiting for game";
@@ -51,20 +54,23 @@ namespace FoosNet.Game
             var player = m_PlayerLineUp.FirstOrDefault(p => p.Email.Equals(challengeResponse.Player.Email, StringComparison.OrdinalIgnoreCase));
             if (player != null)
             {
-                if (player.GameState == GameState.Pending) player.GameState = challengeResponse.Accepted ? GameState.Accepted : GameState.Declined;
+                player.GameState = challengeResponse.Accepted ? GameState.Accepted : GameState.Declined;
                 if (player.GameState == GameState.Declined) m_PlayerLineUp.Remove(player);
 
-                if (m_PlayerLineUp.Count == c_PlayersPerGame)
+                if (IsGameReadyToStart)
                 {
-                    if (m_PlayerLineUp.All(p => p.GameState == GameState.Accepted))
-                    {
-                        BeginGame();
-                    }
+                    StatusMessage = c_ReadyToStart;
+                    // This property is not automatically updated because it's a computed value
+                    OnPropertyChanged("IsGameReadyToStart");
                 }
             }
             else
             {
-                // TODO: reply to the user to say 'sorry, you're not in this game'
+                if (challengeResponse.Accepted)
+                {
+                    // TODO: reply to the user to say 'sorry, you're not in this game'
+                    //m_NetworkService.UnChallenge(challengeResponse.Player);
+                }
             }
         }
 
@@ -96,8 +102,9 @@ namespace FoosNet.Game
             }
         }
 
-        public bool IsGameReadyToStart { get { return m_PlayerLineUp.Count == c_PlayersPerGame; } }
+        public bool IsGameReadyToStart { get { return m_PlayerLineUp.Count(p => p.GameState== GameState.Accepted) == c_PlayersPerGame; } }
         public bool GameCreationInProgress { get { return m_IsOrganisingGame; } set { m_IsOrganisingGame = value; OnPropertyChanged(); } }
+        public bool IsJoiningRemoteGame { get { return m_IsJoiningRemoteGame; } set { m_IsJoiningRemoteGame = value; OnPropertyChanged(); } }
 
         public bool CanAddPlayer { get { return !IsGameReadyToStart; } }
         public bool CanCreateGameAuto { get { return !m_IsOrganisingGame; } }
@@ -129,12 +136,25 @@ namespace FoosNet.Game
         public void Reset()
         {
             StatusMessage = c_Idle;
+            foreach (var player in m_PlayerLineUp)
+            {
+                if (player.Email != m_SelfEmail && player.GameState == GameState.Accepted)
+                {
+                    //TODO: m_NetworkService.UnChallenge(player);
+                }
+            }
             m_PlayerLineUp.Clear();
             GameCreationInProgress = false;
+            m_IsJoiningRemoteGame = false;
+            m_Cts.Cancel();
+
             foreach (var item in m_PlayerList)
             {
                 item.GameState = GameState.None;
             }
+
+            m_Cts.Dispose();
+            m_Cts = new CancellationTokenSource();
         }
 
         public void CreateGameAuto(List<FoosPlayerListItem> prefferedPlayers = null)
@@ -157,11 +177,17 @@ namespace FoosNet.Game
 
                 foreach (var player in orderedPlayerList)
                 {
+                    Task.Delay(TimeSpan.FromSeconds(1), CancellationToken);
+
+                    if (CancellationToken.IsCancellationRequested) return;
+
                     if (player.Status == Status.Available)
                     {
                         InvitePlayer(player);
                     }
                 }
+
+                if (!IsGameReadyToStart) StatusMessage = c_FindingFailed;
             }
             catch (Exception ex)
             {

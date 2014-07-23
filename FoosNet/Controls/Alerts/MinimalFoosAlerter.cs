@@ -10,7 +10,7 @@ namespace FoosNet.Controls.Alerts
 
         public void ShowChallengeAlert(ChallengeRequest foosChallenge)
         {
-            m_AlertBubble = new AlertBubble(foosChallenge, true)
+            m_AlertBubble = new AlertBubble(foosChallenge, 30)
             {
                 Top = Screen.PrimaryScreen.WorkingArea.Height - 200,
                 Left = Screen.PrimaryScreen.WorkingArea.Width - 300
