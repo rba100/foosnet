@@ -16,9 +16,10 @@
       <ComponentRef Id="FoosNetAutostart" />
 		</Feature>
   
-    <PropertyRef Id="NETFRAMEWORK20"/>
-    <Condition Message="This application requires .NET Framework 2.0. Please install the .NET Framework then run this installer again.">
-      <![CDATA[Installed OR NETFRAMEWORK20]]>
+    <PropertyRef Id="NETFRAMEWORK40FULL"/>
+    <PropertyRef Id="NETFRAMEWORK45"/>
+    <Condition Message="This application requires .NET Framework 4.0 or 4.5. Please install the .NET Framework then run this installer again.">
+      <![CDATA[Installed OR NETFRAMEWORK40FULL OR NETFRAMEWORK45]]>
     </Condition>
     
     
