@@ -37,7 +37,7 @@ namespace FoosNet.Network
             Task.Factory.StartNew(() =>
             {
                 Thread.Sleep(2000);
-                var repsonse = new ChallengeResponse(playerToChallenge, m_Random.Next(1) == 0);
+                var repsonse = new ChallengeResponse(playerToChallenge, m_Random.Next(2) == 0);
                 if (ChallengeResponse != null) ChallengeResponse(repsonse);
             });
         }

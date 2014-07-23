@@ -85,16 +85,8 @@ namespace FoosNet.Game
 
         private void AddSelf()
         {
-            var self = m_PlayerList.FirstOrDefault(p => p.Email == m_Self.Email);
-            if (self != null)
-            {
-                self.GameState = GameState.Accepted;
-                m_PlayerLineUp.Add(self);
-            }
-            else
-            {
-                m_PlayerLineUp.Add(new FoosPlayerListItem(m_Self.Email, Status.Available, 1) { GameState = GameState.Accepted });
-            }
+            m_Self.GameState = GameState.Accepted;
+            m_PlayerLineUp.Add(m_Self);
         }
 
         private void NetworkServiceOnChallengeReceived(ChallengeRequest challengeRequest)
@@ -151,8 +143,9 @@ namespace FoosNet.Game
                 AddSelf();
             }
             if (m_PlayerLineUp.Count >= c_PlayersPerGame) throw new InvalidOperationException("Cannot add another player, max players reached");
-            m_PlayerLineUp.Add(player);
             player.GameState = GameState.Pending;
+            m_PlayerLineUp.Add(player);
+            OnPropertyChanged("IsGameReadyToStart");
             m_NetworkService.Challenge(player);
             Task.Factory.StartNew(() => PlayerTimeOutWatcher(player, CancellationToken));
         }
@@ -160,6 +153,7 @@ namespace FoosNet.Game
         public void Reset()
         {
             StatusMessage = c_Idle;
+            m_Self.GameState = GameState.None;
             foreach (var player in m_PlayerLineUp)
             {
                 if (!player.Email.Equals(m_Self.Email, StringComparison.OrdinalIgnoreCase) && player.GameState == GameState.Accepted)
@@ -226,7 +220,7 @@ namespace FoosNet.Game
         private void PlayerTimeOutWatcher(object playerObj, CancellationToken token)
         {
             var player = playerObj as FoosPlayerListItem;
-            Task.Delay(TimeSpan.FromSeconds(20)).Wait();
+            Task.Delay(TimeSpan.FromSeconds(20), token).Wait();
             if (token.IsCancellationRequested) return;
             if (player.GameState == GameState.Pending)
             {

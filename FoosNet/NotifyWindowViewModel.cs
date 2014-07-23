@@ -162,7 +162,7 @@ namespace FoosNet
 
             m_PlayerProcessors = new List<IPlayerTransformation>();
             string localEmail = Environment.UserName + "@red-gate.com";
-            m_Self = new FoosPlayerListItem(localEmail, Status.Available, 1);
+            m_Self = new FoosPlayerListItem(localEmail, Status.Available, 1) { DisplayName = "You" };
 
             try
             {
@@ -180,11 +180,18 @@ namespace FoosNet
             m_NetworkService = new TestFoosNetworkService();
             //m_NetworkService = new FoosNetworkService(endpoint, localEmail);
             m_NetworkService.PlayersDiscovered += NetworkServiceOnPlayersDiscovered;
+            m_NetworkService.GameStarting += NetworkServiceOnGameStarting;
             //var testObjects = new ShowPlayersTest();
             FoosPlayers = new ObservableCollection<FoosPlayerListItem>();
 
             GameManager = new GameManager(m_NetworkService, this, m_FoosPlayers, m_Self);
             GameManager.OnError += GameManagerOnOnError;
+        }
+
+        private void NetworkServiceOnGameStarting(GameStartingMessage gameStartingMessage)
+        {
+            var gogoWindow = new AllPlayersJoined(gameStartingMessage.Players);
+            gogoWindow.Show();
         }
 
         private void GameManagerOnOnError(object sender, ErrorEventArgs errorEventArgs)
