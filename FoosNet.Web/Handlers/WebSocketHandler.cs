@@ -27,7 +27,7 @@ namespace FoosNet.Web.Handlers
                     Respond(m.challenger, m.response);
                     break;
                 case "gametime":
-                    Gametime(m.players);
+                    Gametime(((DynamicJsonArray)m.players).Cast<string>().ToArray());
                     break;
                 case "players":
                     Players();

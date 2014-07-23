@@ -15,6 +15,7 @@ namespace FoosNet.Network
         event Action<GameStartingMessage> GameStarting;
         void Challenge(IFoosPlayer playerToChallenge);
         void Respond(ChallengeResponse response);
+        void StartGame(IEnumerable<IFoosPlayer> players);
     }
 
     public class FoosNetworkService : IFoosNetworkService
@@ -36,6 +37,11 @@ namespace FoosNet.Network
         public void Respond(ChallengeResponse response)
         {
             SendJson(new { action = "respond", challenger = response.Player.Email, response = response.Accepted.ToString() });
+        }
+
+        public void StartGame(IEnumerable<IFoosPlayer> players)
+        {
+            SendJson(new { action = "gametime", players = players.Select(p => p.Email).ToArray() });
         }
 
         public FoosNetworkService(string endpoint, string email)
@@ -67,7 +73,7 @@ namespace FoosNet.Network
                     if (PlayersDiscovered != null) PlayersDiscovered(new PlayerDiscoveryMessage(((string[]) m.players).Select(p => new LivePlayer(p))));
                     break;
                 case "gametime":
-                    if (GameStarting != null) GameStarting(new GameStartingMessage(((string[])m.players).Select(p => new LivePlayer(p))));
+                    if (GameStarting != null) GameStarting(new GameStartingMessage(((DynamicJsonArray)m.players).Select(p => new LivePlayer((string)p))));
                     break;
             }
         }
