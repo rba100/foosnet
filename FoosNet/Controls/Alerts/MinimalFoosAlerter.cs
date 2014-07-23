@@ -15,9 +15,16 @@ namespace FoosNet.Controls.Alerts
                 Top = Screen.PrimaryScreen.WorkingArea.Height - 200,
                 Left = Screen.PrimaryScreen.WorkingArea.Width - 300
             };
-
+            m_AlertBubble.ChallengeResponseReceived += AlertBubbleOnChallengeResponseReceived;
             m_AlertBubble.Show();
         }
+
+        private void AlertBubbleOnChallengeResponseReceived(ChallengeRequest request, bool accepted)
+        {
+            if (ChallengeResponseReceived != null) ChallengeResponseReceived(request, accepted);
+        }
+
+        public event Action<ChallengeRequest, bool> ChallengeResponseReceived;
 
         public void CancelChallengeAlert()
         {

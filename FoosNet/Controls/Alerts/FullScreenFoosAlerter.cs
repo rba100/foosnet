@@ -14,8 +14,7 @@ namespace FoosNet.Controls.Alerts
 
         private List<SecondaryAlertWindow> m_SecondaryAlertWindows;
 
-        public delegate void ChallengeResponseEventHandler(ChallengeResponse response);
-        public event ChallengeResponseEventHandler ChallengeResponseReceived = delegate {};
+        public event Action<ChallengeRequest, bool> ChallengeResponseReceived;
 
         public void ShowChallengeAlert(ChallengeRequest challenge)
         {
@@ -27,7 +26,7 @@ namespace FoosNet.Controls.Alerts
             var alertColors = new []
             {
                 new Tuple<SolidColorBrush, SolidColorBrush> (Brushes.Red, Brushes.White),
-                new Tuple<SolidColorBrush, SolidColorBrush> (Brushes.Green, Brushes.White)
+                new Tuple<SolidColorBrush, SolidColorBrush> (Brushes.Yellow, Brushes.White)
             };
 
             var cancelledColors =
@@ -105,10 +104,10 @@ namespace FoosNet.Controls.Alerts
             }
         }
         
-        private void ChallengeResponseHandler(ChallengeResponse response)
+        private void ChallengeResponseHandler(ChallengeRequest request, bool accepted)
         {
             CloseChallengeAlert();
-            ChallengeResponseReceived(response);
+            if (ChallengeResponseReceived != null) ChallengeResponseReceived(request, accepted);
         }
 
         private void AlertClosedHandler()

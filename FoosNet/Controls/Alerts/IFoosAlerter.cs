@@ -12,6 +12,7 @@ namespace FoosNet.Controls.Alerts
         // If an alert is already active, calling this method again
         // will close the previous alert and open a new one
         void ShowChallengeAlert(ChallengeRequest foosChallenge);
+        event Action<ChallengeRequest, bool> ChallengeResponseReceived;
 
         // Has no effect if no alert is currently active
         void CancelChallengeAlert();

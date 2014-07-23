@@ -18,8 +18,7 @@ namespace FoosNet.Controls.Alerts
         private readonly Timer m_AutoDeclineTimer;
         private Timer m_ClosePopupTimer;
 
-        public delegate void ChallengeResponseEventHandler(ChallengeResponse response);
-        public event ChallengeResponseEventHandler ChallengeResponseReceived = delegate {};
+        public event Action<ChallengeRequest, bool> ChallengeResponseReceived = delegate {};
 
 
         /// <param name="autoDeclineTimeLeft">
@@ -104,13 +103,13 @@ namespace FoosNet.Controls.Alerts
         private void Decline()
         {
             AlertBubbleBorder.Background = Brushes.Gray;
-            ChallengeResponseReceived(new ChallengeResponse(m_Challenge.Challenger, false));
+            ChallengeResponseReceived(m_Challenge, false);
         }
 
         private void Accept()
         {
             AlertBubbleBorder.Background = Brushes.Green;
-            ChallengeResponseReceived(new ChallengeResponse(m_Challenge.Challenger, true));
+            ChallengeResponseReceived(m_Challenge, true);
         }
 
         private void AcceptButton_OnClick(object sender, RoutedEventArgs e)

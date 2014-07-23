@@ -24,8 +24,7 @@ namespace FoosNet.Controls.Alerts
 
         private readonly Timer m_StrobeTimer;
         
-        public delegate void ChallengeResponseEventHandler(ChallengeResponse response);
-        public event ChallengeResponseEventHandler ChallengeResponseReceived = delegate {};
+        public event Action<ChallengeRequest, bool> ChallengeResponseReceived = delegate {};
         
         // Needed so we can close the other windows from the layer above
         public delegate void AlertClosedEventHandler();
@@ -128,12 +127,12 @@ namespace FoosNet.Controls.Alerts
 
         private void AcceptButton_OnClick(object sender, RoutedEventArgs e)
         {
-            ChallengeResponseReceived(new ChallengeResponse(m_Challenge.Challenger, true));
+            ChallengeResponseReceived(m_Challenge, true);
         }
 
         private void DeclineButton_OnClick(object sender, RoutedEventArgs e)
         {
-            ChallengeResponseReceived(new ChallengeResponse(m_Challenge.Challenger, false));
+            ChallengeResponseReceived(m_Challenge, false);
         }
 
         private void CloseButton_OnClick(object sender, RoutedEventArgs e)
