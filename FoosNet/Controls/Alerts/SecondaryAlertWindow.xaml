@@ -4,7 +4,8 @@
         BorderThickness="0"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow">
+        Title="MainWindow" 
+        Topmost="True" >
     <DockPanel>
         <TextBlock x:Name="AlertText"
                    HorizontalAlignment="Center"
