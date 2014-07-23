@@ -22,6 +22,8 @@
     xmlns:dragDrop="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
     xmlns:controls="clr-namespace:FoosNet.Controls"
     xmlns:drawing="clr-namespace:System.Drawing;assembly=System.Drawing"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:diagnostics="clr-namespace:System.Diagnostics;assembly=mscorlib"
     mc:Ignorable="d">
     <Window.DataContext>
         <foosNet:NotifyWindowViewModel></foosNet:NotifyWindowViewModel>
@@ -36,6 +38,7 @@
                 Storyboard.TargetProperty="Opacity" From="1.00" To="0.00" AutoReverse="False" Duration="0:0:0.3" />
         </Storyboard>
         <converters:ConvertStatus x:Key="StatusConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Window.Resources>
     <Border CornerRadius="5">
         <Grid x:Name="uiGridMain" Margin="10">
@@ -47,6 +50,7 @@
                     <RowDefinition Height="27"/>
                     <RowDefinition Height="50"/>
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="44"/>
                 </Grid.RowDefinitions>
 
@@ -198,9 +202,19 @@
                         </ListView>
                     </Grid>
                 </Grid>
-                <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="5,0,5,0" Grid.Row="3">
-                    <Button HorizontalAlignment="Stretch" Margin="5" Width="80" Height="25">Find players</Button>
-                    <Button HorizontalAlignment="Stretch" Margin="5" Width="80" Height="25" Click="TestButtonClick_OpenPlayersJoined">TestButton</Button>
+                <Grid Grid.Row="3" Margin="10,0,10,5" Name="GameControlsGrid" >
+                <!--<Grid Grid.Row="3" Name="GameControlsGrid" Visibility="Visible" Margin="10,0,10,5">-->
+                    <StackPanel Visibility="{Binding Path=GameManager.GameCreationInProgress, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Button Content="Cancel game" Margin="0,0,0,5" Command="{Binding CancelGameCommand}"/>
+                        <Button Content="Start game" Margin="0,0,0,5" Command="{Binding StartGameCommand}"/>
+                    </StackPanel>
+                    <StackPanel Visibility="{Binding Path=GameManager.IsJoiningRemoteGame, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Button Content="Cancel game" Margin="0,0,0,5" Command="{Binding CancelGameCommand}"/>
+                    </StackPanel>
+                </Grid>
+                <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="5,0,5,0" Grid.Row="4">
+                    <Button HorizontalAlignment="Stretch" Margin="5" Width="80" Height="25" Command="{Binding CreateGameAutoCommand}" CommandParameter="{Binding ElementName=FoosPlayersList, Path=SelectedItems}">Find players</Button>
+                    <Button HorizontalAlignment="Stretch" Margin="5" Width="80" Height="25" Click="TestButtonClick_OpenPlayersJoined" Visibility="{Binding Source={x:Static diagnostics:Debugger.IsAttached}, Converter={StaticResource BooleanToVisibilityConverter}}">TestButton</Button>
                 </StackPanel>
             </Grid>
         </Grid>
