@@ -74,7 +74,7 @@ namespace FoosNet
 
         private void CancelGame(object obj)
         {
-            
+            GameManager.Reset();
         }
 
 
@@ -120,7 +120,7 @@ namespace FoosNet
 
         private void StartGame(object obj)
         {
-            
+            GameManager.BeginGame();
         }
 
 
@@ -128,15 +128,18 @@ namespace FoosNet
         {
             var list = (arg as IList);
             if (list == null) return false;
-            return list.Count > 0 && list.Count < 4;
+            return GameManager.CanAddPlayer && GameManager.FreeSlots >= list.Count;
         }
 
         private void ChallengePlayer(object obj)
         {
             var list = (obj as IList);
             if (list == null) return;
-            var players = list.Cast<FoosPlayerListItem>();
-            MessageBox.Show(String.Join(", ", players.Select(p=>p.DisplayName)));
+            var players = list.Cast<FoosPlayerListItem>().ToList();
+            foreach (var p in players)
+            {
+                if(GameManager.CanAddPlayer) GameManager.InvitePlayer(p);
+            }
         }
 
         public bool IsTableFree
@@ -177,8 +180,6 @@ namespace FoosNet
             m_NetworkService = new TestFoosNetworkService();
             //m_NetworkService = new FoosNetworkService(endpoint, localEmail);
             m_NetworkService.PlayersDiscovered += NetworkServiceOnPlayersDiscovered;
-            m_NetworkService.ChallengeReceived += NetworkServiceOnChallengeReceived;
-            m_NetworkService.ChallengeResponse += NetworkServiceOnChallengeResponse;
             //var testObjects = new ShowPlayersTest();
             FoosPlayers = new ObservableCollection<FoosPlayerListItem>();
 
@@ -195,16 +196,6 @@ namespace FoosNet
         {
             var player = m_FoosPlayers.FirstOrDefault(p => p.Email == statusChangedEventArgs.Email);
             if (player != null) player.Status = statusChangedEventArgs.CurrentStatus;
-        }
-
-        private void NetworkServiceOnChallengeResponse(ChallengeResponse challengeResponse)
-        {
-            
-        }
-
-        private void NetworkServiceOnChallengeReceived(ChallengeRequest challengeRequest)
-        {
-            
         }
 
         private void NetworkServiceOnPlayersDiscovered(PlayerDiscoveryMessage playerDiscoveryMessage)

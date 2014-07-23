@@ -78,7 +78,7 @@ namespace FoosNet.Game
 
         public void BeginGame()
         {
-            if(!IsGameReadyToStart) throw new InvalidOperationException("Need four accepted players to start a game.");
+            if (!IsGameReadyToStart) throw new InvalidOperationException("Need four accepted players to start a game.");
             m_NetworkService.StartGame(m_PlayerLineUp.ToArray());
             Reset();
         }
@@ -128,6 +128,7 @@ namespace FoosNet.Game
         public bool GameCreationInProgress { get { return m_IsOrganisingGame; } set { m_IsOrganisingGame = value; OnPropertyChanged(); } }
         public bool IsJoiningRemoteGame { get { return m_IsJoiningRemoteGame; } set { m_IsJoiningRemoteGame = value; OnPropertyChanged(); } }
         public bool CanAddPlayer { get { return !IsGameReadyToStart; } }
+        public int FreeSlots { get { return Math.Max(c_PlayersPerGame - m_PlayerLineUp.Count, 3); } }
         public bool CanCreateGameAuto { get { return !m_IsOrganisingGame; } }
 
         public string StatusMessage
@@ -152,6 +153,7 @@ namespace FoosNet.Game
             if (m_PlayerLineUp.Count >= c_PlayersPerGame) throw new InvalidOperationException("Cannot add another player, max players reached");
             m_PlayerLineUp.Add(player);
             player.GameState = GameState.Pending;
+            m_NetworkService.Challenge(player);
             Task.Factory.StartNew(() => PlayerTimeOutWatcher(player, CancellationToken));
         }
 
@@ -200,7 +202,7 @@ namespace FoosNet.Game
 
                 foreach (var player in orderedPlayerList)
                 {
-                    if(!PlayableStatus(player)) continue;
+                    if (!PlayableStatus(player)) continue;
 
                     while (!IsGameReadyToStart && m_PlayerLineUp.Count == c_PlayersPerGame)
                     {
@@ -229,7 +231,7 @@ namespace FoosNet.Game
             if (player.GameState == GameState.Pending)
             {
                 player.GameState = GameState.Timeout;
-                m_PlayerLineUp.RemoveAll(p=>p.Email.Equals(player.Email));
+                m_PlayerLineUp.RemoveAll(p => p.Email.Equals(player.Email));
             }
         }
 

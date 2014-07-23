@@ -49,7 +49,7 @@ namespace FoosNet.Network
 
         public void StartGame(IEnumerable<IFoosPlayer> players)
         {
-            
+            if(GameStarting!=null) GameStarting(new GameStartingMessage(players));
         }
 
         public void Dispose()
