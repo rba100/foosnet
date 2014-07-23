@@ -32,7 +32,7 @@ namespace FoosNet.Game
         // Messages
         private const string c_Idle = "Waiting for game";
         private const string c_ReadyToStart = "Ready to start!";
-        private const string c_Accepted = "Waiting for game to start...";
+        private const string c_Accepted = "Waiting for game start...";
         private const string c_Finding = "Finding players...";
         private const string c_FindingFailed = "Not enough players!";
         private const string c_CustomGame = "Creating custom game...";
@@ -98,7 +98,10 @@ namespace FoosNet.Game
             }
             else
             {
-                m_IsJoiningRemoteGame = true;
+                IsJoiningRemoteGame = true;
+                OnPropertyChanged("CanCreateGameAuto");
+                OnPropertyChanged("CanAddPlayer");
+                StatusMessage = c_Accepted;
 
                 Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                 {
@@ -111,7 +114,7 @@ namespace FoosNet.Game
                     Thread.Sleep(1500);
                     m_NetworkService.Respond(new ChallengeResponse(challengeRequest.Challenger, true));
                 });
-                
+
                 //Action<bool> lam = (accepted) =>
                 //{
                 //    try
