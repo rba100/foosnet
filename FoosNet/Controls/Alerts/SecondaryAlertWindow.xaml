@@ -16,17 +16,22 @@
                 <EventTrigger RoutedEvent="TextBlock.Loaded">
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation
+                            <DoubleAnimationUsingKeyFrames
                                 Storyboard.TargetName="AlertText" 
                                 Storyboard.TargetProperty="Opacity"
-                                From="1.0" To="0.5" Duration="0:0:2" 
-                                AutoReverse="True" RepeatBehavior="Forever" />
+                                RepeatBehavior="Forever"
+                                Duration="0:0:10">
+                                <LinearDoubleKeyFrame Value="0.0" KeyTime="0:0:0" />
+                                <LinearDoubleKeyFrame Value="1.0" KeyTime="0:0:1" />
+                                <LinearDoubleKeyFrame Value="1.0" KeyTime="0:0:9" />
+                                <LinearDoubleKeyFrame Value="0.0" KeyTime="0:0:10" />
+                            </DoubleAnimationUsingKeyFrames>
 
                             <DoubleAnimation
                                 Storyboard.TargetName="AlertText" 
                                 Storyboard.TargetProperty="FontSize"
-                                From="90" To="250" Duration="0:0:10" 
-                                AutoReverse="False" RepeatBehavior="Forever" />
+                                From="90" To="350" Duration="0:0:10" 
+                                RepeatBehavior="Forever" />
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger>
