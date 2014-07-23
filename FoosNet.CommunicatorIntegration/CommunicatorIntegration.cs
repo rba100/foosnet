@@ -96,7 +96,7 @@ namespace FoosNet.CommunicatorIntegration
         
         public void StatusChangedSubscribeEmail(string email)
         {
-            m_SubscribedContacts.Add(email.ToLower(), GetContactByRedGateEmail(email.ToLower()));
+            m_SubscribedContacts[email.ToLower()] = GetContactByRedGateEmail(email.ToLower());
         }
 
         public void StatusChangedUnsubscribeEmail(string email)
