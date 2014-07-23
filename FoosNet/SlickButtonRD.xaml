@@ -7,11 +7,23 @@
     xmlns:foosNet="clr-namespace:FoosNet">
     <ControlTemplate x:Key="SlickButtonTemplate" TargetType="{x:Type foosNet:SlickToggleButton}">
         <Grid>
-            <Border x:Name="ButtonBackgroundBorder" CornerRadius="{Binding Path=CornerRadius, RelativeSource={RelativeSource TemplatedParent}}" Background="{Binding Path=HighlightBackground, RelativeSource={RelativeSource TemplatedParent}}" Opacity="0" BorderBrush="Black" BorderThickness="1"></Border>
-            <Border x:Name="ButtonEdgesBorder" CornerRadius="{Binding Path=CornerRadius, RelativeSource={RelativeSource TemplatedParent}}" Opacity="1" BorderBrush="#FF3355AA" BorderThickness="1,0,1,1" >
-            </Border>
-            <Border x:Name="ButtonContentBorder" CornerRadius="{Binding Path=CornerRadius, RelativeSource={RelativeSource TemplatedParent}}" Opacity="1" BorderThickness="1">
-                <ContentPresenter Width="Auto" Height="Auto"  HorizontalAlignment="Center" VerticalAlignment="Center"></ContentPresenter>
+            <Border x:Name="ButtonBackgroundBorder" 
+                    CornerRadius="{Binding Path=CornerRadius, RelativeSource={RelativeSource TemplatedParent}}" 
+                    Background="{Binding Path=HighlightBackground, RelativeSource={RelativeSource TemplatedParent}}" 
+                    Opacity="0" BorderBrush="Black" 
+                    BorderThickness="1"/>
+            <Border x:Name="ButtonEdgesBorder" 
+                    CornerRadius="{Binding Path=CornerRadius, RelativeSource={RelativeSource TemplatedParent}}" 
+                    Opacity="1" BorderBrush="#FF3355AA" 
+                    BorderThickness="{Binding Path=BorderThickness, RelativeSource={RelativeSource TemplatedParent}}" />
+            <Border x:Name="ButtonContentBorder" 
+                    CornerRadius="{Binding Path=CornerRadius, RelativeSource={RelativeSource TemplatedParent}}" 
+                    Opacity="1" 
+                    BorderThickness="1">
+                <ContentPresenter Width="Auto"
+                                  Height="Auto"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
             </Border>
         </Grid>
         <ControlTemplate.Triggers>
