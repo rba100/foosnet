@@ -12,9 +12,9 @@ namespace MarkTestApp
     {
         static void Main()
         {
-            IFoosNetworkService foosnet1 = new FoosNetworkService("ws://mdr-foosnet.testnet.red-gate.com/Api/Socket", "mark.raymond@red-gate.com");
+            IFoosNetworkService foosnet1 = new FoosNetworkService("ws://mdr-foosnet.testnet.red-gate.com/Api/Socket", "mark.raymond@red-gate.com", TimeSpan.FromSeconds(1));
             Thread.Sleep(400);
-            IFoosNetworkService foosnet2 = new FoosNetworkService("ws://mdr-foosnet.testnet.red-gate.com/Api/Socket", "robin.anderson@red-gate.com");
+            IFoosNetworkService foosnet2 = new FoosNetworkService("ws://mdr-foosnet.testnet.red-gate.com/Api/Socket", "robin.anderson@red-gate.com", TimeSpan.FromSeconds(1));
             foosnet1.PlayersDiscovered += players => Console.WriteLine("Mark discovered {0}", string.Join(", ", players.Players.Select(p => p.Email)));
             foosnet2.PlayersDiscovered += players => Console.WriteLine("Robin discovered {0}", string.Join(", ", players.Players.Select(p => p.Email)));
             foosnet2.GameStarting += players => Console.WriteLine("Robin sees game starting with {0}", string.Join(", ", players.Players.Select(p => p.Email)));

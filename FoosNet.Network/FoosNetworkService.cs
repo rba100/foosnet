@@ -23,6 +23,7 @@ namespace FoosNet.Network
         private readonly string m_Email;
         private readonly WebSocket m_WebSocket;
         private Timer m_Timer;
+        private readonly TimeSpan m_SubscribeInterval;
 
         public event Action<ChallengeRequest> ChallengeReceived;
         public event Action<ChallengeResponse> ChallengeResponse;
@@ -44,7 +45,7 @@ namespace FoosNet.Network
             SendJson(new { action = "gametime", players = players.Select(p => p.Email).ToArray() });
         }
 
-        public FoosNetworkService(string endpoint, string email)
+        public FoosNetworkService(string endpoint, string email, TimeSpan subscribeInterval)
         {
             m_Email = email;
             m_WebSocket = new WebSocket(endpoint);
@@ -52,6 +53,7 @@ namespace FoosNet.Network
             m_WebSocket.MessageReceived += OnMessageReceived;
             m_WebSocket.Error += (sender, args) => Console.WriteLine("Error!{0}{1}", Environment.NewLine, args.Exception);
             m_WebSocket.Open();
+            m_SubscribeInterval = subscribeInterval;
         }
 
         void OnMessageReceived(object sender, MessageReceivedEventArgs e)
@@ -81,7 +83,7 @@ namespace FoosNet.Network
         private void OnOpen(object sender, EventArgs e)
         {
             var subscribe = new { action = "subscribe", email = m_Email };
-            m_Timer = new Timer(SendJson, subscribe, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+            m_Timer = new Timer(SendJson, subscribe, TimeSpan.Zero, m_SubscribeInterval);
         }
 
         private void SendJson(object message)
