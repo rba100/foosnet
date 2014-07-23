@@ -178,8 +178,17 @@ namespace FoosNet
                 m_PlayerProcessors.Add(new DefaultNameTransformation());
                 m_PlayerProcessors.Add(new StatusToUnknownTransformation());
             }
-            m_NetworkService = new TestFoosNetworkService();
-            //m_NetworkService = new FoosNetworkService(endpoint, localEmail);
+
+            // nasty hack to support WPF designer
+            if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
+            {
+                m_NetworkService = new TestFoosNetworkService();
+            }
+            else
+            {
+                m_NetworkService = new FoosNetworkService(endpoint, localEmail, TimeSpan.FromMinutes(1));
+            }
+           
             m_NetworkService.PlayersDiscovered += NetworkServiceOnPlayersDiscovered;
             m_NetworkService.GameStarting += NetworkServiceOnGameStarting;
             //var testObjects = new ShowPlayersTest();
