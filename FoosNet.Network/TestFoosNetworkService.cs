@@ -10,6 +10,7 @@ namespace FoosNet.Network
         private readonly Random m_Random = new Random();
 
         public event Action<ChallengeRequest> ChallengeReceived;
+        public event Action CancelGameReceived;
         public event Action<ChallengeResponse> ChallengeResponse;
         public event Action<PlayerDiscoveryMessage> PlayersDiscovered;
         public event Action<GameStartingMessage> GameStarting;
@@ -18,17 +19,20 @@ namespace FoosNet.Network
         {
             Task.Factory.StartNew(() =>
             {
+                var jason = new LivePlayer("jason.crease@red-gate.com");
                 Thread.Sleep(1000);
                 var players = new List<LivePlayer>
                 {
                     new LivePlayer("robin.anderson@red-gate.com"),
                     new LivePlayer("reka.burmeister@red-gate.com"),
-                    new LivePlayer("jason.crease@red-gate.com"),
+                    jason,
                     new LivePlayer("martin.podlubny@red-gate.com"),
                     new LivePlayer("mark.raymond@red-gate.com"),
                     new LivePlayer("oliver.lane@red-gate.com")
                 };
                 if (PlayersDiscovered != null) PlayersDiscovered(new PlayerDiscoveryMessage(players));
+
+                //if (ChallengeReceived != null) ChallengeReceived(new ChallengeRequest(jason));
             });
         }
 
@@ -50,6 +54,11 @@ namespace FoosNet.Network
         public void StartGame(IEnumerable<IFoosPlayer> players)
         {
             if(GameStarting!=null) GameStarting(new GameStartingMessage(players));
+        }
+
+        public void CancelGame(IEnumerable<IFoosPlayer> players)
+        {
+            
         }
 
         public void Dispose()

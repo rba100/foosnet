@@ -12,12 +12,14 @@ namespace FoosNet.Network
     public interface IFoosNetworkService : IDisposable
     {
         event Action<ChallengeRequest> ChallengeReceived;
+        event Action CancelGameReceived;
         event Action<ChallengeResponse> ChallengeResponse;
         event Action<PlayerDiscoveryMessage> PlayersDiscovered;
         event Action<GameStartingMessage> GameStarting;
         void Challenge(IFoosPlayer playerToChallenge);
         void Respond(ChallengeResponse response);
         void StartGame(IEnumerable<IFoosPlayer> players);
+        void CancelGame(IEnumerable<IFoosPlayer> players);
     }
 
     public class FoosNetworkService : Disposable, IFoosNetworkService
@@ -28,6 +30,7 @@ namespace FoosNet.Network
         private readonly TimeSpan m_SubscribeInterval;
 
         public event Action<ChallengeRequest> ChallengeReceived;
+        public event Action CancelGameReceived;
         public event Action<ChallengeResponse> ChallengeResponse;
         public event Action<PlayerDiscoveryMessage> PlayersDiscovered;
         public event Action<GameStartingMessage> GameStarting;
@@ -52,6 +55,11 @@ namespace FoosNet.Network
             m_WebSocket.SendAsJson(new { action = "players" });
         }
 
+        public void CancelGame(IEnumerable<IFoosPlayer> players)
+        {
+            m_WebSocket.SendAsJson(new { action = "cancelgame", players = players.Select(p => p.Email).ToArray() });
+        }
+
         public FoosNetworkService(string endpoint, string email, TimeSpan subscribeInterval)
         {
             m_Email = email;
@@ -69,6 +77,9 @@ namespace FoosNet.Network
             var type = m.type as string;
             switch (type)
             {
+                case "cancelgame":
+                    if (CancelGameReceived != null) CancelGameReceived();
+                    break;
                 case "challenge":
                     if (ChallengeReceived != null) ChallengeReceived(new ChallengeRequest(new LivePlayer(m.challengedBy as string)));
                     break;
@@ -117,6 +128,18 @@ namespace FoosNet.Network
         }
 
         public IFoosPlayer Challenger { get { return m_Challenger; } }
+    }
+
+    public class CancelGameMessage
+    {
+        private readonly IEnumerable<IFoosPlayer> m_Challenger;
+
+        public CancelGameMessage(IEnumerable<IFoosPlayer> challenger)
+        {
+            m_Challenger = challenger;
+        }
+
+        public IEnumerable<IFoosPlayer> Challenger { get { return m_Challenger; } }
     }
 
     public class PlayerDiscoveryMessage

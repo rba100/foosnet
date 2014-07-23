@@ -29,6 +29,9 @@ namespace FoosNet.Web.Handlers
                 case "gametime":
                     Gametime(((DynamicJsonArray)m.players).Cast<string>().ToArray());
                     break;
+                case "cancelgame":
+                    CancelGame(((DynamicJsonArray)m.players).Cast<string>().ToArray());
+                    break;
                 case "players":
                     Players();
                     break;
@@ -69,6 +72,14 @@ namespace FoosNet.Web.Handlers
             foreach (var player in otherPlayers)
             {
                 SendTo(player, new { type = "gametime", players = allPlayers });
+            }
+        }
+
+        private void CancelGame(string[] otherPlayers)
+        {
+            foreach (var player in otherPlayers)
+            {
+                SendTo(player, new { type = "cancelgame" });
             }
         }
 

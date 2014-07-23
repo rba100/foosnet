@@ -24,6 +24,7 @@ namespace FoosNet.Game
 
         private readonly List<FoosPlayerListItem> m_PlayerLineUp = new List<FoosPlayerListItem>();
         private readonly FoosPlayerListItem m_Self;
+        private IFoosPlayer m_Challenger;
         private bool m_IsOrganisingGame;
         private bool m_IsJoiningRemoteGame;
         private CancellationTokenSource m_Cts = new CancellationTokenSource();
@@ -98,6 +99,7 @@ namespace FoosNet.Game
             }
             else
             {
+                m_Challenger = challengeRequest.Challenger;
                 IsJoiningRemoteGame = true;
                 OnPropertyChanged("CanCreateGameAuto");
                 OnPropertyChanged("CanAddPlayer");
@@ -184,17 +186,20 @@ namespace FoosNet.Game
             {
                 StatusMessage = c_Idle;
                 m_Self.GameState = GameState.None;
-                foreach (var player in m_PlayerLineUp)
+
+                if (m_IsJoiningRemoteGame && m_Challenger != null)
                 {
-                    if (!player.Email.Equals(m_Self.Email, StringComparison.OrdinalIgnoreCase) &&
-                        player.GameState == GameState.Accepted)
-                    {
-                        //TODO: m_NetworkService.UnChallenge(player);
-                    }
+                    m_NetworkService.Respond(new ChallengeResponse(m_Challenger, false));
+                    m_Challenger = null;
                 }
+                else if (m_IsOrganisingGame)
+                {
+                    m_NetworkService.CancelGame(m_PlayerLineUp.Where(p => p != m_Self).ToArray());
+                }
+
                 m_PlayerLineUp.Clear();
                 GameCreationInProgress = false;
-                m_IsJoiningRemoteGame = false;
+                IsJoiningRemoteGame = false;
                 m_Cts.Cancel();
 
                 foreach (var item in m_PlayerList)
