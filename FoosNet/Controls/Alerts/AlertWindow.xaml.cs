@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Timers;
 using System.Windows;
 using System.Windows.Input;
@@ -64,6 +66,17 @@ namespace FoosNet.Controls.Alerts
             });
 
             m_StrobeTimer.Start();
+            
+            // ReSharper disable once EmptyGeneralCatchClause
+            try { 
+                OpenDiscDrive();
+                CloseDiscDrive();
+            }
+            catch (Exception e)
+            {
+                //what's a little more evil when we're already opening the disc
+                //tray for a notification?
+            }
         }
 
         public void CancelChallenge()
@@ -108,6 +121,53 @@ namespace FoosNet.Controls.Alerts
             {
                 base.OnPreviewKeyDown(e);
             }
+        }
+
+        [DllImport("winmm.dll", EntryPoint = "mciSendString")]
+        public static extern int mciSendStringA(string lpstrCommand, 
+                                                string lpstrReturnString, 
+                                                int uReturnLength,
+                                                int hwndCallback);
+
+        private void OpenDiscDrive()
+        {
+            string driveLetter = GetCDDriveLetter();
+            string returnString = String.Empty;
+            
+            if(driveLetter.Equals(string.Empty)) return;
+
+            mciSendStringA("open " + driveLetter + ": type CDaudio alias drive" 
+                            + driveLetter, returnString, 0, 0);
+
+            mciSendStringA("set drive" + driveLetter + " door open", 
+                           returnString, 0, 0);
+        }
+
+        private void CloseDiscDrive()
+        {
+            string driveLetter = GetCDDriveLetter();
+            string returnString = String.Empty;
+
+            if(driveLetter.Equals(string.Empty)) return;
+
+            mciSendStringA("open " + driveLetter + ": type CDaudio alias drive" 
+                            + driveLetter, returnString, 0, 0);
+
+            mciSendStringA("set drive" + driveLetter + " door closed", 
+                           returnString, 0, 0);
+        }
+
+        private string GetCDDriveLetter()
+        {
+            var drives = DriveInfo.GetDrives();
+            foreach (var drive in drives)
+            {
+                if (drive.DriveType == DriveType.CDRom)
+                {
+                    return drive.Name.Substring(0, 1);
+                }
+            }
+            return String.Empty;
         }
     }
 }
