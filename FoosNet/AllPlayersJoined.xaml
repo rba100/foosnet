@@ -4,57 +4,46 @@
         xmlns:foosNet="clr-namespace:FoosNet"
         Topmost="True" 
         WindowStyle="None" 
+        AllowsTransparency="True" 
         ResizeMode="NoResize"
         BorderThickness="1" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        Title="Let's start playing!" Height="300" Width="300">
+        Title="Let's start playing!" Height="284" Width="470" Background="Transparent">
     <Window.DataContext>
         <foosNet:AllPlayersJoinedViewModel></foosNet:AllPlayersJoinedViewModel>
     </Window.DataContext>
-    <Border CornerRadius="5">
+    <Border CornerRadius="15" BorderThickness="4" BorderBrush="Gray" Background="WhiteSmoke">
         <Grid x:Name="TopGrid">
             <Border Width="Auto" Height="Auto">
             </Border>
-            
+
             <Grid Grid.Row="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="100"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="44"></RowDefinition>
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" FontSize="32">
-            GO! GO! GO!!!
+            GO! GO! GO!
                 </TextBlock>
-                
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="25"></ColumnDefinition>
-                        <ColumnDefinition Width="50"></ColumnDefinition>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="25"></RowDefinition>
-                        <RowDefinition Height="110"></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <Label FontWeight="Bold" Grid.Column="1">Players</Label>
-                    <Grid Grid.Row="1" Grid.Column="2">
-                        <ListView Name="FoosPlayersList" BorderThickness="0" BorderBrush="Transparent" ItemsSource="{Binding FoosPlayers}" >
+                    <Grid Grid.Row="1">
+                        <ListView Name="FoosPlayersList" BorderThickness="0" BorderBrush="Transparent" Margin="100,0,100,0"
+                                  ItemsSource="{Binding FoosPlayers}" Background="WhiteSmoke">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Background="Transparent" Margin="5,1,5,1" FontSize="14" Text="{Binding DisplayName}"></TextBlock>
+                                        <TextBlock Background="Transparent" Margin="5,1,5,5" FontSize="14" Text="{Binding DisplayName}"></TextBlock>
                                     </StackPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
                     </Grid>
-                    
-                </Grid>
                 <Grid Grid.Row="2">
-                    <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5" Click="AckButtonClicked">On my way</Button>
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Stretch" Margin="5,5,5,10" Click="AckButtonClicked"
+                             Content="OK" Width="80"/>
                 </Grid>
-                    
+
             </Grid>
-            
+
         </Grid>
     </Border>
 </Window>
