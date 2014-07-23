@@ -21,6 +21,9 @@
     </Condition>
     
     
+    <WixVariable Id="WixUIDialogBmp" Value="$(var.SolutionDir)\FoosNet\Images\InstallerImages\dialog.bmp" />
+    <WixVariable Id="WixUIBannerBmp" Value="$(var.SolutionDir)\FoosNet\Images\InstallerImages\banner.bmp" />
+    
     <UI>
       <UIRef Id="WixUI_InstallDir" />
       
