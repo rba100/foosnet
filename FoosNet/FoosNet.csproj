@@ -51,6 +51,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Controls\Alerts\AlertBubble.xaml.cs">
+      <DependentUpon>AlertBubble.xaml</DependentUpon>
+    </Compile>
     <Compile Include="AllPlayersJoined.xaml.cs">
       <DependentUpon>AllPlayersJoined.xaml</DependentUpon>
     </Compile>
@@ -67,12 +70,20 @@
     <Compile Include="Controls\ScrollingContentControl.xaml.cs">
       <DependentUpon>ScrollingContentControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SimpleCommand.cs" />
     <Compile Include="Controls\Spinner.cs" />
     <Compile Include="ConvertStatus.cs" />
+    <Compile Include="PlayerFilters\DefaultNameTransformation.cs" />
+    <Compile Include="PlayerFilters\StatusToUnknownTransformation.cs" />
     <Compile Include="Tests\ShowPlayersTest.cs" />
     <Compile Include="Views\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\Alerts\AlertBubble.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Alerts\AlertBubbleGridStyleRD.xaml" />
     <Page Include="AllPlayersJoined.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -129,7 +140,7 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Controls\ExtendedNotifyIcon.cs" />
-    <Compile Include="FoosPlayer.cs" />
+    <Compile Include="FoosPlayerListItem.cs" />
     <Compile Include="HorizontalSeparatorRD.xaml.cs">
       <DependentUpon>HorizontalSeparatorRD.xaml</DependentUpon>
     </Compile>

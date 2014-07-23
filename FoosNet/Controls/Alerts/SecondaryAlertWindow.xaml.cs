@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Timers;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace TestAlerts
@@ -19,8 +20,10 @@ namespace TestAlerts
         {
             m_CancelledColors = cancelledColors;
             InitializeComponent();
+            
+            var random = new Random();
 
-            m_StrobeTimer = new Timer {Interval = 1000};
+            m_StrobeTimer = new Timer {Interval = 1000 + random.Next(100)};
 
             var currentColour = 0;
             
@@ -43,6 +46,19 @@ namespace TestAlerts
             
             SecondaryAlertWindowElement.Background = m_CancelledColors.Item1;
             AlertText.Foreground = m_CancelledColors.Item2;
+        }
+
+        //disable Alt+F4
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
+        {
+            if (Keyboard.Modifiers == ModifierKeys.Alt && e.SystemKey == Key.F4)
+            {
+                e.Handled = true;
+            }
+            else
+            {
+                base.OnPreviewKeyDown(e);
+            }
         }
     }
 }

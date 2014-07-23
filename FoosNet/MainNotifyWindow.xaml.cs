@@ -202,6 +202,7 @@ namespace FoosNet
             if (original != null) original.StreamSource.Dispose();
 
             FoosTableImage.Visibility = Visibility.Collapsed;
+            FoosTablePopup.StaysOpen = true;
             FoosTablePopup.IsOpen = true;
             var url = new Uri(@"http://10.120.115.224/snapshot.cgi?user=viewer&amp;pwd=&amp;");
             var webRequest = WebRequest.CreateDefault(url);
@@ -229,15 +230,20 @@ namespace FoosNet
         {
             FoosTablePopup.IsOpen = false;
         }
+
+        private void FoosTablePopup_OnMouseEnter(object sender, MouseEventArgs e)
+        {
+            FoosTablePopup.StaysOpen = false;
+        }
 		
         private void TestButtonClick_OpenPlayersJoined(object sender, RoutedEventArgs e)
         {
             Window playersJoined = new AllPlayersJoined(new List<IFoosPlayer>() 
             { 
-                new FoosPlayer("Robin Anderson", Status.Available, 1), 
-                new FoosPlayer("Aaron Law", Status.Available, 1), 
-                new FoosPlayer("Tom Crossman", Status.Available, 1),
-                new FoosPlayer("Ali Daw", Status.Available, 1)
+                new FoosPlayerListItem("Robin Anderson", Status.Available, 1), 
+                new FoosPlayerListItem("Aaron Law", Status.Available, 1), 
+                new FoosPlayerListItem("Tom Crossman", Status.Available, 1),
+                new FoosPlayerListItem("Ali Daw", Status.Available, 1)
             });
 
             playersJoined.ShowDialog();

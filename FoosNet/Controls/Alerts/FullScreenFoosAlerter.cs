@@ -15,12 +15,7 @@ namespace FoosNet.Controls.Alerts
         private List<SecondaryAlertWindow> m_SecondaryAlertWindows;
 
         public delegate void ChallengeResponseEventHandler(ChallengeResponse response);
-
         public event ChallengeResponseEventHandler ChallengeResponseReceived = delegate {};
-
-        public delegate void AlertClosedEventHandler();
-
-        public event AlertClosedEventHandler AlertClosed = delegate {};
 
         public void ShowChallengeAlert(ChallengeRequest challenge)
         {
@@ -38,7 +33,10 @@ namespace FoosNet.Controls.Alerts
             var cancelledColors =
                 new Tuple<SolidColorBrush, SolidColorBrush> (Brushes.Gray, Brushes.White);
 
-            m_MainAlertWindow = new AlertWindow(alertColors, cancelledColors, challenge)
+            m_MainAlertWindow = new AlertWindow(alertColors, 
+                                                cancelledColors, 
+                                                challenge,
+                                                false)
             {
                 Top = Screen.PrimaryScreen.WorkingArea.Top,
                 Left = Screen.PrimaryScreen.WorkingArea.Left,
@@ -111,7 +109,6 @@ namespace FoosNet.Controls.Alerts
         private void AlertClosedHandler()
         {
             CloseChallengeAlert();
-            AlertClosed();
         }
 
         private void SpeakerBeep()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Collections.ObjectModel;
@@ -9,32 +10,60 @@ using System.Net.Mime;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Threading;
 using FoosNet.Annotations;
 using FoosNet.CommunicatorIntegration;
+using FoosNet.Controls;
 using FoosNet.Network;
+using FoosNet.PlayerFilters;
 using FoosNet.Tests;
 
 namespace FoosNet
 {
     public class NotifyWindowViewModel : INotifyPropertyChanged
     {
-        private ObservableCollection<FoosPlayer> m_FoosPlayers;
+        private ObservableCollection<FoosPlayerListItem> m_FoosPlayers;
         private bool m_IsTableFree;
         public event PropertyChangedEventHandler PropertyChanged;
         private readonly FoosNetworkService m_NetworkService;
         private List<IPlayerTransformation> m_PlayerProcessors;
 
-        public ObservableCollection<FoosPlayer> FoosPlayers
+        public ObservableCollection<FoosPlayerListItem> FoosPlayers
         {
             get { return m_FoosPlayers; }
             set
             {
                 m_FoosPlayers = value;
-                m_IsTableFree = true;
                 OnPropertyChanged();
             }
+        }
+
+        private ICommand m_ChallengeSelectedPlayer;
+
+        public ICommand ChallengeSelectedPlayer
+        {
+            get
+            {
+                return m_ChallengeSelectedPlayer ?? (m_ChallengeSelectedPlayer = new SimpleCommand(ChallengePlayer, CanChallengePlayer));
+            }
+        }
+
+        private bool CanChallengePlayer(object arg)
+        {
+            var list = (arg as IList);
+            if (list == null) return false;
+            return list.Count > 0 && list.Count < 4;
+        }
+
+        private void ChallengePlayer(object obj)
+        {
+            var list = (obj as IList);
+            if (list == null) return;
+            var players = list.Cast<FoosPlayerListItem>();
+            MessageBox.Show(String.Join(", ", players.Select(p=>p.DisplayName)));
         }
 
         public bool IsTableFree
@@ -53,17 +82,27 @@ namespace FoosNet
         public NotifyWindowViewModel()
         {
             var endpoint = ConfigurationManager.AppSettings["networkServiceEndpoint"];
-            var communicator = new CommunicatorIntegration.CommunicatorIntegration();
             m_PlayerProcessors = new List<IPlayerTransformation>();
-            m_PlayerProcessors.Add(new CommunicatorPlayerFilter(communicator));
-            communicator.StatusChanged += CommunicatorOnStatusChanged;
-            m_NetworkService = new FoosNetworkService(); // TODO: FoosNetworkService(endpoint);
+            string localEmail = Environment.UserName + "@red-gate.com";
+            try
+            {
+                var communicator = new CommunicatorIntegration.CommunicatorIntegration();
+                m_PlayerProcessors.Add(new CommunicatorPlayerFilter(communicator));
+                communicator.StatusChanged += CommunicatorOnStatusChanged;
+                localEmail = communicator.GetLocalUserEmail();
+            }
+            catch
+            {
+                // If Communicator isn't working, process player names as best we can from email address
+                m_PlayerProcessors.Add(new DefaultNameTransformation());
+                m_PlayerProcessors.Add(new StatusToUnknownTransformation());
+            }
+            m_NetworkService = new FoosNetworkService(endpoint, localEmail);
             m_NetworkService.PlayersDiscovered += NetworkServiceOnPlayersDiscovered;
             m_NetworkService.ChallengeReceived += NetworkServiceOnChallengeReceived;
             m_NetworkService.ChallengeResponse += NetworkServiceOnChallengeResponse;
             //var testObjects = new ShowPlayersTest();
-            FoosPlayers = new ObservableCollection<FoosPlayer>();
-
+            FoosPlayers = new ObservableCollection<FoosPlayerListItem>();
         }
 
         private void CommunicatorOnStatusChanged(object sender, StatusChangedEventArgs statusChangedEventArgs)
@@ -109,10 +148,9 @@ namespace FoosNet
             {
                 foreach (var foosPlayer in newPlayers)
                 {
-                    m_FoosPlayers.Add(new FoosPlayer(foosPlayer));
+                    m_FoosPlayers.Add(new FoosPlayerListItem(foosPlayer));
                 }
             });
-
         }
 
         [NotifyPropertyChangedInvocator]
