@@ -30,15 +30,14 @@ namespace FoosNet
 {
     public class NotifyWindowViewModel : INotifyPropertyChanged, IFoosAlerterProvider
     {
-        private ObservableCollection<FoosPlayerListItem> m_FoosPlayers;
+        private ObservableCollection<FoosPlayerListItem> m_FoosPlayers = new ObservableCollection<FoosPlayerListItem>();
         private bool m_IsTableFree;
         public event PropertyChangedEventHandler PropertyChanged;
         private readonly IFoosNetworkService m_NetworkService;
         private readonly List<IPlayerTransformation> m_PlayerProcessors;
         public GameManager GameManager { get; set; }
         private IFoosAlerter m_Alerter;
-        private FoosPlayerListItem m_Self;
-
+        private readonly FoosPlayerListItem m_Self;
 
         public ObservableCollection<FoosPlayerListItem> FoosPlayers
         {
@@ -49,13 +48,31 @@ namespace FoosNet
                 OnPropertyChanged();
             }
         }
-
+        #region Commands
         private ICommand m_ChallengeSelectedPlayer;
         public ICommand ChallengeSelectedPlayer
         {
             get
             {
                 return m_ChallengeSelectedPlayer ?? (m_ChallengeSelectedPlayer = new SimpleCommand(ChallengePlayer, CanChallengePlayer));
+            }
+        }
+
+        private bool CanChallengePlayer(object arg)
+        {
+            var list = (arg as IList);
+            if (list == null) return false;
+            return GameManager.CanAddPlayer && GameManager.FreeSlots >= list.Count;
+        }
+
+        private void ChallengePlayer(object obj)
+        {
+            var list = (obj as IList);
+            if (list == null) return;
+            var players = list.Cast<FoosPlayerListItem>().ToList();
+            foreach (var p in players)
+            {
+                if (GameManager.CanAddPlayer) GameManager.InvitePlayer(p);
             }
         }
 
@@ -88,6 +105,16 @@ namespace FoosNet
             }
         }
 
+        private bool CanStartGame(object arg)
+        {
+            return GameManager.IsGameReadyToStart;
+        }
+
+        private void StartGame(object obj)
+        {
+            GameManager.BeginGame();
+        }
+
         private ICommand m_CreateGameAutoCommand;
 
         public ICommand CreateGameAutoCommand
@@ -113,35 +140,7 @@ namespace FoosNet
             }
             GameManager.CreateGameAuto(prefferedPlayers);
         }
-
-        private bool CanStartGame(object arg)
-        {
-            return GameManager.IsGameReadyToStart;
-        }
-
-        private void StartGame(object obj)
-        {
-            GameManager.BeginGame();
-        }
-
-
-        private bool CanChallengePlayer(object arg)
-        {
-            var list = (arg as IList);
-            if (list == null) return false;
-            return GameManager.CanAddPlayer && GameManager.FreeSlots >= list.Count;
-        }
-
-        private void ChallengePlayer(object obj)
-        {
-            var list = (obj as IList);
-            if (list == null) return;
-            var players = list.Cast<FoosPlayerListItem>().ToList();
-            foreach (var p in players)
-            {
-                if(GameManager.CanAddPlayer) GameManager.InvitePlayer(p);
-            }
-        }
+        #endregion
 
         public bool IsTableFree
         {
@@ -159,7 +158,7 @@ namespace FoosNet
         public NotifyWindowViewModel()
         {
             var endpoint = ConfigurationManager.AppSettings["networkServiceEndpoint"];
-            m_Alerter = new FullScreenFoosAlerter();
+            ConfigureAlert();
 
             m_PlayerProcessors = new List<IPlayerTransformation>();
             string localEmail = Environment.UserName + "@red-gate.com";
@@ -191,18 +190,34 @@ namespace FoosNet
            
             m_NetworkService.PlayersDiscovered += NetworkServiceOnPlayersDiscovered;
             m_NetworkService.GameStarting += NetworkServiceOnGameStarting;
-            //var testObjects = new ShowPlayersTest();
-            FoosPlayers = new ObservableCollection<FoosPlayerListItem>();
 
             GameManager = new GameManager(m_NetworkService, this, m_FoosPlayers, m_Self);
             GameManager.PropertyChanged += GameManagerOnPropertyChanged;
             GameManager.OnError += GameManagerOnOnError;
         }
 
+        private void ConfigureAlert()
+        {
+            var alertType = (AlertType) Enum.Parse(typeof(AlertType), ConfigurationManager.AppSettings["alertType"]);
+            switch (alertType)
+            {
+                case AlertType.Full:
+                    m_Alerter = new FullScreenFoosAlerter();
+                    break;
+                case AlertType.Minimal:
+                    m_Alerter = new MinimalFoosAlerter();
+                    break;
+                default:
+                    throw new ConfigurationErrorsException("Unknown alertType in configuration.");
+            }
+        }
+
         private void GameManagerOnPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
+            // For some reason the 'start game' button does not re-evaluate it's CanExecute when it should.
             if (args.PropertyName == "IsGameReadyToStart")
             {
+                // This method must be called on UI thread to work, or it fails silently.
                 Application.Current.Dispatcher.BeginInvoke(new Action(CommandManager.InvalidateRequerySuggested));
             }
         }

@@ -95,7 +95,8 @@
                         <ColumnDefinition Width="42*"/>
                         <ColumnDefinition Width="65*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Padding="5" HorizontalAlignment="Left" FontSize="14" FontWeight="DemiBold" FontFamily="Global User Interface" MouseDown="TableStatusImage_OnMouseDown" Height="27" Margin="0,-1" Width="78">
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Padding="5" HorizontalAlignment="Center" TextAlignment="Center"
+                               MouseDown="TableStatusImage_OnMouseDown" Height="27" Width="78" FontWeight="DemiBold">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Style.Triggers>
@@ -238,15 +239,16 @@
                 <Grid Grid.Row="3" Margin="10,0,10,5" Name="GameControlsGrid" >
                     <!--<Grid Grid.Row="3" Name="GameControlsGrid" Visibility="Visible" Margin="10,0,10,5">-->
                     <StackPanel Visibility="{Binding Path=GameManager.GameCreationInProgress, Converter={StaticResource BooleanToVisibilityConverter}}">
-                        <Button Content="Cancel game" Margin="0,0,0,5" Command="{Binding CancelGameCommand}" />
-                        <Button Content="Start game" Margin="0,0,0,5" Command="{Binding StartGameCommand}"/>
+                        <Button Content="Cancel game" Margin="0,0,0,5" Command="{Binding CancelGameCommand}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Width="200"/>
+                        <Button Content="Start game" Margin="0,0,0,5" Command="{Binding StartGameCommand}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Width="200"/>
                     </StackPanel>
                     <StackPanel Visibility="{Binding Path=GameManager.HasAcceptedRemoteGame, Converter={StaticResource BooleanToVisibilityConverter}}">
-                        <Button Content="Cancel game" Margin="0,0,0,5" Command="{Binding CancelGameCommand}"/>
+                        <Button Content="Cancel game" Margin="0,0,0,5" Command="{Binding CancelGameCommand}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
                     </StackPanel>
                 </Grid>
                 <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="5,0,5,0" Grid.Row="4">
-                    <Button HorizontalAlignment="Stretch" Margin="5" Width="80" Height="25" Command="{Binding CreateGameAutoCommand}" CommandParameter="{Binding ElementName=FoosPlayersList, Path=SelectedItems}" Background="LightSkyBlue">Auto invite</Button>
+                    <Button HorizontalAlignment="Stretch" Margin="5" Width="80" Height="25" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                            Command="{Binding CreateGameAutoCommand}" CommandParameter="{Binding ElementName=FoosPlayersList, Path=SelectedItems}" Background="LightSkyBlue">Auto invite</Button>
                     <Button HorizontalAlignment="Stretch" Margin="5" Width="80" Height="25" Click="TestButtonClick_OpenPlayersJoined" Visibility="{Binding Source={x:Static diagnostics:Debugger.IsAttached}, Converter={StaticResource BooleanToVisibilityConverter}}">TestButton</Button>
                 </StackPanel>
             </Grid>

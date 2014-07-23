@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Net;
@@ -55,6 +56,18 @@ namespace FoosNet
             gridFadeOutStoryBoard.Completed += gridFadeOutStoryBoard_Completed;
             gridFadeInStoryBoard = (Storyboard)TryFindResource("gridFadeInStoryBoard");
             gridFadeInStoryBoard.Completed += gridFadeInStoryBoard_Completed;
+
+            var vm = this.DataContext as NotifyWindowViewModel;
+            vm.PropertyChanged+= Vm_PropertyChanged;
+        }
+
+        private void Vm_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var vm = sender as NotifyWindowViewModel;
+            if (e.PropertyName == "IsTableFree")
+            {
+                SetNotifyIcon(vm.IsTableFree ? "Green" : "Red");
+            }
         }
 
         /// <summary>
@@ -238,15 +251,8 @@ namespace FoosNet
 		
         private void TestButtonClick_OpenPlayersJoined(object sender, RoutedEventArgs e)
         {
-            Window playersJoined = new AllPlayersJoined(new List<IFoosPlayer>() 
-            { 
-                new FoosPlayerListItem("Robin Anderson", Status.Available, 1), 
-                new FoosPlayerListItem("Aaron Law", Status.Available, 1), 
-                new FoosPlayerListItem("Tom Crossman", Status.Available, 1),
-                new FoosPlayerListItem("Ali Daw", Status.Available, 1)
-            });
-
-            playersJoined.ShowDialog();
+            var vm = this.DataContext as NotifyWindowViewModel;
+            vm.IsTableFree = true;
         }
     }
 }

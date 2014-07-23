@@ -33,6 +33,11 @@ namespace FoosNet.Controls.Alerts
 
         public void CloseChallengeAlert()
         {
+            if (!m_AlertBubble.Dispatcher.CheckAccess())
+            {
+                m_AlertBubble.Dispatcher.BeginInvoke(new Action(() => m_AlertBubble.Close()));
+                return;
+            }
             m_AlertBubble.Close();
         }
     }
