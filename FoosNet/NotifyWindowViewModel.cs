@@ -18,6 +18,7 @@ using FoosNet.Annotations;
 using FoosNet.CommunicatorIntegration;
 using FoosNet.Controls;
 using FoosNet.Network;
+using FoosNet.PlayerFilters;
 using FoosNet.Tests;
 
 namespace FoosNet
@@ -81,17 +82,27 @@ namespace FoosNet
         public NotifyWindowViewModel()
         {
             var endpoint = ConfigurationManager.AppSettings["networkServiceEndpoint"];
-            var communicator = new CommunicatorIntegration.CommunicatorIntegration();
             m_PlayerProcessors = new List<IPlayerTransformation>();
-            m_PlayerProcessors.Add(new CommunicatorPlayerFilter(communicator));
-            communicator.StatusChanged += CommunicatorOnStatusChanged;
-            m_NetworkService = new FoosNetworkService(endpoint, communicator.GetLocalUserEmail());
+            string localEmail = Environment.UserName + "@red-gate.com";
+            try
+            {
+                var communicator = new CommunicatorIntegration.CommunicatorIntegration();
+                m_PlayerProcessors.Add(new CommunicatorPlayerFilter(communicator));
+                communicator.StatusChanged += CommunicatorOnStatusChanged;
+                localEmail = communicator.GetLocalUserEmail();
+            }
+            catch
+            {
+                // If Communicator isn't working, process player names as best we can from email address
+                m_PlayerProcessors.Add(new DefaultNameTransformation());
+                m_PlayerProcessors.Add(new StatusToUnknownTransformation());
+            }
+            m_NetworkService = new FoosNetworkService(endpoint, localEmail);
             m_NetworkService.PlayersDiscovered += NetworkServiceOnPlayersDiscovered;
             m_NetworkService.ChallengeReceived += NetworkServiceOnChallengeReceived;
             m_NetworkService.ChallengeResponse += NetworkServiceOnChallengeResponse;
             //var testObjects = new ShowPlayersTest();
             FoosPlayers = new ObservableCollection<FoosPlayerListItem>();
-
         }
 
         private void CommunicatorOnStatusChanged(object sender, StatusChangedEventArgs statusChangedEventArgs)

@@ -73,6 +73,7 @@
     <Compile Include="Controls\SimpleCommand.cs" />
     <Compile Include="Controls\Spinner.cs" />
     <Compile Include="ConvertStatus.cs" />
+    <Compile Include="PlayerFilters\DefaultNameTransformation.cs" />
     <Compile Include="Tests\ShowPlayersTest.cs" />
     <Compile Include="Views\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
