@@ -55,7 +55,7 @@
                 </Grid.RowDefinitions>
 
                 <Label Margin="0" x:Name="TitleLabel" Foreground="White" Opacity="0.9" Content="Foos.Net" MouseDown="TitleLabel_OnMouseDown"/>
-                
+
                 <Grid Grid.Row="0" Margin="5,0,12,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="0"/>
@@ -74,10 +74,10 @@
 
                 <Grid Grid.Row="1" Margin="10,5,10,10">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="42*"/>
+                        <ColumnDefinition Width="65*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Padding="5" HorizontalAlignment="Left" FontSize="14" FontWeight="DemiBold" FontFamily="Global User Interface" MouseDown="TableStatusImage_OnMouseDown">
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Padding="5" HorizontalAlignment="Left" FontSize="14" FontWeight="DemiBold" FontFamily="Global User Interface" MouseDown="TableStatusImage_OnMouseDown" Height="27" Margin="0,-1" Width="78">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Style.Triggers>
@@ -96,7 +96,7 @@
                         </TextBlock.Style>
                     </TextBlock>
 
-                    <TextBlock Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Text="{Binding Path=GameManager.StatusMessage}" FontWeight="DemiBold" Foreground="Gray"/>
+                    <TextBlock Grid.Column="1" VerticalAlignment="Center" TextAlignment="Right" Text="{Binding Path=GameManager.StatusMessage}" FontWeight="DemiBold" Foreground="Gray" Height="16" Margin="0,4,0,5" Width="130"/>
                     <!--<Image Margin="5,0" Grid.Row="1" Name="TableStatusImage" MouseDown="TableStatusImage_OnMouseDown">
                         <Image.Style>
                             <Style TargetType="{x:Type Image}">
@@ -217,7 +217,7 @@
                     </Grid>
                 </Grid>
                 <Grid Grid.Row="3" Margin="10,0,10,5" Name="GameControlsGrid" >
-                <!--<Grid Grid.Row="3" Name="GameControlsGrid" Visibility="Visible" Margin="10,0,10,5">-->
+                    <!--<Grid Grid.Row="3" Name="GameControlsGrid" Visibility="Visible" Margin="10,0,10,5">-->
                     <StackPanel Visibility="{Binding Path=GameManager.GameCreationInProgress, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <Button Content="Cancel game" Margin="0,0,0,5" Command="{Binding CancelGameCommand}" />
                         <Button Content="Start game" Margin="0,0,0,5" Command="{Binding StartGameCommand}"/>
