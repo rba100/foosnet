@@ -38,7 +38,7 @@ namespace FoosNet.Vision
                 double tableBusyProb = ImageProcessing.TableBusyProbability(image, m_Previousimage, m_DebugImage);
                 m_SEMA = (m_SEMA * (1f - RATE)) + (tableBusyProb * RATE);
 
-                if (m_SEMA > 0.5) m_TableUsage = TableUsage.Busy;
+                if (m_SEMA > 0.4) m_TableUsage = TableUsage.Busy;
                 else m_TableUsage = TableUsage.Free;
             }
             m_Previousimage = image.Clone();
