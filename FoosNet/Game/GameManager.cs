@@ -97,7 +97,16 @@ namespace FoosNet.Game
             }
             else
             {
-                //m_Alerter.GetAlerter().ShowChallengeAlert(challengeRequest, accepted =>
+                m_IsJoiningRemoteGame = true;
+                var alert = m_Alerter.GetAlerter();
+                alert.ShowChallengeAlert(challengeRequest);
+                Task.Factory.StartNew(() =>
+                {
+                    Thread.Sleep(1500);
+                    m_NetworkService.Respond(new ChallengeResponse(challengeRequest.Challenger, true));
+                });
+                
+                //Action<bool> lam = (accepted) =>
                 //{
                 //    try
                 //    {
@@ -112,7 +121,7 @@ namespace FoosNet.Game
                 //        }
                 //    }
                 //    catch { }
-                //});
+                //};
             }
         }
 
@@ -120,7 +129,7 @@ namespace FoosNet.Game
         {
             get
             {
-                lock(m_PlayerLineUp) return m_PlayerLineUp.Count(p => p.GameState == GameState.Accepted) == c_PlayersPerGame;
+                lock (m_PlayerLineUp) return m_PlayerLineUp.Count(p => p.GameState == GameState.Accepted) == c_PlayersPerGame;
             }
         }
 
