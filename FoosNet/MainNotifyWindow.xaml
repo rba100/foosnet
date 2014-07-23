@@ -241,7 +241,7 @@
                         <Button Content="Cancel game" Margin="0,0,0,5" Command="{Binding CancelGameCommand}" />
                         <Button Content="Start game" Margin="0,0,0,5" Command="{Binding StartGameCommand}"/>
                     </StackPanel>
-                    <StackPanel Visibility="{Binding Path=GameManager.IsJoiningRemoteGame, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <StackPanel Visibility="{Binding Path=GameManager.HasAcceptedRemoteGame, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <Button Content="Cancel game" Margin="0,0,0,5" Command="{Binding CancelGameCommand}"/>
                     </StackPanel>
                 </Grid>

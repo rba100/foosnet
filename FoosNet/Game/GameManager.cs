@@ -24,9 +24,10 @@ namespace FoosNet.Game
 
         private readonly List<FoosPlayerListItem> m_PlayerLineUp = new List<FoosPlayerListItem>();
         private readonly FoosPlayerListItem m_Self;
-        private IFoosPlayer m_Challenger;
+        private IFoosAlerter m_CurrentAlert;
+        private IFoosPlayer m_CurrentChallenger;
         private bool m_IsOrganisingGame;
-        private bool m_IsJoiningRemoteGame;
+        private bool m_HasAcceptedRemoteGame;
         private CancellationTokenSource m_Cts = new CancellationTokenSource();
         private CancellationToken CancellationToken { get { return m_Cts.Token; } }
 
@@ -99,46 +100,44 @@ namespace FoosNet.Game
 
         private void NetworkServiceOnChallengeReceived(ChallengeRequest challengeRequest)
         {
-            if (m_IsOrganisingGame || m_IsJoiningRemoteGame)
+            if (m_IsOrganisingGame || m_HasAcceptedRemoteGame)
             {
                 m_NetworkService.Respond(new ChallengeResponse(challengeRequest.Challenger, false));
             }
             else
             {
-                m_Challenger = challengeRequest.Challenger;
-                IsJoiningRemoteGame = true;
-                OnPropertyChanged("CanCreateGameAuto");
-                OnPropertyChanged("CanAddPlayer");
-                StatusMessage = c_Accepted;
-
+                m_CurrentChallenger = challengeRequest.Challenger;
                 Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    var alert = m_Alerter.GetAlerter();
-                    alert.ShowChallengeAlert(challengeRequest);
+                    m_CurrentAlert = m_Alerter.GetAlerter();
+                    m_CurrentAlert.ChallengeResponseReceived += AlertOnChallengeResponseReceived;
+                    m_CurrentAlert.ShowChallengeAlert(challengeRequest);
                 }));
+            }
+        }
 
-                Task.Factory.StartNew(() =>
+        private void AlertOnChallengeResponseReceived(ChallengeRequest request, bool accepted)
+        {
+            try
+            {
+                if (HasAcceptedRemoteGame || m_IsOrganisingGame) return;
+                if (accepted)
                 {
-                    Thread.Sleep(1500);
-                    m_NetworkService.Respond(new ChallengeResponse(challengeRequest.Challenger, true));
-                });
-
-                //Action<bool> lam = (accepted) =>
-                //{
-                //    try
-                //    {
-                //        if (IsJoiningRemoteGame || m_IsOrganisingGame) return;
-                //        m_NetworkService.Respond(new ChallengeResponse(m_Self, accepted));
-                //        if (accepted)
-                //        {
-                //            IsJoiningRemoteGame = true;
-                //            OnPropertyChanged("CanCreateGameAuto");
-                //            OnPropertyChanged("CanAddPlayer");
-                //            StatusMessage = c_Accepted;
-                //        }
-                //    }
-                //    catch { }
-                //};
+                    HasAcceptedRemoteGame = true;
+                    OnPropertyChanged("CanCreateGameAuto");
+                    OnPropertyChanged("CanAddPlayer");
+                    StatusMessage = c_Accepted;
+                }
+                m_NetworkService.Respond(new ChallengeResponse(request.Challenger, accepted));
+            }
+            catch (Exception ex)
+            {
+                if (OnError != null) OnError(this, new ErrorEventArgs(ex));
+            }
+            finally
+            {
+                m_CurrentAlert = null;
+                m_CurrentChallenger = null;
             }
         }
 
@@ -151,7 +150,7 @@ namespace FoosNet.Game
         }
 
         public bool GameCreationInProgress { get { return m_IsOrganisingGame; } set { m_IsOrganisingGame = value; OnPropertyChanged(); } }
-        public bool IsJoiningRemoteGame { get { return m_IsJoiningRemoteGame; } set { m_IsJoiningRemoteGame = value; OnPropertyChanged(); } }
+        public bool HasAcceptedRemoteGame { get { return m_HasAcceptedRemoteGame; } set { m_HasAcceptedRemoteGame = value; OnPropertyChanged(); } }
         public bool CanAddPlayer { get { return !IsGameReadyToStart; } }
         public int FreeSlots { get { return Math.Min(c_PlayersPerGame - m_PlayerLineUp.Count, 3); } }
         public bool CanCreateGameAuto { get { return !m_IsOrganisingGame; } }
@@ -193,10 +192,15 @@ namespace FoosNet.Game
                 StatusMessage = c_Idle;
                 m_Self.GameState = GameState.None;
 
-                if (m_IsJoiningRemoteGame && m_Challenger != null)
+                if (m_CurrentAlert != null)
                 {
-                    if (sendCancel) m_NetworkService.Respond(new ChallengeResponse(m_Challenger, false));
-                    m_Challenger = null;
+                    m_CurrentAlert.CloseChallengeAlert();
+                    m_CurrentAlert = null;
+                }
+                if (m_HasAcceptedRemoteGame && m_CurrentChallenger != null)
+                {
+                    if (sendCancel) m_NetworkService.Respond(new ChallengeResponse(m_CurrentChallenger, false));
+                    m_CurrentChallenger = null;
                 }
                 else if (m_IsOrganisingGame)
                 {
@@ -205,7 +209,7 @@ namespace FoosNet.Game
 
                 m_PlayerLineUp.Clear();
                 GameCreationInProgress = false;
-                IsJoiningRemoteGame = false;
+                HasAcceptedRemoteGame = false;
                 m_Cts.Cancel();
 
                 foreach (var item in m_PlayerList)
@@ -282,7 +286,7 @@ namespace FoosNet.Game
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));

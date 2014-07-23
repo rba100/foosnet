@@ -23,20 +23,20 @@ namespace FoosNet.Controls.Alerts
 
             SpeakerBeep();
 
-            var alertColors = new []
+            var alertColors = new[]
             {
                 new Tuple<SolidColorBrush, SolidColorBrush> (Brushes.Red, Brushes.White),
-                new Tuple<SolidColorBrush, SolidColorBrush> (Brushes.Yellow, Brushes.White)
+                new Tuple<SolidColorBrush, SolidColorBrush> (Brushes.Gold, Brushes.Black)
             };
 
             var cancelledColors =
-                new Tuple<SolidColorBrush, SolidColorBrush> (Brushes.Gray, Brushes.White);
+                new Tuple<SolidColorBrush, SolidColorBrush>(Brushes.Gray, Brushes.White);
 
-            var textSequence = new [] {"FOOS", "ALERT"};
+            var textSequence = new[] { "FOOS", "ALERT" };
 
-            m_MainAlertWindow = new AlertWindow(alertColors, 
+            m_MainAlertWindow = new AlertWindow(alertColors,
                                                 textSequence,
-                                                cancelledColors, 
+                                                cancelledColors,
                                                 challenge,
                                                 0.1)
             {
@@ -56,7 +56,8 @@ namespace FoosNet.Controls.Alerts
 
             foreach (var screen in Screen.AllScreens)
             {
-                if (!Equals(screen, Screen.PrimaryScreen)) { 
+                if (!Equals(screen, Screen.PrimaryScreen))
+                {
                     var window = new SecondaryAlertWindow(alertColors,
                                                           textSequence,
                                                           cancelledColors)
@@ -78,7 +79,8 @@ namespace FoosNet.Controls.Alerts
 
         public void CancelChallengeAlert()
         {
-            if (m_MainAlertWindow != null) { 
+            if (m_MainAlertWindow != null)
+            {
                 m_MainAlertWindow.CancelChallenge();
             }
             if (m_SecondaryAlertWindows != null)
@@ -92,7 +94,13 @@ namespace FoosNet.Controls.Alerts
 
         public void CloseChallengeAlert()
         {
-            if (m_MainAlertWindow != null) { 
+            if (m_MainAlertWindow != null)
+            {
+                if (!m_MainAlertWindow.Dispatcher.CheckAccess())
+                {
+                    m_MainAlertWindow.Dispatcher.BeginInvoke(new Action(CloseChallengeAlert));
+                    return;
+                }
                 m_MainAlertWindow.Close();
             }
             if (m_SecondaryAlertWindows != null)
@@ -103,7 +111,7 @@ namespace FoosNet.Controls.Alerts
                 }
             }
         }
-        
+
         private void ChallengeResponseHandler(ChallengeRequest request, bool accepted)
         {
             CloseChallengeAlert();

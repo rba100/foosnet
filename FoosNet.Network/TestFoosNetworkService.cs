@@ -33,6 +33,12 @@ namespace FoosNet.Network
                 if (PlayersDiscovered != null) PlayersDiscovered(new PlayerDiscoveryMessage(players));
 
                 //if (ChallengeReceived != null) ChallengeReceived(new ChallengeRequest(jason));
+
+                //Task.Factory.StartNew(() =>
+                //{
+                //    Thread.Sleep(3000);
+                //    if (CancelGameReceived != null) CancelGameReceived();
+                //});
             });
         }
 
