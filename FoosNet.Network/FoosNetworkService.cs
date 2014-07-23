@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.WebSockets;
-using System.Text;
+using System.Linq;
 using System.Threading;
 using System.Web.Helpers;
-using WebSocket = WebSocket4Net.WebSocket;
+using WebSocket4Net;
 
 namespace FoosNet.Network
 {
@@ -13,6 +12,7 @@ namespace FoosNet.Network
         event Action<ChallengeRequest> ChallengeReceived;
         event Action<ChallengeResponse> ChallengeResponse;
         event Action<PlayerDiscoveryMessage> PlayersDiscovered;
+        void Challenge(IFoosPlayer playerToChallenge);
     }
 
     public class FoosNetworkService : IFoosNetworkService
@@ -25,20 +25,41 @@ namespace FoosNet.Network
         public event Action<ChallengeResponse> ChallengeResponse;
         public event Action<PlayerDiscoveryMessage> PlayersDiscovered;
 
+        public void Challenge(IFoosPlayer playerToChallenge)
+        {
+            SendJson(new { action = "challenge", toChallenge = playerToChallenge.Email });
+        }
+
         public FoosNetworkService(string endpoint, string email)
         {
-            try
+            m_Email = email;
+            m_WebSocket = new WebSocket(endpoint);
+            m_WebSocket.Opened += OnOpen;
+            m_WebSocket.MessageReceived += OnMessageReceived;
+            m_WebSocket.Error += (sender, args) => Console.WriteLine("Error!{0}{1}", Environment.NewLine, args.Exception);
+            m_WebSocket.Open();
+        }
+
+        void OnMessageReceived(object sender, MessageReceivedEventArgs e)
+        {
+            var m = Json.Decode(e.Message);
+            var type = m.type as string;
+            switch (type)
             {
-                m_Email = email;
-                m_WebSocket = new WebSocket(endpoint);
-                m_WebSocket.Opened += OnOpen;
-                m_WebSocket.Error +=
-                    (sender, args) => Console.WriteLine("Error!{0}{1}", Environment.NewLine, args.Exception);
-                m_WebSocket.Open();
-            }
-            catch
-            {
-                
+                case "challenge":
+                    if (ChallengeReceived != null) ChallengeReceived(new ChallengeRequest(new LivePlayer(m.email as string)));
+                    break;
+                case "response":
+                    if (ChallengeResponse != null) ChallengeResponse(new ChallengeResponse());
+                    break;
+                case "players":
+                    if (PlayersDiscovered != null) PlayersDiscovered(new PlayerDiscoveryMessage(new LivePlayer(m.player as string)));
+                    break;
+                case "player":
+                    if (PlayersDiscovered != null) PlayersDiscovered(new PlayerDiscoveryMessage(((string[]) m.players).Select(p => new LivePlayer(p))));
+                    break;
+                case "gametime":
+                    break;
             }
         }
 
@@ -56,11 +77,30 @@ namespace FoosNet.Network
 
     public class ChallengeRequest
     {
-        public IFoosPlayer Challenger { get; set; }
+        private readonly IFoosPlayer m_Challenger;
+
+        public ChallengeRequest(IFoosPlayer challenger)
+        {
+            m_Challenger = challenger;
+        }
+
+        public IFoosPlayer Challenger { get { return m_Challenger; } }
     }
 
     public class PlayerDiscoveryMessage
     {
-        public IEnumerable<IFoosPlayer> Players { get; set; }
+        private readonly IEnumerable<IFoosPlayer> m_Players;
+
+        public PlayerDiscoveryMessage(IFoosPlayer player)
+        {
+            m_Players = new [] { player };
+        }
+
+        public PlayerDiscoveryMessage(IEnumerable<IFoosPlayer> players)
+        {
+            m_Players = players;
+        }
+
+        public IEnumerable<IFoosPlayer> Players { get { return m_Players; } }
     }
 }
