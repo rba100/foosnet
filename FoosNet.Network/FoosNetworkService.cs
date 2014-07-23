@@ -60,10 +60,10 @@ namespace FoosNet.Network
                 case "response":
                     if (ChallengeResponse != null) ChallengeResponse(new ChallengeResponse(new LivePlayer(m.player as string), bool.Parse(m.response)));
                     break;
-                case "players":
+                case "player":
                     if (PlayersDiscovered != null) PlayersDiscovered(new PlayerDiscoveryMessage(new LivePlayer(m.player as string)));
                     break;
-                case "player":
+                case "players":
                     if (PlayersDiscovered != null) PlayersDiscovered(new PlayerDiscoveryMessage(((string[]) m.players).Select(p => new LivePlayer(p))));
                     break;
                 case "gametime":
