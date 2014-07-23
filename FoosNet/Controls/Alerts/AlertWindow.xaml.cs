@@ -29,22 +29,29 @@ namespace FoosNet.Controls.Alerts
         public delegate void AlertClosedEventHandler();
         public event AlertClosedEventHandler AlertClosed = delegate {};
 
-        /// <param name="alertColors">
+        /// <param name="alertColorSequence">
         /// List of (backgroundColor, foregroundColor) tuples to cycle through
         /// when alerting
         /// </param>
+        /// 
+        /// 
+        /// <param name="alertTextSequence">
+        /// List of strings to cycle the alert text through when alerting
+        /// </param>
+        /// 
         /// <param name="cancelledColors">
         /// (backgroundColor, foregroundColor) tuple, used if the challenge is
         /// cancelled
         /// </param>
+        /// 
         /// <param name="discTrayAnnoyance">
-        /// If true, open and close the disc tray once when the notification
-        /// starts.
+        /// Chance (number between 0 and 1) that the disc tray will open
         /// </param>
-        public AlertWindow(Tuple<SolidColorBrush, SolidColorBrush> [] alertColors,
+        public AlertWindow(Tuple<SolidColorBrush, SolidColorBrush> [] alertColorSequence,
+                           String [] alertTextSequence,
                            Tuple<SolidColorBrush, SolidColorBrush> cancelledColors,
                            ChallengeRequest challenge,
-                           bool discTrayAnnoyance)
+                           double discTrayAnnoyanceChance)
         {
             InitializeComponent();
 
@@ -54,32 +61,41 @@ namespace FoosNet.Controls.Alerts
 
             var random = new Random();
 
-            m_StrobeTimer = new Timer {Interval = 1000 + random.Next(100)};
+            m_StrobeTimer = new Timer {Interval = 1000 + random.Next(10)};
 
             DescriptionText.Text = "You have been challenged by " 
                                     + m_Challenge.Challenger.DisplayName + "!";
 
-            var currentColour = 0;
+            var currentFrame = 0;
             
-            AlertWindowElement.Background = alertColors[currentColour].Item1;
-            AlertText.Foreground = alertColors[currentColour].Item2;
-            DescriptionText.Foreground = alertColors[currentColour].Item2;
+            AlertWindowElement.Background = alertColorSequence[0].Item1;
+            AlertText.Foreground = alertColorSequence[0].Item2;
+            DescriptionText.Foreground = alertColorSequence[0].Item2;
+
+            AlertText.Text = alertTextSequence[0];
 
             m_StrobeTimer.Elapsed += (sender, elapsedEventArgs) => Dispatcher.Invoke(() =>
             {
-                currentColour = (currentColour + 1) % alertColors.Length;
-                AlertWindowElement.Background = alertColors[currentColour].Item1;
-                AlertText.Foreground = alertColors[currentColour].Item2;
-                DescriptionText.Foreground = alertColors[currentColour].Item2;
+                currentFrame++;
+                var colorIndex = currentFrame % alertColorSequence.Length;
+                var textIndex = currentFrame % alertTextSequence.Length;
+
+                AlertWindowElement.Background = alertColorSequence[colorIndex].Item1;
+                AlertText.Foreground = alertColorSequence[colorIndex].Item2;
+                DescriptionText.Foreground = alertColorSequence[colorIndex].Item2;
+
+                AlertText.Text = alertTextSequence[textIndex];
             });
 
             m_StrobeTimer.Start();
 
-            if (discTrayAnnoyance) { 
+            if (random.NextDouble() < discTrayAnnoyanceChance) { 
                 // ReSharper disable once EmptyGeneralCatchClause
                 try { 
                     OpenDiscDrive();
-                    CloseDiscDrive();
+                    if (random.NextDouble() < 0.5) { 
+                        CloseDiscDrive();
+                    }
                 }
                 catch (Exception e)
                 {

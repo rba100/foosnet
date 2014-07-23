@@ -44,6 +44,11 @@ namespace FoosNet.Network
             
         }
 
+        public void StartGame(IEnumerable<IFoosPlayer> players)
+        {
+            
+        }
+
         public void Dispose()
         {
             throw new NotImplementedException();
