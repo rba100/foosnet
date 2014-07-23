@@ -19,6 +19,7 @@ using System.Windows.Threading;
 using FoosNet.Annotations;
 using FoosNet.CommunicatorIntegration;
 using FoosNet.Controls;
+using FoosNet.Controls.Alerts;
 using FoosNet.Game;
 using FoosNet.Network;
 using FoosNet.PlayerFilters;
@@ -26,7 +27,7 @@ using FoosNet.Tests;
 
 namespace FoosNet
 {
-    public class NotifyWindowViewModel : INotifyPropertyChanged
+    public class NotifyWindowViewModel : INotifyPropertyChanged, IFoosAlerterProvider
     {
         private ObservableCollection<FoosPlayerListItem> m_FoosPlayers;
         private bool m_IsTableFree;
@@ -34,6 +35,8 @@ namespace FoosNet
         private readonly IFoosNetworkService m_NetworkService;
         private readonly List<IPlayerTransformation> m_PlayerProcessors;
         public GameManager GameManager { get; set; }
+        private IFoosAlerter m_Alerter;
+        private FoosPlayerListItem m_Self;
 
 
         public ObservableCollection<FoosPlayerListItem> FoosPlayers
@@ -71,7 +74,7 @@ namespace FoosNet
 
         private void CancelGame(object obj)
         {
-            
+            GameManager.Reset();
         }
 
 
@@ -85,6 +88,7 @@ namespace FoosNet
         }
 
         private ICommand m_CreateGameAutoCommand;
+
         public ICommand CreateGameAutoCommand
         {
             get
@@ -116,7 +120,7 @@ namespace FoosNet
 
         private void StartGame(object obj)
         {
-            
+            GameManager.BeginGame();
         }
 
 
@@ -124,15 +128,18 @@ namespace FoosNet
         {
             var list = (arg as IList);
             if (list == null) return false;
-            return list.Count > 0 && list.Count < 4;
+            return GameManager.CanAddPlayer && GameManager.FreeSlots >= list.Count;
         }
 
         private void ChallengePlayer(object obj)
         {
             var list = (obj as IList);
             if (list == null) return;
-            var players = list.Cast<FoosPlayerListItem>();
-            MessageBox.Show(String.Join(", ", players.Select(p=>p.DisplayName)));
+            var players = list.Cast<FoosPlayerListItem>().ToList();
+            foreach (var p in players)
+            {
+                if(GameManager.CanAddPlayer) GameManager.InvitePlayer(p);
+            }
         }
 
         public bool IsTableFree
@@ -151,8 +158,12 @@ namespace FoosNet
         public NotifyWindowViewModel()
         {
             var endpoint = ConfigurationManager.AppSettings["networkServiceEndpoint"];
+            m_Alerter = new FullScreenFoosAlerter();
+
             m_PlayerProcessors = new List<IPlayerTransformation>();
             string localEmail = Environment.UserName + "@red-gate.com";
+            m_Self = new FoosPlayerListItem(localEmail, Status.Available, 1) { DisplayName = "You" };
+
             try
             {
                 var communicator = new CommunicatorIntegration.CommunicatorIntegration();
@@ -169,13 +180,18 @@ namespace FoosNet
             m_NetworkService = new TestFoosNetworkService();
             //m_NetworkService = new FoosNetworkService(endpoint, localEmail);
             m_NetworkService.PlayersDiscovered += NetworkServiceOnPlayersDiscovered;
-            m_NetworkService.ChallengeReceived += NetworkServiceOnChallengeReceived;
-            m_NetworkService.ChallengeResponse += NetworkServiceOnChallengeResponse;
+            m_NetworkService.GameStarting += NetworkServiceOnGameStarting;
             //var testObjects = new ShowPlayersTest();
             FoosPlayers = new ObservableCollection<FoosPlayerListItem>();
 
-            GameManager = new GameManager(m_NetworkService, m_FoosPlayers, localEmail);
+            GameManager = new GameManager(m_NetworkService, this, m_FoosPlayers, m_Self);
             GameManager.OnError += GameManagerOnOnError;
+        }
+
+        private void NetworkServiceOnGameStarting(GameStartingMessage gameStartingMessage)
+        {
+            var gogoWindow = new AllPlayersJoined(gameStartingMessage.Players);
+            gogoWindow.Show();
         }
 
         private void GameManagerOnOnError(object sender, ErrorEventArgs errorEventArgs)
@@ -189,21 +205,12 @@ namespace FoosNet
             if (player != null) player.Status = statusChangedEventArgs.CurrentStatus;
         }
 
-        private void NetworkServiceOnChallengeResponse(ChallengeResponse challengeResponse)
-        {
-            
-        }
-
-        private void NetworkServiceOnChallengeReceived(ChallengeRequest challengeRequest)
-        {
-            
-        }
-
         private void NetworkServiceOnPlayersDiscovered(PlayerDiscoveryMessage playerDiscoveryMessage)
         {
             var newPlayers = new List<IFoosPlayer>();
             foreach (var player in playerDiscoveryMessage.Players)
             {
+                if (player.Email == m_Self.Email) continue;
                 var transformedPlayer = player;
                 foreach (var playerTransformation in m_PlayerProcessors)
                 {
@@ -236,6 +243,11 @@ namespace FoosNet
         {
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public IFoosAlerter GetAlerter()
+        {
+            return m_Alerter;
         }
     }
 }

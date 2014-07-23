@@ -65,10 +65,10 @@
                         <ColumnDefinition Width="36" />
                         <ColumnDefinition Width="42" />
                     </Grid.ColumnDefinitions>
-                    <foosNet:SlickToggleButton CornerRadius="0,0,0,4"   x:Name="PinButton" Style="{StaticResource SlickButton}" HighlightBackground="Gray" PressedBackground="DarkBlue" Grid.Column="1" Grid.Row="1" FontWeight="Bold" Click="PinButton_Click">
+                    <foosNet:SlickToggleButton x:Name="PinButton" Style="{StaticResource SlickButton}" HighlightBackground="#FF2299EE" PressedBackground="#FF1188DD" Grid.Column="1" Grid.Row="1" FontWeight="Bold" Click="PinButton_Click">
                         <Image x:Name="PinImage" Source="pack://application:,,/Images/Un-Pinned.png" Stretch="None"/>
                     </foosNet:SlickToggleButton>
-                    <foosNet:SlickToggleButton CornerRadius="0,0,4,0" x:Name="CloseButton" Style="{StaticResource SlickButton}" HighlightBackground="Gray" Content="X" Click="CloseButton_Click" Grid.Row="1" FontWeight="Bold" Foreground="#FFFFFFFF" Grid.Column="2" />
+                    <foosNet:SlickToggleButton x:Name="CloseButton" Style="{StaticResource SlickButton}" HighlightBackground="#FF2299EE" PressedBackground="#FF1188DD" Content="X" Click="CloseButton_Click" Grid.Row="1" FontWeight="Bold" Foreground="#FFFFFFFF" Grid.Column="2" />
                 </Grid>
 
                 <Grid Grid.Row="1" Margin="10,0,10,0">
@@ -177,6 +177,18 @@
                                                     <Setter Property="Visibility" Value="Collapsed"/>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding GameState}" Value="Declined">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
+                                        </Image>
+                                        <Image Grid.Column="2" Width="16" Height="16" Source="/Images/unknown.png">
+                                            <Image.Style>
+                                                <Style TargetType="Image">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding GameState}" Value="Timeout">
                                                             <Setter Property="Visibility" Value="Visible"/>
                                                         </DataTrigger>
                                                     </Style.Triggers>

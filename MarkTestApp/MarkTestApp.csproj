@@ -78,6 +78,10 @@
       <Project>{7A10FABD-29A6-4CA5-B369-DF54303FC00F}</Project>
       <Name>FoosNet.Network</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FoosNet.Utils\FoosNet.Utils.csproj">
+      <Project>{6F092BB2-8099-431B-8136-01596FE050E9}</Project>
+      <Name>FoosNet.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -61,6 +61,7 @@
     <Compile Include="Controls\Alerts\AlertWindow.xaml.cs">
       <DependentUpon>AlertWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Alerts\IFoosAlerterProvider.cs" />
     <Compile Include="Controls\Alerts\FullScreenFoosAlerter.cs" />
     <Compile Include="Controls\Alerts\IFoosAlerter.cs" />
     <Compile Include="Controls\Alerts\MinimalFoosAlerter.cs" />
@@ -276,6 +277,9 @@
   <ItemGroup>
     <Resource Include="Images\PlayerUnavailable.png" />
     <Resource Include="Images\PlayerUseless.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\unknown.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Icons\Icon-40%402x.ico" />

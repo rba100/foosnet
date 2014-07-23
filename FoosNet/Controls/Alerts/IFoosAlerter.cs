@@ -1,4 +1,5 @@
-﻿using FoosNet.Network;
+﻿using System;
+using FoosNet.Network;
 
 namespace FoosNet.Controls.Alerts
 {

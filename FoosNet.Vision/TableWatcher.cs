@@ -25,14 +25,21 @@ namespace FoosNet.Vision
             m_ImageStream.LatestImageAvailable += LatestImageAvailable;
         }
 
+        private double m_SEMA = 0.0f;
+        private const double RATE = 0.2f;
+
         private void LatestImageAvailable(object state, Image<Bgr, byte> image)
         {
+            m_PreviousTableUsage = m_TableUsage;
             m_DebugImage = image.Clone();
             if (m_Previousimage != null)
             {
+                // Use an exponential-moving average concept to smooth data
                 double tableBusyProb = ImageProcessing.TableBusyProbability(image, m_Previousimage, m_DebugImage);
-                if (tableBusyProb > 0.2) m_TableUsage = TableUsage.Busy;
-                if (tableBusyProb < 0.2) m_TableUsage = TableUsage.Free;
+                m_SEMA = (m_SEMA * (1f - RATE)) + (tableBusyProb * RATE);
+
+                if (m_SEMA > 0.4) m_TableUsage = TableUsage.Busy;
+                else m_TableUsage = TableUsage.Free;
             }
             m_Previousimage = image.Clone();
 

@@ -27,14 +27,15 @@ namespace FoosNet.Vision.TestApp
 
         private void UpdateImage(object state)
         {
-            Dispatcher.Invoke(() => ImageCam.Source = Utils.ToBitmapSource(m_TableWatcher.DebugImage));
+            if (m_TableWatcher.DebugImage != null)
+                Dispatcher.Invoke(() => ImageCam.Source = Utils.ToBitmapSource(m_TableWatcher.DebugImage));
         }
 
         public MainWindow()
         {
             InitializeComponent();
 
-            m_ImageTimer = new Timer(UpdateImage, null, 3000, 1500);
+            m_ImageTimer = new Timer(UpdateImage, null, 3000, 1000);
 
             m_TableWatcher = new TableWatcher();
             m_TableWatcher.TableNowFree += delegate { Dispatcher.Invoke(() => LabelTableStatus.Content = "Table is now free"); };

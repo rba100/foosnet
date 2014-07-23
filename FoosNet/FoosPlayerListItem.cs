@@ -6,12 +6,13 @@ using FoosNet.Network;
 
 namespace FoosNet
 {
-    public enum GameState { None, Pending, Accepted, Declined }
+    public enum GameState { None, Pending, Accepted, Declined, Timeout }
 
     public class FoosPlayerListItem : IFoosPlayer
     {
         private Status m_Status;
         private string m_DisplayName;
+        private GameState m_GameState;
         public string Email { get; set; }
 
         public string DisplayName
@@ -38,7 +39,16 @@ namespace FoosNet
 
         public int Priority { get; set; }
 
-        public GameState GameState { get; set; }
+        public GameState GameState
+        {
+            get { return m_GameState; }
+            set
+            {
+                if (value == m_GameState) return;
+                m_GameState = value;
+                OnPropertyChanged();
+            }
+        }
 
         public FoosPlayerListItem(string email, Status status, int priority)
         {
