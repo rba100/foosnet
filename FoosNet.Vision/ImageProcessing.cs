@@ -31,6 +31,10 @@ namespace FoosNet.Vision
 
             diffPic = diffPic.ThresholdBinary(new Bgr(threshold, threshold, threshold), new Bgr(255, 255, 255));
 
+            int contourCount = 0;
+            int contourLeftTotal = 0;
+            int contourTopTotal = 0;
+
             using (MemStorage storage = new MemStorage()) //allocate storage for contour approximation
                 //detect the contours and loop through each of them
                 for (Contour<Point> contours = diffPic.Convert<Gray, Byte>().FindContours(
@@ -46,10 +50,25 @@ namespace FoosNet.Vision
                     //Draw the detected contour on the image
                     if (currentContour.Area > contourThreshold) //only consider contours with area greater than 100 as default then take from form control
                     {
+                        contourCount++;
+                        contourLeftTotal += currentContour.BoundingRectangle.Left + (currentContour.BoundingRectangle.Width / 2);
+                        contourTopTotal += currentContour.BoundingRectangle.Top + (currentContour.BoundingRectangle.Height / 2);
                         if (debugImage != null)
                             debugImage.Draw(currentContour.BoundingRectangle, new Bgr(Color.Red), 2);
                     }
                 }
+
+            if(contourCount>0 && debugImage != null)
+            {
+                float actionCentreLeft = contourLeftTotal / contourCount;
+                float actionCentreTop = contourTopTotal / contourCount;
+
+                            debugImage.Draw(new CircleF(
+                                new PointF(actionCentreLeft, actionCentreTop), 8),
+                                new Bgr(0, 100, 200), 3);
+
+               if (actionCentreLeft < 300 && actionCentreTop < 300) return 0.5;
+            }
 
             byte[, ,] data = diffPic.Data;
             long totalB = 0, totalG = 0, totalR = 0;

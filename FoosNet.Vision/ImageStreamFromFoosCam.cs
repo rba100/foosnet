@@ -32,7 +32,7 @@ namespace FoosNet.Vision
 
         internal ImageStreamFromFoosCam()
         {
-            m_GetNextImageTimer = new Timer(RetrieveNextImage, true, 1000, 2000);
+            m_GetNextImageTimer = new Timer(RetrieveNextImage, true, 1000, 2621);
         }
 
         public static Image GetImageFromUrl(string url)

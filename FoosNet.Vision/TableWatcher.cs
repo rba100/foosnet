@@ -27,12 +27,13 @@ namespace FoosNet.Vision
 
         private void LatestImageAvailable(object state, Image<Bgr, byte> image)
         {
+            m_PreviousTableUsage = m_TableUsage;
             m_DebugImage = image.Clone();
             if (m_Previousimage != null)
             {
                 double tableBusyProb = ImageProcessing.TableBusyProbability(image, m_Previousimage, m_DebugImage);
-                if (tableBusyProb > 0.2) m_TableUsage = TableUsage.Busy;
-                if (tableBusyProb < 0.2) m_TableUsage = TableUsage.Free;
+                if (tableBusyProb > 0.05) m_TableUsage = TableUsage.Busy;
+                else m_TableUsage = TableUsage.Free;
             }
             m_Previousimage = image.Clone();
 
