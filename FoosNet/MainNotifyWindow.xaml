@@ -83,7 +83,7 @@
                             </Style>
                         </Image.Style>
                     </Image>
-                    <Popup Name="FoosTablePopup" Placement="Left" MouseDown="FoosTablePopup_OnMouseDown"
+                    <Popup Name="FoosTablePopup" Placement="Left" MouseDown="FoosTablePopup_OnMouseDown" MouseEnter="FoosTablePopup_OnMouseEnter"
                         PlacementTarget="{Binding ElementName=TableStatusImage}">
                         <Border Background="WhiteSmoke" BorderBrush="DarkGray" BorderThickness="1" Width="160" Height="120">
                             <Grid>

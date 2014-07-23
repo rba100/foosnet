@@ -202,6 +202,7 @@ namespace FoosNet
             if (original != null) original.StreamSource.Dispose();
 
             FoosTableImage.Visibility = Visibility.Collapsed;
+            FoosTablePopup.StaysOpen = true;
             FoosTablePopup.IsOpen = true;
             var url = new Uri(@"http://10.120.115.224/snapshot.cgi?user=viewer&amp;pwd=&amp;");
             var webRequest = WebRequest.CreateDefault(url);
@@ -228,6 +229,11 @@ namespace FoosNet
         private void FoosTablePopup_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             FoosTablePopup.IsOpen = false;
+        }
+
+        private void FoosTablePopup_OnMouseEnter(object sender, MouseEventArgs e)
+        {
+            FoosTablePopup.StaysOpen = false;
         }
 		
         private void TestButtonClick_OpenPlayersJoined(object sender, RoutedEventArgs e)

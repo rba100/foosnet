@@ -27,11 +27,19 @@ namespace FoosNet.Network
 
         public FoosNetworkService(string endpoint, string email)
         {
-            m_Email = email;
-            m_WebSocket = new WebSocket(endpoint);
-            m_WebSocket.Opened += OnOpen;
-            m_WebSocket.Error += (sender, args) => Console.WriteLine("Error!{0}{1}", Environment.NewLine, args.Exception);
-            m_WebSocket.Open();
+            try
+            {
+                m_Email = email;
+                m_WebSocket = new WebSocket(endpoint);
+                m_WebSocket.Opened += OnOpen;
+                m_WebSocket.Error +=
+                    (sender, args) => Console.WriteLine("Error!{0}{1}", Environment.NewLine, args.Exception);
+                m_WebSocket.Open();
+            }
+            catch
+            {
+                
+            }
         }
 
         private void OnOpen(object sender, EventArgs e)
