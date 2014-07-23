@@ -11,6 +11,7 @@ namespace FoosNet.Network
         public event Action<ChallengeRequest> ChallengeReceived;
         public event Action<ChallengeResponse> ChallengeResponse;
         public event Action<PlayerDiscoveryMessage> PlayersDiscovered;
+        public event Action<GameStartingMessage> GameStarting;
 
         public TestFoosNetworkService()
         {
@@ -33,10 +34,19 @@ namespace FoosNet.Network
             Task.Factory.StartNew(() =>
             {
                 Thread.Sleep(2000);
-                var repsonse = new ChallengeResponse() { Player = playerToChallenge };
-                repsonse.Accepted = m_Random.Next(1) == 0;
+                var repsonse = new ChallengeResponse(playerToChallenge, m_Random.Next(1) == 0);
                 if (ChallengeResponse != null) ChallengeResponse(repsonse);
             });
+        }
+
+        public void Respond(ChallengeResponse response)
+        {
+            
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
         }
     }
 }
