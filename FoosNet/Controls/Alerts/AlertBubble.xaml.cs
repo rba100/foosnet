@@ -71,18 +71,12 @@ namespace FoosNet.Controls.Alerts
 
         private void Decline()
         {
-            ChallengeResponseReceived(new ChallengeResponse
-            {
-                Accepted = false
-            });
+            ChallengeResponseReceived(new ChallengeResponse(m_Challenge.Challenger, false));
         }
 
         private void Accept()
         {
-            ChallengeResponseReceived(new ChallengeResponse
-            {
-                Accepted = true
-            });
+            ChallengeResponseReceived(new ChallengeResponse(m_Challenge.Challenger, true));
         }
 
         private void AcceptButton_OnClick(object sender, RoutedEventArgs e)

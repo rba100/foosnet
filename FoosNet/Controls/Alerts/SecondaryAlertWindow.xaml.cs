@@ -20,8 +20,10 @@ namespace TestAlerts
         {
             m_CancelledColors = cancelledColors;
             InitializeComponent();
+            
+            var random = new Random();
 
-            m_StrobeTimer = new Timer {Interval = 1000};
+            m_StrobeTimer = new Timer {Interval = 1000 + random.Next(100)};
 
             var currentColour = 0;
             

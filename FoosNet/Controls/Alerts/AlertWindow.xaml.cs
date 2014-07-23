@@ -52,7 +52,9 @@ namespace FoosNet.Controls.Alerts
 
             m_Challenge = challenge;
 
-            m_StrobeTimer = new Timer {Interval = 1000};
+            var random = new Random();
+
+            m_StrobeTimer = new Timer {Interval = 1000 + random.Next(100)};
 
             DescriptionText.Text = "You have been challenged by " 
                                     + m_Challenge.Challenger.DisplayName + "!";
@@ -105,12 +107,12 @@ namespace FoosNet.Controls.Alerts
 
         private void AcceptButton_OnClick(object sender, RoutedEventArgs e)
         {
-            ChallengeResponseReceived(new ChallengeResponse {Accepted = true});
+            ChallengeResponseReceived(new ChallengeResponse(m_Challenge.Challenger, true));
         }
 
         private void DeclineButton_OnClick(object sender, RoutedEventArgs e)
         {
-            ChallengeResponseReceived(new ChallengeResponse {Accepted = false});
+            ChallengeResponseReceived(new ChallengeResponse(m_Challenge.Challenger, false));
         }
 
         private void CloseButton_OnClick(object sender, RoutedEventArgs e)
