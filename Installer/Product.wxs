@@ -20,9 +20,21 @@
       <![CDATA[Installed OR NETFRAMEWORK20]]>
     </Condition>
     
-    <Property Id="LicenseAccepted" Value="1"/>
+    
     <UI>
-      <UIRef Id="WixUI_Minimal" />
+      <UIRef Id="WixUI_InstallDir" />
+      
+      <!-- Skip license dialog -->
+      <Publish Dialog="WelcomeDlg"
+               Control="Next"
+               Event="NewDialog"
+               Value="InstallDirDlg"
+               Order="2">1</Publish>
+      <Publish Dialog="InstallDirDlg"
+               Control="Back"
+               Event="NewDialog"
+               Value="WelcomeDlg"
+               Order="2">1</Publish>
       <Publish  Dialog="ExitDialog"
                 Control="Finish" 
                 Event="DoAction" 
@@ -31,6 +43,7 @@
     </UI>
     <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch FoosNet" />
     <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1"/>
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
     
     <Property Id="WixShellExecTarget" Value="[#FoosNet.exe]" />
     <CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
