@@ -58,16 +58,24 @@ namespace FoosNet.Vision
                     }
                 }
 
-            if (contourCount > 0 && debugImage != null)
+            if (contourCount > 0)
             {
                 float actionCentreLeft = contourLeftTotal / contourCount;
                 float actionCentreTop = contourTopTotal / contourCount;
 
-                debugImage.Draw(new CircleF(
-                    new PointF(actionCentreLeft, actionCentreTop), 8),
-                    new Bgr(0, 100, 200), 3);
+                if (debugImage != null)
+                    debugImage.Draw(new CircleF(new PointF(actionCentreLeft, actionCentreTop), 8), new Bgr(0, 100, 200), 3);
 
-                if (actionCentreLeft < 350 && actionCentreTop < 300) return 0.9;
+                if (contourCount > 4)
+                {
+                    if (actionCentreLeft < 350 && actionCentreTop < 300) return 0.9;
+                    if (actionCentreLeft < 400 && actionCentreTop < 350) return 0.8;
+                }
+                else
+                {
+                    if (actionCentreLeft < 350 && actionCentreTop < 300) return 0.8;
+                    if (actionCentreLeft < 400 && actionCentreTop < 350) return 0.7;
+                }
             }
 
             return 0.0;
