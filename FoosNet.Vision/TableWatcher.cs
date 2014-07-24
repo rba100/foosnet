@@ -26,7 +26,7 @@ namespace FoosNet.Vision
         }
 
         private double m_SEMA = 0.0f;
-        private const double RATE = 0.2f;
+        private const double RATE = 0.15f;
 
         private void LatestImageAvailable(object state, Image<Bgr, byte> image)
         {
