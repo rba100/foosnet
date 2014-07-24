@@ -67,8 +67,8 @@ namespace FoosNet
             var menu = new System.Windows.Forms.ContextMenu();
             var exit = new System.Windows.Forms.MenuItem("Exit", (sender, args) =>
             {
-                extendedNotifyIcon.Dispose();
-                Close();
+                extendedNotifyIcon.Dispose(); // So that the icon disappears and it looks like the app closed quickly.
+                Close(); // Takes about two seconds to close.
             });
             menu.MenuItems.Add(exit);
             return menu;

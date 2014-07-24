@@ -273,7 +273,7 @@
                 <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="5,0,5,0" Grid.Row="5">
                     <Button HorizontalAlignment="Stretch" Margin="5" Width="80" Height="25" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
                             Command="{Binding CreateGameAutoCommand}" CommandParameter="{Binding ElementName=FoosPlayersList, Path=SelectedItems}" Background="LightSkyBlue">Auto invite</Button>
-                    <Button HorizontalAlignment="Stretch" Margin="5" Width="80" Height="25" Click="TestButtonClick_OpenPlayersJoined" Visibility="{Binding Source={x:Static diagnostics:Debugger.IsAttached}, Converter={StaticResource BooleanToVisibilityConverter}}">TestButton</Button>
+                    <!--<Button HorizontalAlignment="Stretch" Margin="5" Width="80" Height="25" Click="TestButtonClick_OpenPlayersJoined" Visibility="{Binding Source={x:Static diagnostics:Debugger.IsAttached}, Converter={StaticResource BooleanToVisibilityConverter}}">TestButton</Button>-->
                 </StackPanel>
             </Grid>
         </Grid>

@@ -52,6 +52,9 @@
     <Prefer32Bit>false</Prefer32Bit>
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Icon-40.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Controls\Alerts\AlertBubble.xaml.cs">
       <DependentUpon>AlertBubble.xaml</DependentUpon>
@@ -314,6 +317,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\timeout.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icon-40.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
