@@ -55,7 +55,15 @@
                     <RowDefinition Height="44"/>
                 </Grid.RowDefinitions>
 
-                <Label Margin="0" x:Name="TitleLabel" Foreground="White" Opacity="0.9" Content="FoosNet" MouseDown="TitleLabel_OnMouseDown" Width="Auto"/>
+                <Label Margin="0" 
+                       x:Name="TitleLabel" 
+                       Foreground="White" 
+                       Opacity="0.9" 
+                       Content="FoosNet" 
+                       MouseDown="TitleLabel_OnMouseDown" 
+                       Width="55"
+                       HorizontalAlignment="Left"
+                       Cursor="Hand"/>
 
                 <Grid Grid.Row="0" Margin="5,0,12,0">
                     <Grid.RowDefinitions>
