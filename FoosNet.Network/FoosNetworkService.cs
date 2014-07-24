@@ -87,9 +87,6 @@ namespace FoosNet.Network
                 case "response":
                     if (ChallengeResponse != null) ChallengeResponse(new ChallengeResponse(new LivePlayer(m.player as string), bool.Parse(m.response)));
                     break;
-                case "player":
-                    if (PlayersDiscovered != null) PlayersDiscovered(new PlayerDiscoveryMessage(new LivePlayer(m.player as string)));
-                    break;
                 case "players":
                     if (PlayersDiscovered != null) PlayersDiscovered(new PlayerDiscoveryMessage(((DynamicJsonArray) m.players).Cast<string>().Select(p => new LivePlayer(p))));
                     break;

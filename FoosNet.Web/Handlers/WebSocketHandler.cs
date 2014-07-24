@@ -8,7 +8,7 @@ using Microsoft.Web.WebSockets;
 
 namespace FoosNet.Web.Handlers
 {
-    public class SocketHandler : WebSocketHandler, IDisposable
+    public class SocketHandler : WebSocketHandler
     {
         private static readonly ConcurrentDictionary<string, SocketHandler> s_Subscribers = new ConcurrentDictionary<string, SocketHandler>();
         private static readonly TableWatcher s_TableWatcher = new TableWatcher();
@@ -64,7 +64,9 @@ namespace FoosNet.Web.Handlers
 
         public override void OnClose()
         {
-            Dispose();
+            SocketHandler removed;
+            s_Subscribers.TryRemove(m_Email, out removed);
+            BroadcastAll(PlayersMessage());
             base.OnClose();
         }
 
@@ -73,7 +75,7 @@ namespace FoosNet.Web.Handlers
             if (m_Email != null && m_Email != email) throw new InvalidOperationException("Cannot change email address during a connection");
             m_Email = email;
             s_Subscribers[email] = this;
-            Broadcast(new { type = "player", player = email });
+            BroadcastAll(PlayersMessage());
         }
 
         private void Challenge(string toChallenge)
@@ -107,24 +109,18 @@ namespace FoosNet.Web.Handlers
 
         private void Players()
         {
-            Send(new { type = "players", players = s_Subscribers.Keys.Where(e => e != m_Email).ToArray() });
+            Send(PlayersMessage());
         }
 
-        private void Broadcast(object message)
+        private static object PlayersMessage()
         {
-            var sendTo = s_Subscribers.Values.Where(s => s != this).ToList();
-            BroadcastTo(message, sendTo);
+            return new { type = "players", players = s_Subscribers.Keys.ToArray() };
         }
 
         private static void BroadcastAll(object message)
         {
             var sendTo = s_Subscribers.Values.ToList();
-            BroadcastTo(message, sendTo);
-        }
-
-        private static void BroadcastTo(object message, IEnumerable<SocketHandler> sendTo)
-        {
-            foreach (var recipient in sendTo)
+            foreach (var recipient in (IEnumerable<SocketHandler>) sendTo)
             {
                 recipient.Send(message);
             }
@@ -138,18 +134,6 @@ namespace FoosNet.Web.Handlers
         private void Send(object message)
         {
             base.Send(Json.Encode(message));
-        }
-
-        public void Dispose()
-        {
-            SocketHandler removed;
-            s_Subscribers.TryRemove(m_Email, out removed);
-            GC.SuppressFinalize(this);
-        }
-
-        ~SocketHandler()
-        {
-            Dispose();
         }
     }
 }

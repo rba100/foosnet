@@ -67,7 +67,7 @@ namespace FoosNet.Game
             if (player != null)
             {
                 player.GameState = challengeResponse.Accepted ? GameState.Accepted : GameState.Declined;
-                if (player.GameState == GameState.Declined) m_PlayerLineUp.Remove(player);
+                if (player.GameState == GameState.Declined) RemovePlayer(player);
 
                 if (IsGameReadyToStart)
                 {
@@ -292,6 +292,16 @@ namespace FoosNet.Game
         {
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void RemovePlayer(IFoosPlayer player)
+        {
+            if (!IsGameReadyToStart) StatusMessage = c_CustomGame;
+            lock (m_PlayerLineUp)
+            {
+                m_PlayerLineUp.RemoveAll(p => p.Email.Equals(player.Email, StringComparison.InvariantCultureIgnoreCase));
+            }
+            OnPropertyChanged("IsGameReadyToStart");
         }
     }
 }

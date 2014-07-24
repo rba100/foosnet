@@ -300,10 +300,10 @@ namespace FoosNet
 
         private void NetworkServiceOnPlayersDiscovered(PlayerDiscoveryMessage playerDiscoveryMessage)
         {
-            var newPlayers = new List<IFoosPlayer>();
+            var newPlayerList = new List<IFoosPlayer>();
             foreach (var player in playerDiscoveryMessage.Players)
             {
-                if (player.Email == m_Self.Email) continue;
+                if (player.Email.Equals(m_Self.Email, StringComparison.InvariantCultureIgnoreCase)) continue;
                 var transformedPlayer = player;
                 foreach (var playerTransformation in m_PlayerProcessors)
                 {
@@ -315,16 +315,23 @@ namespace FoosNet
                 {
                     existingPlayer.DisplayName = transformedPlayer.DisplayName;
                     existingPlayer.Status = transformedPlayer.Status;
+                    newPlayerList.Add(existingPlayer);
                 }
                 else
                 {
-                    newPlayers.Add(transformedPlayer);
+                    newPlayerList.Add(transformedPlayer);
                 }
             }
 
             Application.Current.Dispatcher.Invoke(() =>
             {
-                foreach (var foosPlayer in newPlayers)
+                var toRemove = m_FoosPlayers.Where(p => newPlayerList.All(q => q.Email != p.Email)).ToList();
+                foreach (var foosPlayerListItem in toRemove)
+                {
+                    m_FoosPlayers.Remove(foosPlayerListItem);
+                    GameManager.RemovePlayer(foosPlayerListItem);
+                }
+                foreach (var foosPlayer in newPlayerList.Where(p => m_FoosPlayers.All(q => q.Email != p.Email)))
                 {
                     m_FoosPlayers.Add(new FoosPlayerListItem(foosPlayer));
                 }
