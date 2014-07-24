@@ -1,11 +1,12 @@
 using System.ComponentModel;
 using System.IO;
 using System.Net;
-using System.Timers;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using FoosNet.Views;
+using MouseEventArgs = System.Windows.Input.MouseEventArgs;
+using Timer = System.Timers.Timer;
 
 namespace FoosNet
 {
@@ -318,9 +319,20 @@ namespace FoosNet
             }
         }
 
-        private void ListBox_MouseDown(object sender, MouseButtonEventArgs e)
+         private void ListBox_MouseDown(object sender, MouseButtonEventArgs e)
         {
             (sender as ListBox).SelectedItems.Clear();
+        }
+        private void FoosPlayersList_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var vm = (DataContext as NotifyWindowViewModel);
+            if (vm != null) vm.ChatToSelectedPlayer(FoosPlayersList.SelectedItems);
+        }
+
+        private void FoosPlayersList_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (Keyboard.Modifiers == ModifierKeys.Control) return;
+            FoosPlayersList.SelectedItems.Clear();
         }
     }
 }

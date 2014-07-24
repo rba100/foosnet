@@ -108,7 +108,7 @@ namespace FoosNet
             return m_Communicator != null && players.All(p => p.Status != Status.Unknown);
         }
 
-        private void ChatToSelectedPlayer(object obj)
+        public void ChatToSelectedPlayer(object obj)
         {
             var list = (obj as IList);
             if (list == null) return;
