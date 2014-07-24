@@ -1,11 +1,10 @@
 using System.ComponentModel;
 using System.IO;
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
 using FoosNet.Views;
+using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using Timer = System.Timers.Timer;
 
 namespace FoosNet
@@ -323,6 +322,12 @@ namespace FoosNet
         {
             var vm = (DataContext as NotifyWindowViewModel);
             if (vm != null) vm.ChatToSelectedPlayer(FoosPlayersList.SelectedItems);
+        }
+
+        private void FoosPlayersList_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (Keyboard.Modifiers == ModifierKeys.Control) return;
+            FoosPlayersList.SelectedItems.Clear();
         }
     }
 }

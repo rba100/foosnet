@@ -156,7 +156,7 @@
                     </Grid.RowDefinitions>
                     <TextBlock FontWeight="Bold" Margin="0,0,0,5">Contacts</TextBlock>
                     <Grid Grid.Row="1">
-                        <ListView Name="FoosPlayersList" MouseDoubleClick="FoosPlayersList_OnMouseDoubleClick" 
+                        <ListView Name="FoosPlayersList" MouseDoubleClick="FoosPlayersList_OnMouseDoubleClick" PreviewMouseLeftButtonDown="FoosPlayersList_OnPreviewMouseLeftButtonDown"
                                   Padding="0,5,0,0"
                                   ItemsSource="{Binding FoosPlayers}"
                                   Grid.Column="0" 
