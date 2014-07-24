@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
-	<Product Id="*" Name="FoosNet Installer" Language="1033" Version="1.0.0.0" Manufacturer="Down Tools Week 2014" UpgradeCode="1e6db7a7-6f5a-460a-9f07-53cd2e97431a">
+	<Product Id="*" Name="FoosNet" Language="1033" Version="1.0.0.0" Manufacturer="Down Tools Week 2014" UpgradeCode="1e6db7a7-6f5a-460a-9f07-53cd2e97431a">
     
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" InstallPrivileges="elevated" />
     <Icon Id="icon" SourceFile="$(var.SolutionDir)\FoosNet\Images\Icons\Icon-Small@2x.ico" />
@@ -71,11 +71,17 @@
       <Component Guid="{E53A2BCE-AF98-4C70-B750-87027AF07C71}">
         <File Source="$(var.FoosNet.TargetPath)" KeyPath="yes" />
       </Component>
+      <Component Guid="{95B11F65-13FB-4827-96D8-B5AF41813369}">
+        <File Source="$(var.FoosNet.TargetPath).config" KeyPath="yes" />
+      </Component>
       <Component Guid="{E53A2BCE-AF98-4C70-B750-87027AF07C72}">
         <File Source="$(var.FoosNet.CommunicatorIntegration.TargetPath)" KeyPath="yes" />
       </Component>
       <Component Guid="{E53A2BCE-AF98-4C70-B750-87027AF07C73}">
         <File Source="$(var.FoosNet.Network.TargetPath)" KeyPath="yes" />
+      </Component>
+      <Component Guid="{AB91EBB5-EB1F-461E-BA1A-B9E031510037}">
+        <File Source="$(var.FoosNet.Utils.TargetPath)" KeyPath="yes" />
       </Component>
       <Component Guid="{E53A2BCE-AF98-4C70-B750-87027AF07C74}">
         <File Source="$(var.SolutionDir)\packages\gong-wpf-dragdrop.0.1.4.1\lib\net40\GongSolutions.Wpf.DragDrop.dll" KeyPath="yes" />

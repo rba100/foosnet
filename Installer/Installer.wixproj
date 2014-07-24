@@ -42,6 +42,14 @@
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
       <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
+    <ProjectReference Include="..\FoosNet.Utils\FoosNet.Utils.csproj">
+      <Name>FoosNet.Utils</Name>
+      <Project>{6f092bb2-8099-431b-8136-01596fe050e9}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
     <ProjectReference Include="..\FoosNet\FoosNet.csproj">
       <Name>FoosNet</Name>
       <Project>{9cd11b90-9cba-4435-b51c-baeae1e7fad9}</Project>
