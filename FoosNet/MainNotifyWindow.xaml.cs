@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using FoosNet.Controls;
 using FoosNet.Network;
 using FoosNet.Views;
 
@@ -41,7 +42,7 @@ namespace FoosNet
             extendedNotifyIcon = new Controls.ExtendedNotifyIcon();
             extendedNotifyIcon.MouseLeave += extendedNotifyIcon_OnHideWindow;
             extendedNotifyIcon.MouseMove += extendedNotifyIcon_OnShowWindow;
-            extendedNotifyIcon.targetNotifyIcon.Text = "Popup Text";
+            extendedNotifyIcon.targetNotifyIcon.ContextMenu = GetSystrayContextMenu();
             SetNotifyIcon("Red");
 
             InitializeComponent();
@@ -58,7 +59,19 @@ namespace FoosNet
             gridFadeInStoryBoard.Completed += gridFadeInStoryBoard_Completed;
 
             var vm = this.DataContext as NotifyWindowViewModel;
-            vm.PropertyChanged+= Vm_PropertyChanged;
+            vm.PropertyChanged += Vm_PropertyChanged;
+        }
+
+        private System.Windows.Forms.ContextMenu GetSystrayContextMenu()
+        {
+            var menu = new System.Windows.Forms.ContextMenu();
+            var exit = new System.Windows.Forms.MenuItem("Exit", (sender, args) =>
+            {
+                extendedNotifyIcon.Dispose();
+                Close();
+            });
+            menu.MenuItems.Add(exit);
+            return menu;
         }
 
         private void Vm_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -114,7 +127,7 @@ namespace FoosNet
         {
             if (PinButton.IsChecked == true) return; // Dont hide the window if its pinned open
             if (PlayerListContextMenu.IsOpen) return;
-           // if (FoosTablePopup.IsOpen) return;
+            // if (FoosTablePopup.IsOpen) return;
             if (Mouse.LeftButton.HasFlag(MouseButtonState.Pressed)) return; // Drag and drop hack
 
             gridFadeInStoryBoard.Stop(); // Stop the fade in storyboard if running.
@@ -249,7 +262,7 @@ namespace FoosNet
                 FoosTableImage.Visibility = Visibility.Visible;
             }));
         }
-		
+
         private void TestButtonClick_OpenPlayersJoined(object sender, RoutedEventArgs e)
         {
             var vm = this.DataContext as NotifyWindowViewModel;
