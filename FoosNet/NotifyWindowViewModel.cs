@@ -224,7 +224,7 @@ namespace FoosNet
 
         private void ConfigureAlert()
         {
-            var alertType = (AlertType) Enum.Parse(typeof(AlertType), ConfigurationManager.AppSettings["alertType"]);
+            var alertType = (AlertType) Enum.Parse(typeof(AlertType), Settings.Default.AlertType);
             switch (alertType)
             {
                 case AlertType.Full:
