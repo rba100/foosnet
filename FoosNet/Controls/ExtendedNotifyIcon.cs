@@ -1,8 +1,4 @@
-﻿//-----------------------------------------------------------------------------------------
-// Author:   Murray Foxcroft - April 2009
-//-----------------------------------------------------------------------------------------
-
-using System;
+﻿using System;
 using System.Windows.Forms;
 
 namespace FoosNet.Controls

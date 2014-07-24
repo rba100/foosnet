@@ -60,17 +60,15 @@ namespace FoosNet.Network
 
         public void StartGame(IEnumerable<IFoosPlayer> players)
         {
-            if(GameStarting!=null) GameStarting(new GameStartingMessage(players));
+            if (GameStarting != null) GameStarting(new GameStartingMessage(players));
         }
 
         public void CancelGame(IEnumerable<IFoosPlayer> players)
         {
-            
         }
 
         public void Dispose()
         {
-            
         }
     }
 }

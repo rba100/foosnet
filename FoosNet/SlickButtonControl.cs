@@ -1,11 +1,4 @@
-﻿//-------------------------------------------------------------------------------------
-// Author:   Murray Foxcroft - April 2009
-// Comments: A simple class that Inherits from ToggleButton and adds a few properties.
-//           These properties are used to pass values to a control template and add 
-//           some flexibility to allow for re-use of the control templates. See 
-//           SlickButtonRD.xaml. 
-//-------------------------------------------------------------------------------------
-using System.Windows.Controls.Primitives;
+﻿using System.Windows.Controls.Primitives;
 
 namespace FoosNet
 {

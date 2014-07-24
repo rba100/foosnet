@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Emgu.CV;
 using Emgu.CV.Structure;
 
 namespace FoosNet.Vision.Test
 {
-    internal class ImageStreamFromStaticImages: IImageStream
+    internal class ImageStreamFromStaticImages : IImageStream
     {
         private int m_ImageNumber = 0;
         private Timer m_Timer;

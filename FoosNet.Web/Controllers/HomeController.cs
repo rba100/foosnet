@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 namespace FoosNet.Web.Controllers
 {
@@ -11,7 +7,7 @@ namespace FoosNet.Web.Controllers
         // GET: Home
         public ActionResult Index()
         {
-            return Content("Hi there!" + Url.Action("Get", "Socket"));
+            return Content("This is the FoosNet web server.");
         }
     }
 }

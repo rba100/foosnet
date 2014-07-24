@@ -1,28 +1,14 @@
-//-------------------------------------------------------------------------------------
-// Author:   Murray Foxcroft - April 2009
-// Comments: code behind for the main WPF popup window 
-//-------------------------------------------------------------------------------------
-
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Drawing;
 using System.IO;
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Threading;
-using FoosNet.Controls;
-using FoosNet.Network;
 using FoosNet.Views;
 
 namespace FoosNet
 {
     using System;
     using System.Windows;
-    using System.Windows.Controls;
     using System.Windows.Media.Animation;
     using System.Windows.Media.Imaging;
 

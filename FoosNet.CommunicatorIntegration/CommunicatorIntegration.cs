@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.ExceptionServices;
-using System.Text;
-using System.Threading.Tasks;
 using CommunicatorAPI;
 using FoosNet.Network;
-
 
 //
 // Sample usage:
@@ -23,8 +17,8 @@ namespace FoosNet.CommunicatorIntegration
 {
     public class CommunicatorIntegration
     {
-        private Messenger m_Messenger;
-        private string m_ServiceID;
+        private readonly Messenger m_Messenger;
+        private readonly string m_ServiceID;
 
         private Dictionary<string, IMessengerContact> m_SubscribedContacts; 
 
@@ -111,7 +105,7 @@ namespace FoosNet.CommunicatorIntegration
 
         public event StatusChangedEventHandler StatusChanged;
 
-        protected virtual void OnStatusChanged(StatusChangedEventArgs e)
+        private void OnStatusChanged(StatusChangedEventArgs e)
         {
             StatusChangedEventHandler handler = StatusChanged;
             if (handler != null)

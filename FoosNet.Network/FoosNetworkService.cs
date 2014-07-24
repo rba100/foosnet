@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Helpers;
 using FoosNet.Utils;
-using WebSocket4Net;
 
 namespace FoosNet.Network
 {

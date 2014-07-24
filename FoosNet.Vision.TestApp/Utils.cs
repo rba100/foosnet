@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
 namespace FoosNet.Vision.TestApp
 {
-    class Utils
+    static class Utils
     {
         [DllImport("gdi32")]
         private static extern int DeleteObject(IntPtr o);
@@ -24,7 +20,7 @@ namespace FoosNet.Vision.TestApp
                     ptr,
                     IntPtr.Zero,
                     Int32Rect.Empty,
-                    System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+                    BitmapSizeOptions.FromEmptyOptions());
 
                 DeleteObject(ptr);
                 return bs;

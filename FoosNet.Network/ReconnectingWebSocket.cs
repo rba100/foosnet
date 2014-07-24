@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Web.Helpers;
 using FoosNet.Utils;
 using SuperSocket.ClientEngine;
