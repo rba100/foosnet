@@ -6,7 +6,7 @@ using FoosNet.Network;
 
 namespace FoosNet.Model
 {
-    public enum GameState { None, Pending, Accepted, Declined, Timeout }
+    public enum GameState { None, Pending, Accepted, Declined, Timeout, Challenger }
 
     public class FoosPlayerListItem : IFoosPlayer
     {

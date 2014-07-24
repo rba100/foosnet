@@ -112,13 +112,17 @@ namespace FoosNet.Game
             else
             {
                 var challenger = m_PlayerList.FirstOrDefault(p => p.Email.Equals(challengeRequest.Challenger.Email, StringComparison.OrdinalIgnoreCase));
-                m_CurrentChallenger = challengeRequest.Challenger;
-                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                if (challenger != null)
                 {
-                    m_CurrentAlert = m_Alerter.GetAlerter();
-                    m_CurrentAlert.ChallengeResponseReceived += AlertOnChallengeResponseReceived;
-                    m_CurrentAlert.ShowChallengeAlert(challenger);
-                }));
+                    challenger.GameState = GameState.Challenger;
+                    m_CurrentChallenger = challengeRequest.Challenger;
+                    Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        m_CurrentAlert = m_Alerter.GetAlerter();
+                        m_CurrentAlert.ChallengeResponseReceived += AlertOnChallengeResponseReceived;
+                        m_CurrentAlert.ShowChallengeAlert(challenger);
+                    }));
+                }
             }
         }
 
@@ -184,7 +188,7 @@ namespace FoosNet.Game
                 if (m_PlayerLineUp.Count >= c_PlayersPerGame)
                     throw new InvalidOperationException("Cannot add another player, max players reached");
                 player.GameState = GameState.Pending;
-                if(!m_PlayerLineUp.Contains(player)) m_PlayerLineUp.Add(player);
+                if (!m_PlayerLineUp.Contains(player)) m_PlayerLineUp.Add(player);
             }
             m_NetworkService.Challenge(player);
             Task.Factory.StartNew(() => PlayerTimeOutWatcher(player, CancellationToken));
