@@ -49,12 +49,13 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="27"/>
                     <RowDefinition Height="45"/>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="44"/>
                 </Grid.RowDefinitions>
 
-                <Label Margin="0" x:Name="TitleLabel" Foreground="White" Opacity="0.9" Content="FoosNet" MouseDown="TitleLabel_OnMouseDown"/>
+                <Label Margin="0" x:Name="TitleLabel" Foreground="White" Opacity="0.9" Content="FoosNet" MouseDown="TitleLabel_OnMouseDown" Width="Auto"/>
 
                 <Grid Grid.Row="0" Margin="5,0,12,0">
                     <Grid.RowDefinitions>
@@ -129,7 +130,7 @@
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>
-                    </Image>-->
+                    </Image>--><!--
                     <Popup Name="FoosTablePopup" Placement="Left" MouseDown="FoosTablePopup_OnMouseDown" MouseEnter="FoosTablePopup_OnMouseEnter"
                         PlacementTarget="{Binding ElementName=TableStatusImage}">
                         <Border Background="WhiteSmoke" BorderBrush="DarkGray" BorderThickness="1" Width="160" Height="120">
@@ -138,10 +139,17 @@
                                 <Image Name="FoosTableImage" Width="160" Height="120"></Image>
                             </Grid>
                         </Border>
-                    </Popup>
+                    </Popup>-->
                 </Grid>
 
-                <Grid Grid.Row="2" Margin="10,0,10,10">
+                <Border Name="FoosTableImageBorder" Visibility="Collapsed" Grid.Row="2" Background="WhiteSmoke" BorderBrush="DarkGray" BorderThickness="1" Width="160" Height="120">
+                    <Grid>
+                        <controls:Spinner Width="16" Height="16" ></controls:Spinner>
+                        <Image Name="FoosTableImage" Width="160" Height="120" MouseDown="FoosTableImage_OnMouseDown"></Image>
+                    </Grid>
+                </Border>
+
+                <Grid Grid.Row="3" Margin="10,0,10,10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition/>
@@ -245,7 +253,7 @@
                         </ListView>
                     </Grid>
                 </Grid>
-                <Grid Grid.Row="3" Margin="10,0,10,5" Name="GameControlsGrid" >
+                <Grid Grid.Row="4" Margin="10,0,10,5" Name="GameControlsGrid" >
                     <!--<Grid Grid.Row="3" Name="GameControlsGrid" Visibility="Visible" Margin="10,0,10,5">-->
                     <StackPanel Visibility="{Binding Path=GameManager.GameCreationInProgress, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <Button Content="Cancel game" Margin="0,0,0,5" Command="{Binding CancelGameCommand}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Width="200"/>
@@ -255,7 +263,7 @@
                         <Button Content="Cancel game" Margin="0,0,0,5" Command="{Binding CancelGameCommand}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Width="200"/>
                     </StackPanel>
                 </Grid>
-                <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="5,0,5,0" Grid.Row="4">
+                <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="5,0,5,0" Grid.Row="5">
                     <Button HorizontalAlignment="Stretch" Margin="5" Width="80" Height="25" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
                             Command="{Binding CreateGameAutoCommand}" CommandParameter="{Binding ElementName=FoosPlayersList, Path=SelectedItems}" Background="LightSkyBlue">Auto invite</Button>
                     <Button HorizontalAlignment="Stretch" Margin="5" Width="80" Height="25" Click="TestButtonClick_OpenPlayersJoined" Visibility="{Binding Source={x:Static diagnostics:Debugger.IsAttached}, Converter={StaticResource BooleanToVisibilityConverter}}">TestButton</Button>

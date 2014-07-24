@@ -114,7 +114,7 @@ namespace FoosNet
         {
             if (PinButton.IsChecked == true) return; // Dont hide the window if its pinned open
             if (PlayerListContextMenu.IsOpen) return;
-            if (FoosTablePopup.IsOpen) return;
+           // if (FoosTablePopup.IsOpen) return;
             if (Mouse.LeftButton.HasFlag(MouseButtonState.Pressed)) return; // Drag and drop hack
 
             gridFadeInStoryBoard.Stop(); // Stop the fade in storyboard if running.
@@ -206,17 +206,28 @@ namespace FoosNet
 
         private void TableStatusImage_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            UpdatePopupSource();
+            ToggleTableImageVisibility();
         }
 
-        private async void UpdatePopupSource()
+        private void ToggleTableImageVisibility()
+        {
+            if (FoosTableImageBorder.Visibility != Visibility.Visible)
+            {
+                FoosTableImageBorder.Visibility = Visibility.Visible;
+                UpdateFoosTableImageSource();
+            }
+            else
+            {
+                FoosTableImageBorder.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private async void UpdateFoosTableImageSource()
         {
             var original = FoosTableImage.Source as BitmapImage;
             if (original != null) original.StreamSource.Dispose();
 
             FoosTableImage.Visibility = Visibility.Collapsed;
-            FoosTablePopup.StaysOpen = true;
-            FoosTablePopup.IsOpen = true;
             var url = new Uri(@"http://10.120.115.224/snapshot.cgi?user=viewer&amp;pwd=&amp;");
             var webRequest = WebRequest.CreateDefault(url);
             webRequest.ContentType = "image/jpeg";
@@ -238,21 +249,16 @@ namespace FoosNet
                 FoosTableImage.Visibility = Visibility.Visible;
             }));
         }
-
-        private void FoosTablePopup_OnMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            FoosTablePopup.IsOpen = false;
-        }
-
-        private void FoosTablePopup_OnMouseEnter(object sender, MouseEventArgs e)
-        {
-            FoosTablePopup.StaysOpen = false;
-        }
 		
         private void TestButtonClick_OpenPlayersJoined(object sender, RoutedEventArgs e)
         {
             var vm = this.DataContext as NotifyWindowViewModel;
             vm.IsTableFree = true;
+        }
+
+        private void FoosTableImage_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            UpdateFoosTableImageSource();
         }
     }
 }
