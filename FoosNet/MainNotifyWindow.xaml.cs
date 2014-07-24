@@ -48,6 +48,8 @@ namespace FoosNet
 
             var vm = this.DataContext as NotifyWindowViewModel;
             vm.PropertyChanged += Vm_PropertyChanged;
+
+            MouseDown += delegate{DragMove();};
         }
 
         private System.Windows.Forms.ContextMenu GetSystrayContextMenu()
