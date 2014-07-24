@@ -1,10 +1,12 @@
 using System.ComponentModel;
 using System.IO;
 using System.Net;
-using System.Timers;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
 using FoosNet.Views;
+using Timer = System.Timers.Timer;
 
 namespace FoosNet
 {
@@ -315,6 +317,12 @@ namespace FoosNet
             {  
                 DragMove();
             }
+        }
+
+        private void FoosPlayersList_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var vm = (DataContext as NotifyWindowViewModel);
+            if (vm != null) vm.ChatToSelectedPlayer(FoosPlayersList.SelectedItems);
         }
     }
 }
