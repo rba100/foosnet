@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.IO;
 using System.Net;
+using System.Timers;
 using System.Windows.Input;
 using System.Windows.Threading;
 using FoosNet.Views;
@@ -17,6 +18,7 @@ namespace FoosNet
         private Controls.ExtendedNotifyIcon extendedNotifyIcon; // global class scope for the icon as it needs to exist foer the lifetime of the window
         private Storyboard gridFadeInStoryBoard;
         private Storyboard gridFadeOutStoryBoard;
+        private Timer m_ImageUpdateTimer;
         //private Point startPoint;
 
         /// <summary>
@@ -212,13 +214,31 @@ namespace FoosNet
         {
             if (FoosTableImageBorder.Visibility != Visibility.Visible)
             {
-                FoosTableImageBorder.Visibility = Visibility.Visible;
-                UpdateFoosTableImageSource();
+                ShowTableImage();
             }
             else
             {
-                FoosTableImageBorder.Visibility = Visibility.Collapsed;
+                HideTableImage();
             }
+        }
+
+        private void ShowTableImage()
+        {
+            FoosTableImageBorder.Visibility = Visibility.Visible;
+            UpdateFoosTableImageSource();
+
+            m_ImageUpdateTimer = new Timer {Interval = 5000};
+
+            m_ImageUpdateTimer.Elapsed += 
+                (s, e) => Dispatcher.Invoke(UpdateFoosTableImageSource);
+
+            m_ImageUpdateTimer.Start();
+        }
+
+        private void HideTableImage()
+        {
+            m_ImageUpdateTimer.Stop();
+            FoosTableImageBorder.Visibility = Visibility.Collapsed;
         }
 
         private async void UpdateFoosTableImageSource()
