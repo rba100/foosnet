@@ -50,7 +50,7 @@ namespace FoosNet
         {
             get
             {
-                return m_ShowSettingsCommand ?? (m_ShowSettingsCommand = new SimpleCommand(ShowSettings, a=> true));
+                return m_ShowSettingsCommand ?? (m_ShowSettingsCommand = new SimpleCommand(ShowSettings, a => true));
             }
         }
 
@@ -77,7 +77,7 @@ namespace FoosNet
         {
             var list = (arg as IList);
             if (list == null) return false;
-            return GameManager.CanAddPlayer && GameManager.FreeSlots >= list.Count;
+            return list.Count > 0 && GameManager.CanAddPlayer && GameManager.FreeSlots >= list.Count;
         }
 
         private void ChallengePlayer(object obj)
