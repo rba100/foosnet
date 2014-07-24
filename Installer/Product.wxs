@@ -80,6 +80,9 @@
       <Component Guid="{E53A2BCE-AF98-4C70-B750-87027AF07C73}">
         <File Source="$(var.FoosNet.Network.TargetPath)" KeyPath="yes" />
       </Component>
+      <Component Guid="{3883F20B-592A-41E6-9BF7-C8135901D39B}">
+        <File Source="$(var.FoosNet.Network.TargetDir)\System.Web.Helpers.dll" KeyPath="yes" />
+      </Component>
       <Component Guid="{AB91EBB5-EB1F-461E-BA1A-B9E031510037}">
         <File Source="$(var.FoosNet.Utils.TargetPath)" KeyPath="yes" />
       </Component>
