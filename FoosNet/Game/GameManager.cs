@@ -114,7 +114,6 @@ namespace FoosNet.Game
                 var challenger = m_PlayerList.FirstOrDefault(p => p.Email.Equals(challengeRequest.Challenger.Email, StringComparison.OrdinalIgnoreCase));
                 if (challenger != null)
                 {
-                    challenger.GameState = GameState.Challenger;
                     m_CurrentChallenger = challengeRequest.Challenger;
                     Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                     {
@@ -137,6 +136,8 @@ namespace FoosNet.Game
                     OnPropertyChanged("CanCreateGameAuto");
                     OnPropertyChanged("CanAddPlayer");
                     StatusMessage = c_Accepted;
+                    var ch = m_PlayerList.FirstOrDefault(p => p.Email.Equals(m_CurrentChallenger.Email, StringComparison.OrdinalIgnoreCase));
+                    if (ch != null) ch.GameState = GameState.Challenger;
                 }
                 m_NetworkService.Respond(new ChallengeResponse(challenger, accepted));
             }
