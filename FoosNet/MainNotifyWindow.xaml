@@ -273,8 +273,19 @@
                     <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Margin="5" Command="{Binding ShowSettingsCommand}">
                         <Image Source="Images\settings.png" Width="24" Height="24"/>
                     </Button>
-                    <Button Grid.Column="2" HorizontalAlignment="Stretch" Margin="5" Width="80" Height="25" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-                            Command="{Binding ChallengeSelectedPlayer}" CommandParameter="{Binding ElementName=FoosPlayersList, Path=SelectedItems}" Background="LightSkyBlue">Invite</Button>
+                    <Button Grid.Column="2" HorizontalAlignment="Stretch" Margin="5" Width="80" Height="25"
+                            Command="{Binding ChallengeSelectedPlayer}" CommandParameter="{Binding ElementName=FoosPlayersList, Path=SelectedItems}" Content="Invite">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                                <Setter Property="Background" Value="LightSkyBlue"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Background" Value="#FFE0E0E0"></Setter>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
                     <Button Grid.Column="3" HorizontalAlignment="Stretch" Margin="5" Width="80" Height="25" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
                             Command="{Binding CreateGameAutoCommand}" CommandParameter="{Binding ElementName=FoosPlayersList, Path=SelectedItems}" Background="LightSkyBlue">QuickPlay™</Button>
                 </Grid>
