@@ -55,7 +55,7 @@ namespace FoosNet.Vision
             }
             catch(Exception e)
             {
-                throw new WebCamNotReachableException(e);
+                //throw new WebCamNotReachableException(e);
             }
         }
     }
