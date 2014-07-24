@@ -146,6 +146,10 @@
       <Project>{6F092BB2-8099-431B-8136-01596FE050E9}</Project>
       <Name>FoosNet.Utils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FoosNet.Vision\FoosNet.Vision.csproj">
+      <Project>{AD4396A9-7CC1-40FD-9987-3A834CD8F21A}</Project>
+      <Name>FoosNet.Vision</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -158,7 +162,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>64487</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

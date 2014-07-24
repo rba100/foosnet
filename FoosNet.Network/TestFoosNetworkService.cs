@@ -14,6 +14,7 @@ namespace FoosNet.Network
         public event Action<ChallengeResponse> ChallengeResponse;
         public event Action<PlayerDiscoveryMessage> PlayersDiscovered;
         public event Action<GameStartingMessage> GameStarting;
+        public event Action<bool> TableStatusChanged;
 
         public TestFoosNetworkService()
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -16,6 +17,7 @@ namespace FoosNet.Network
         event Action<ChallengeResponse> ChallengeResponse;
         event Action<PlayerDiscoveryMessage> PlayersDiscovered;
         event Action<GameStartingMessage> GameStarting;
+        event Action<bool> TableStatusChanged;
         void Challenge(IFoosPlayer playerToChallenge);
         void Respond(ChallengeResponse response);
         void StartGame(IEnumerable<IFoosPlayer> players);
@@ -34,6 +36,7 @@ namespace FoosNet.Network
         public event Action<ChallengeResponse> ChallengeResponse;
         public event Action<PlayerDiscoveryMessage> PlayersDiscovered;
         public event Action<GameStartingMessage> GameStarting;
+        public event Action<bool> TableStatusChanged;
 
         public void Challenge(IFoosPlayer playerToChallenge)
         {
@@ -95,6 +98,9 @@ namespace FoosNet.Network
                 case "gametime":
                     if (GameStarting != null) GameStarting(new GameStartingMessage(((DynamicJsonArray)m.players).Select(p => new LivePlayer((string)p))));
                     break;
+                case "tablestatus":
+                    if (TableStatusChanged != null) TableStatusChanged(m.tablestatus == "Free");
+                    break;
             }
         }
 
@@ -103,6 +109,12 @@ namespace FoosNet.Network
             var subscribe = new { action = "subscribe", email = m_Email };
             m_Timer = new Timer(m_WebSocket.SendAsJson, subscribe, TimeSpan.Zero, m_SubscribeInterval);
             Task.Factory.StartNew(RequestPlayers);
+            Task.Factory.StartNew(RequestTableStatus);
+        }
+
+        private void RequestTableStatus()
+        {
+            m_WebSocket.SendAsJson(new { action = "tablestatus" });
         }
 
         protected override void Dispose(bool disposing)

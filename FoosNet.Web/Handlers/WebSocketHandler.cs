@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Helpers;
+using FoosNet.Vision;
 using Microsoft.Web.WebSockets;
 
 namespace FoosNet.Web.Handlers
@@ -9,7 +11,19 @@ namespace FoosNet.Web.Handlers
     public class SocketHandler : WebSocketHandler, IDisposable
     {
         private static readonly ConcurrentDictionary<string, SocketHandler> s_Subscribers = new ConcurrentDictionary<string, SocketHandler>();
+        private static readonly TableWatcher s_TableWatcher = new TableWatcher();
         private string m_Email = null;
+
+        static SocketHandler()
+        {
+            s_TableWatcher.TableNowBusy += TableStatusChanged;
+            s_TableWatcher.TableNowFree += TableStatusChanged;
+        }
+
+        private static void TableStatusChanged(object sender, EventArgs eventArgs)
+        {
+            BroadcastAll(new {type = "tablestatus", tablestatus = s_TableWatcher.TableUsage.ToString()});
+        }
 
         public override void OnMessage(string message)
         {
@@ -35,9 +49,17 @@ namespace FoosNet.Web.Handlers
                 case "players":
                     Players();
                     break;
+                case "tablestatus":
+                    TableStatus();
+                    break;
                 default:
                     throw new InvalidOperationException(string.Format("Unknown action \"{0}\"", action));
             }
+        }
+
+        private void TableStatus()
+        {
+            Send(new { type = "tablestatus", tablestatus = s_TableWatcher.TableUsage.ToString() });
         }
 
         public override void OnClose()
@@ -75,7 +97,7 @@ namespace FoosNet.Web.Handlers
             }
         }
 
-        private void CancelGame(string[] otherPlayers)
+        private static void CancelGame(IEnumerable<string> otherPlayers)
         {
             foreach (var player in otherPlayers)
             {
@@ -91,13 +113,24 @@ namespace FoosNet.Web.Handlers
         private void Broadcast(object message)
         {
             var sendTo = s_Subscribers.Values.Where(s => s != this).ToList();
+            BroadcastTo(message, sendTo);
+        }
+
+        private static void BroadcastAll(object message)
+        {
+            var sendTo = s_Subscribers.Values.ToList();
+            BroadcastTo(message, sendTo);
+        }
+
+        private static void BroadcastTo(object message, IEnumerable<SocketHandler> sendTo)
+        {
             foreach (var recipient in sendTo)
             {
                 recipient.Send(message);
             }
         }
 
-        private void SendTo(string to, object message)
+        private static void SendTo(string to, object message)
         {
             s_Subscribers[to].Send(message);
         }

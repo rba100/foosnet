@@ -210,10 +210,16 @@ namespace FoosNet
            
             m_NetworkService.PlayersDiscovered += NetworkServiceOnPlayersDiscovered;
             m_NetworkService.GameStarting += NetworkServiceOnGameStarting;
+            m_NetworkService.TableStatusChanged += NetworkServiceOnTableStatusChanged;
 
             GameManager = new GameManager(m_NetworkService, this, m_FoosPlayers, m_Self);
             GameManager.PropertyChanged += GameManagerOnPropertyChanged;
             GameManager.OnError += GameManagerOnOnError;
+        }
+
+        private void NetworkServiceOnTableStatusChanged(bool free)
+        {
+            IsTableFree = free;
         }
 
         private void ConfigureAlert()
