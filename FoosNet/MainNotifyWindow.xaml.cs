@@ -49,7 +49,7 @@ namespace FoosNet
             var vm = this.DataContext as NotifyWindowViewModel;
             vm.PropertyChanged += Vm_PropertyChanged;
 
-            MouseDown += delegate{DragMove();};
+            MouseDown += Window_MouseDown;
         }
 
         private System.Windows.Forms.ContextMenu GetSystrayContextMenu()
@@ -313,6 +313,15 @@ namespace FoosNet
         private void FoosTableImage_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             UpdateFoosTableImageSource();
+        }
+
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left
+                && e.ButtonState == MouseButtonState.Pressed)
+            {  
+                DragMove();
+            }
         }
     }
 }
