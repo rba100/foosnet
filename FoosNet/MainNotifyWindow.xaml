@@ -173,12 +173,12 @@
                                 <DataTemplate>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="21"/>
+                                            <ColumnDefinition Width="165"/>
                                             <ColumnDefinition Width="20"/>
                                         </Grid.ColumnDefinitions>
-                                        <Image      Grid.Column="0" Width="16" Height="16" Margin="5,0" Source="{Binding Status, Converter = {StaticResource StatusConverter}}"></Image>
-                                        <TextBlock  Grid.Column="1"  Margin="5,1,5,1" Text="{Binding DisplayName}"></TextBlock>
+                                        <Image UseLayoutRounding="True"  Grid.Column="0" Width="16" Height="16" Margin="0,0" Source="{Binding Status, Converter = {StaticResource StatusConverter}}"></Image>
+                                        <TextBlock  Grid.Column="1"  Margin="5,1,5,1" Text="{Binding DisplayName}" TextTrimming="CharacterEllipsis"></TextBlock>
                                         <controls:Spinner x:Name="LoadingSpinner" Grid.Column="2"  Width="16">
                                             <controls:Spinner.Style>
                                                 <Style TargetType="controls:Spinner">
