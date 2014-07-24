@@ -170,7 +170,7 @@ namespace FoosNet
             }
 
             // nasty hack to support WPF designer
-            if (DesignerProperties.GetIsInDesignMode(new DependencyObject()) || true)
+            if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
             {
                 m_NetworkService = new TestFoosNetworkService();
             }
