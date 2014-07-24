@@ -104,7 +104,7 @@
                         <ColumnDefinition Width="42*"/>
                         <ColumnDefinition Width="65*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Padding="5" HorizontalAlignment="Center" TextAlignment="Center"
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Padding="5" HorizontalAlignment="Left" TextAlignment="Center"
                                MouseDown="TableStatusImage_OnMouseDown" Height="27" Width="78" FontWeight="DemiBold">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
