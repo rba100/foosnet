@@ -281,7 +281,6 @@ namespace FoosNet
             var original = FoosTableImage.Source as BitmapImage;
             if (original != null) original.StreamSource.Dispose();
 
-            FoosTableImage.Visibility = Visibility.Collapsed;
             var url = new Uri(@"http://10.120.115.224/snapshot.cgi?user=viewer&amp;pwd=&amp;");
             var webRequest = WebRequest.CreateDefault(url);
             webRequest.ContentType = "image/jpeg";
