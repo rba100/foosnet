@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using FoosNet.Network;
 
@@ -17,12 +18,16 @@ namespace FoosNet
 
         public AllPlayersJoined(IEnumerable<IFoosPlayer> foosPlayers) : this()
         {
-            this.DataContext = new AllPlayersJoinedViewModel{FoosPlayers = foosPlayers};
+            var players = foosPlayers.ToArray();
+            Name1.Text = players[0].DisplayName;
+            Name2.Text = players[1].DisplayName;
+            Name3.Text = players[2].DisplayName;
+            Name4.Text = players[3].DisplayName;
         }
 
         private void AckButtonClicked(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }

@@ -4,19 +4,11 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IdentityModel.Tokens;
 using System.IO;
 using System.Linq;
-using System.Net.Mime;
 using System.Runtime.CompilerServices;
-using System.Security.Policy;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Threading;
 using FoosNet.Annotations;
 using FoosNet.CommunicatorIntegration;
 using FoosNet.Controls;
@@ -24,7 +16,6 @@ using FoosNet.Controls.Alerts;
 using FoosNet.Game;
 using FoosNet.Network;
 using FoosNet.PlayerFilters;
-using FoosNet.Tests;
 
 namespace FoosNet
 {
@@ -179,7 +170,7 @@ namespace FoosNet
             }
 
             // nasty hack to support WPF designer
-            if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
+            if (DesignerProperties.GetIsInDesignMode(new DependencyObject()) || true)
             {
                 m_NetworkService = new TestFoosNetworkService();
             }
