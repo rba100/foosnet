@@ -82,14 +82,19 @@ namespace FoosNet.CommunicatorIntegration
             return contact.FriendlyName;
         }
 
-        public IMessengerConversationWndAdvanced OpenConversationWithRedgateEmail(string email)
+        public void OpenConversationWithRedgateEmail(string email)
+        {
+            m_Messenger.InstantMessage(GetContactByRedGateEmail(email));
+        }
+
+        private IMessengerConversationWndAdvanced OpenConversationWithRedgateEmailInternal(string email)
         {
             return m_Messenger.InstantMessage(GetContactByRedGateEmail(email));
         }
 
         public IMessengerConversationWndAdvanced OpenConversationWithRedgateEmail(string email, string initialMessage)
         {
-            IMessengerConversationWndAdvanced wnd = OpenConversationWithRedgateEmail(email);
+            IMessengerConversationWndAdvanced wnd = OpenConversationWithRedgateEmailInternal(email);
             wnd.SendText(initialMessage);
             return wnd;
         }

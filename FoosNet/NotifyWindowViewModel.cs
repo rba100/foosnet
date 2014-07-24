@@ -29,6 +29,7 @@ namespace FoosNet
         public GameManager GameManager { get; set; }
         private IFoosAlerter m_Alerter;
         private readonly FoosPlayerListItem m_Self;
+        private CommunicatorIntegration.CommunicatorIntegration m_Communicator;
 
         public ObservableCollection<FoosPlayerListItem> FoosPlayers
         {
@@ -40,6 +41,7 @@ namespace FoosNet
             }
         }
         #region Commands
+
         private ICommand m_ChallengeSelectedPlayer;
         public ICommand ChallengeSelectedPlayer
         {
@@ -64,6 +66,31 @@ namespace FoosNet
             foreach (var p in players)
             {
                 if (GameManager.CanAddPlayer) GameManager.InvitePlayer(p);
+            }
+        }
+
+        private ICommand m_ChatToSelectedPlayerCommand;
+        public ICommand ChatToSelectedPlayerCommand
+        {
+            get
+            {
+                return m_ChatToSelectedPlayerCommand ?? (m_ChatToSelectedPlayerCommand = new SimpleCommand(ChatToSelectedPlayer, CanChatToSelectedPlayer));
+            }
+        }
+
+        private bool CanChatToSelectedPlayer(object arg)
+        {
+            return m_Communicator != null;
+        }
+
+        private void ChatToSelectedPlayer(object obj)
+        {
+            var list = (obj as IList);
+            if (list == null) return;
+            var players = list.Cast<FoosPlayerListItem>().ToList();
+            foreach (var p in players)
+            {
+                m_Communicator.OpenConversationWithRedgateEmail(p.Email);
             }
         }
 
@@ -107,6 +134,7 @@ namespace FoosNet
         }
 
         private ICommand m_CreateGameAutoCommand;
+        
 
         public ICommand CreateGameAutoCommand
         {
@@ -157,16 +185,17 @@ namespace FoosNet
 
             try
             {
-                var communicator = new CommunicatorIntegration.CommunicatorIntegration();
-                m_PlayerProcessors.Add(new CommunicatorPlayerFilter(communicator));
-                communicator.StatusChanged += CommunicatorOnStatusChanged;
-                localEmail = communicator.GetLocalUserEmail();
+                m_Communicator = new CommunicatorIntegration.CommunicatorIntegration();
+                m_PlayerProcessors.Add(new CommunicatorPlayerFilter(m_Communicator));
+                m_Communicator.StatusChanged += CommunicatorOnStatusChanged;
+                localEmail = m_Communicator.GetLocalUserEmail();
             }
             catch
             {
                 // If Communicator isn't working, process player names as best we can from email address
                 m_PlayerProcessors.Add(new DefaultNameTransformation());
                 m_PlayerProcessors.Add(new StatusToUnknownTransformation());
+                m_Communicator = null;
             }
 
             // nasty hack to support WPF designer

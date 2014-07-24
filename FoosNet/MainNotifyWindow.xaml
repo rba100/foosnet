@@ -26,7 +26,7 @@
     xmlns:diagnostics="clr-namespace:System.Diagnostics;assembly=mscorlib"
     mc:Ignorable="d">
     <Window.DataContext>
-        <foosNet:NotifyWindowViewModel></foosNet:NotifyWindowViewModel>
+        <foosNet:NotifyWindowViewModel/>
     </Window.DataContext>
     <Window.Resources>
         <Storyboard x:Key="gridFadeInStoryBoard">
@@ -34,8 +34,8 @@
                 Storyboard.TargetProperty="Opacity" From="0.00" To="1.00" AutoReverse="False" Duration="0:0:0.3" />
         </Storyboard>
         <Storyboard x:Key="gridFadeOutStoryBoard">
-            <DoubleAnimation Storyboard.TargetName="uiGridMain" BeginTime="0:0:0.3"
-                Storyboard.TargetProperty="Opacity" From="1.00" To="0.00" AutoReverse="False" Duration="0:0:0.3" />
+            <DoubleAnimation Storyboard.TargetName="uiGridMain" BeginTime="0:0:0.6"
+                Storyboard.TargetProperty="Opacity" From="1.00" To="0.00" AutoReverse="False" Duration="0:0:0.6" />
         </Storyboard>
         <converters:ConvertStatus x:Key="StatusConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
@@ -54,7 +54,7 @@
                     <RowDefinition Height="44"/>
                 </Grid.RowDefinitions>
 
-                <Label Margin="0" x:Name="TitleLabel" Foreground="White" Opacity="0.9" Content="Foos.Net" MouseDown="TitleLabel_OnMouseDown"/>
+                <Label Margin="0" x:Name="TitleLabel" Foreground="White" Opacity="0.9" Content="FoosNet" MouseDown="TitleLabel_OnMouseDown"/>
 
                 <Grid Grid.Row="0" Margin="5,0,12,0">
                     <Grid.RowDefinitions>
@@ -224,6 +224,15 @@
                                 <ContextMenu Name="PlayerListContextMenu">
                                     <MenuItem Header="Send invite"
                                               Command="{Binding ChallengeSelectedPlayer}">
+                                        <MenuItem.Icon>
+                                            <Image Width="16" Height="16" Source="/FoosNet;component/Images/plus.png"></Image>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Header="Start conversation"
+                                              Command="{Binding ChatToSelectedPlayerCommand}">
+                                        <MenuItem.Icon>
+                                            <Image Width="16" Height="16" Source="/FoosNet;component/Images/chat.png"></Image>
+                                        </MenuItem.Icon>
                                     </MenuItem>
                                     <ContextMenu.ItemContainerStyle>
                                         <Style TargetType="{x:Type MenuItem}">
@@ -243,7 +252,7 @@
                         <Button Content="Start game" Margin="0,0,0,5" Command="{Binding StartGameCommand}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Width="200"/>
                     </StackPanel>
                     <StackPanel Visibility="{Binding Path=GameManager.HasAcceptedRemoteGame, Converter={StaticResource BooleanToVisibilityConverter}}">
-                        <Button Content="Cancel game" Margin="0,0,0,5" Command="{Binding CancelGameCommand}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
+                        <Button Content="Cancel game" Margin="0,0,0,5" Command="{Binding CancelGameCommand}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Width="200"/>
                     </StackPanel>
                 </Grid>
                 <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="5,0,5,0" Grid.Row="4">

@@ -305,6 +305,12 @@
   <ItemGroup>
     <Resource Include="Images\InstallerImages\banner.bmp" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\chat.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\plus.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
