@@ -303,12 +303,6 @@ namespace FoosNet
             }));
         }
 
-        private void TestButtonClick_OpenPlayersJoined(object sender, RoutedEventArgs e)
-        {
-            var vm = this.DataContext as NotifyWindowViewModel;
-            vm.IsTableFree = true;
-        }
-
         private void FoosTableImage_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             UpdateFoosTableImageSource();
