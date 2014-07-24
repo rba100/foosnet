@@ -100,9 +100,14 @@ namespace FoosNet.Game
 
         private void NetworkServiceOnChallengeReceived(ChallengeRequest challengeRequest)
         {
-            if (m_IsOrganisingGame || m_HasAcceptedRemoteGame)
+            if (m_IsOrganisingGame)
             {
                 m_NetworkService.Respond(new ChallengeResponse(challengeRequest.Challenger, false));
+            }
+            else if (m_HasAcceptedRemoteGame)
+            {
+                var sameChallenger = m_CurrentChallenger.Email.Equals(challengeRequest.Challenger.Email, StringComparison.InvariantCultureIgnoreCase);
+                m_NetworkService.Respond(new ChallengeResponse(challengeRequest.Challenger, sameChallenger));
             }
             else
             {
@@ -138,7 +143,6 @@ namespace FoosNet.Game
             finally
             {
                 m_CurrentAlert = null;
-                m_CurrentChallenger = null;
             }
         }
 
@@ -152,7 +156,7 @@ namespace FoosNet.Game
 
         public bool GameCreationInProgress { get { return m_IsOrganisingGame; } set { m_IsOrganisingGame = value; OnPropertyChanged(); } }
         public bool HasAcceptedRemoteGame { get { return m_HasAcceptedRemoteGame; } set { m_HasAcceptedRemoteGame = value; OnPropertyChanged(); } }
-        public bool CanAddPlayer { get { return !IsGameReadyToStart; } }
+        public bool CanAddPlayer { get { return !IsGameReadyToStart && !m_HasAcceptedRemoteGame; } }
         public int FreeSlots { get { return Math.Min(c_PlayersPerGame - m_PlayerLineUp.Count, 3); } }
         public bool CanCreateGameAuto { get { return !m_IsOrganisingGame; } }
 
@@ -180,7 +184,7 @@ namespace FoosNet.Game
                 if (m_PlayerLineUp.Count >= c_PlayersPerGame)
                     throw new InvalidOperationException("Cannot add another player, max players reached");
                 player.GameState = GameState.Pending;
-                m_PlayerLineUp.Add(player);
+                if(!m_PlayerLineUp.Contains(player)) m_PlayerLineUp.Add(player);
             }
             m_NetworkService.Challenge(player);
             Task.Factory.StartNew(() => PlayerTimeOutWatcher(player, CancellationToken));
