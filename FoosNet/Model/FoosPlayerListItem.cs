@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using FoosNet.Annotations;
 using FoosNet.Network;
 
-namespace FoosNet
+namespace FoosNet.Model
 {
     public enum GameState { None, Pending, Accepted, Declined, Timeout }
 

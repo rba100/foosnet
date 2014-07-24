@@ -59,7 +59,7 @@
     <Compile Include="Controls\Alerts\AlertBubble.xaml.cs">
       <DependentUpon>AlertBubble.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AllPlayersJoined.xaml.cs">
+    <Compile Include="Views\AllPlayersJoined.xaml.cs">
       <DependentUpon>AllPlayersJoined.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Alerts\AlertWindow.xaml.cs">
@@ -94,7 +94,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Alerts\AlertBubbleGridStyleRD.xaml" />
-    <Page Include="AllPlayersJoined.xaml">
+    <Page Include="Views\AllPlayersJoined.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -144,7 +144,7 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.IdentityModel" />
     <Compile Include="Controls\ExtendedNotifyIcon.cs" />
-    <Compile Include="FoosPlayerListItem.cs" />
+    <Compile Include="Model\FoosPlayerListItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

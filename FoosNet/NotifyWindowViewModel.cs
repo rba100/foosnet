@@ -14,8 +14,10 @@ using FoosNet.CommunicatorIntegration;
 using FoosNet.Controls;
 using FoosNet.Controls.Alerts;
 using FoosNet.Game;
+using FoosNet.Model;
 using FoosNet.Network;
 using FoosNet.PlayerFilters;
+using FoosNet.Views;
 
 namespace FoosNet
 {
@@ -27,7 +29,6 @@ namespace FoosNet
         private readonly IFoosNetworkService m_NetworkService;
         private readonly List<IPlayerTransformation> m_PlayerProcessors;
         public GameManager GameManager { get; set; }
-        private IFoosAlerter m_Alerter;
         private readonly FoosPlayerListItem m_Self;
         private CommunicatorIntegration.CommunicatorIntegration m_Communicator;
 
@@ -49,13 +50,17 @@ namespace FoosNet
         {
             get
             {
-                return m_ShowSettingsCommand ?? (m_ShowSettingsCommand = new SimpleCommand(ShowSettings));
+                return m_ShowSettingsCommand ?? (m_ShowSettingsCommand = new SimpleCommand(ShowSettings, a=> true));
             }
         }
 
         private void ShowSettings(object obj)
         {
-           
+            if (m_IsShowSettings)
+            {
+                // Save
+            }
+            IsShowSettings = !IsShowSettings;
         }
 
         private ICommand m_ChallengeSelectedPlayer;
@@ -99,7 +104,7 @@ namespace FoosNet
             var list = (arg as IList);
             if (list == null) return false;
             var players = list.Cast<FoosPlayerListItem>().ToList();
-            return m_Communicator != null && players.All(p=>p.Status!= Status.Unknown);
+            return m_Communicator != null && players.All(p => p.Status != Status.Unknown);
         }
 
         private void ChatToSelectedPlayer(object obj)
@@ -153,7 +158,9 @@ namespace FoosNet
         }
 
         private ICommand m_CreateGameAutoCommand;
-        
+        private bool m_IsShowSettings;
+        private bool m_UseMinimalAlerts;
+
 
         public ICommand CreateGameAutoCommand
         {
@@ -180,6 +187,28 @@ namespace FoosNet
         }
         #endregion
 
+        public bool UseMinimalAlerts
+        {
+            get { return m_UseMinimalAlerts; }
+            set
+            {
+                if (value.Equals(m_UseMinimalAlerts)) return;
+                m_UseMinimalAlerts = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsShowSettings
+        {
+            get { return m_IsShowSettings; }
+            set
+            {
+                if (value.Equals(m_IsShowSettings)) return;
+                m_IsShowSettings = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool IsTableFree
         {
             get
@@ -196,7 +225,6 @@ namespace FoosNet
         public NotifyWindowViewModel()
         {
             var endpoint = ConfigurationManager.AppSettings["networkServiceEndpoint"];
-            ConfigureAlert();
 
             m_PlayerProcessors = new List<IPlayerTransformation>();
             var localEmail = Environment.UserName + "@" + Environment.UserDomainName + ".com";
@@ -226,7 +254,7 @@ namespace FoosNet
             {
                 m_NetworkService = new FoosNetworkService(endpoint, localEmail, TimeSpan.FromMinutes(1));
             }
-           
+
             m_NetworkService.PlayersDiscovered += NetworkServiceOnPlayersDiscovered;
             m_NetworkService.GameStarting += NetworkServiceOnGameStarting;
             m_NetworkService.TableStatusChanged += NetworkServiceOnTableStatusChanged;
@@ -239,22 +267,6 @@ namespace FoosNet
         private void NetworkServiceOnTableStatusChanged(bool free)
         {
             IsTableFree = free;
-        }
-
-        private void ConfigureAlert()
-        {
-            var alertType = (AlertType) Enum.Parse(typeof(AlertType), Settings.Default.AlertType);
-            switch (alertType)
-            {
-                case AlertType.Full:
-                    m_Alerter = new FullScreenFoosAlerter();
-                    break;
-                case AlertType.Minimal:
-                    m_Alerter = new MinimalFoosAlerter();
-                    break;
-                default:
-                    throw new ConfigurationErrorsException("Unknown alertType in configuration.");
-            }
         }
 
         private void GameManagerOnPropertyChanged(object sender, PropertyChangedEventArgs args)
@@ -295,7 +307,7 @@ namespace FoosNet
                 {
                     transformedPlayer = playerTransformation.Process(transformedPlayer);
                 }
-                
+
                 var existingPlayer = m_FoosPlayers.FirstOrDefault(p => p.Email == transformedPlayer.Email);
                 if (existingPlayer != null)
                 {
@@ -326,7 +338,11 @@ namespace FoosNet
 
         public IFoosAlerter GetAlerter()
         {
-            return m_Alerter;
+            if (UseMinimalAlerts)
+            {
+                return new MinimalFoosAlerter();
+            }
+            return new FullScreenFoosAlerter();
         }
     }
 }

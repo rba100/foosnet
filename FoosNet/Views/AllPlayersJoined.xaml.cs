@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows;
 using FoosNet.Network;
 
-namespace FoosNet
+namespace FoosNet.Views
 {
     /// <summary>
     /// Interaction logic for AllPlayersJoined.xaml

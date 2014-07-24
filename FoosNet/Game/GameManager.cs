@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using FoosNet.Annotations;
 using FoosNet.Controls.Alerts;
+using FoosNet.Model;
 using FoosNet.Network;
 
 namespace FoosNet.Game

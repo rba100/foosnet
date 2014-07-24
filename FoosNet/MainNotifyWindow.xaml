@@ -118,7 +118,7 @@
                     </TextBlock>
 
                     <TextBlock Grid.Column="1" VerticalAlignment="Center" TextAlignment="Right" Text="{Binding Path=GameManager.StatusMessage}" FontWeight="DemiBold" Foreground="Gray" Height="16" Margin="0,4,0,5" Width="130"/>
-                    
+
                 </Grid>
 
                 <Border Name="FoosTableImageBorder"
@@ -129,11 +129,11 @@
                         Width="214"
                         Height="162"
                         Background="WhiteSmoke">
-                        <Grid>
-                            <controls:Spinner Width="16" Height="16" />
-                            <Image Name="FoosTableImage" Width="206" Height="154" 
+                    <Grid>
+                        <controls:Spinner Width="16" Height="16" />
+                        <Image Name="FoosTableImage" Width="206" Height="154" 
                                    MouseDown="FoosTableImage_OnMouseDown"/>
-                        </Grid>
+                    </Grid>
 
                     <Border.Style>
                         <Style TargetType="Border">
@@ -273,6 +273,17 @@
                     </Button>
                     <Button Grid.Column="2" HorizontalAlignment="Stretch" Margin="5" Width="80" Height="25" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
                             Command="{Binding CreateGameAutoCommand}" CommandParameter="{Binding ElementName=FoosPlayersList, Path=SelectedItems}" Background="LightSkyBlue">Auto invite</Button>
+                </Grid>
+
+                <Grid Grid.Row="1" Grid.RowSpan="5" Name="SettingsGrid" Visibility="{Binding IsShowSettings, Converter={StaticResource BooleanToVisibilityConverter}}"
+                      Background="#FFF9F9F9" Margin="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <CheckBox Content="Minimal alerts" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding UseMinimalAlerts}"/>
+                    <Button Grid.Row="1" HorizontalAlignment="Right" Margin="0,0,9,8" Width="80" Height="25" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                            Command="{Binding ShowSettingsCommand}" CommandParameter="{Binding ElementName=FoosPlayersList, Path=SelectedItems}" Background="LightSkyBlue">Done</Button>
                 </Grid>
             </Grid>
         </Grid>

@@ -116,6 +116,8 @@ namespace FoosNet
         {
             if (PinButton.IsChecked == true) return; // Dont hide the window if its pinned open
             if (PlayerListContextMenu.IsOpen) return;
+            if (SettingsGrid.Visibility == Visibility.Visible) return;
+
             // if (FoosTablePopup.IsOpen) return;
             if (Mouse.LeftButton.HasFlag(MouseButtonState.Pressed)) return; // Drag and drop hack
 
