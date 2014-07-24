@@ -163,7 +163,7 @@
                                   dragDrop:DragDrop.IsDragSource="True"
                                   dragDrop:DragDrop.IsDropTarget="True"
                                   ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                                  Mouse.MouseDown="ListBox_MouseDown">
+                                  PreviewMouseLeftButtonDown="FoosPlayersList_OnPreviewMouseLeftButtonDown">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>

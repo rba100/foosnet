@@ -319,10 +319,10 @@ namespace FoosNet
             }
         }
 
-        private void ListBox_MouseDown(object sender, MouseButtonEventArgs e)
+        private void FoosPlayersList_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            (sender as ListBox).SelectedItem = null;
-            (sender as ListBox).SelectedItems.Clear();
+            if (Keyboard.Modifiers == ModifierKeys.Control) return;
+            FoosPlayersList.SelectedItems.Clear();
         }
 
         private void FoosPlayersList_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
