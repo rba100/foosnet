@@ -14,9 +14,9 @@ namespace FoosNet.Controls.Alerts
 
         private List<SecondaryAlertWindow> m_SecondaryAlertWindows;
 
-        public event Action<ChallengeRequest, bool> ChallengeResponseReceived;
+        public event Action<IFoosPlayer, bool> ChallengeResponseReceived;
 
-        public void ShowChallengeAlert(ChallengeRequest challenge)
+        public void ShowChallengeAlert(IFoosPlayer challenger)
         {
             // Close any alerts already open before we start
             CloseChallengeAlert();
@@ -37,7 +37,7 @@ namespace FoosNet.Controls.Alerts
             m_MainAlertWindow = new AlertWindow(alertColors,
                                                 textSequence,
                                                 cancelledColors,
-                                                challenge,
+                                                challenger,
                                                 0.1)
             {
                 Top = Screen.PrimaryScreen.WorkingArea.Top,
@@ -112,10 +112,10 @@ namespace FoosNet.Controls.Alerts
             }
         }
 
-        private void ChallengeResponseHandler(ChallengeRequest request, bool accepted)
+        private void ChallengeResponseHandler(IFoosPlayer challenger, bool accepted)
         {
             CloseChallengeAlert();
-            if (ChallengeResponseReceived != null) ChallengeResponseReceived(request, accepted);
+            if (ChallengeResponseReceived != null) ChallengeResponseReceived(challenger, accepted);
         }
 
         private void AlertClosedHandler()

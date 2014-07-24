@@ -106,17 +106,18 @@ namespace FoosNet.Game
             }
             else
             {
+                var challenger = m_PlayerList.FirstOrDefault(p => p.Email.Equals(challengeRequest.Challenger.Email, StringComparison.OrdinalIgnoreCase));
                 m_CurrentChallenger = challengeRequest.Challenger;
                 Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                 {
                     m_CurrentAlert = m_Alerter.GetAlerter();
                     m_CurrentAlert.ChallengeResponseReceived += AlertOnChallengeResponseReceived;
-                    m_CurrentAlert.ShowChallengeAlert(challengeRequest);
+                    m_CurrentAlert.ShowChallengeAlert(challenger);
                 }));
             }
         }
 
-        private void AlertOnChallengeResponseReceived(ChallengeRequest request, bool accepted)
+        private void AlertOnChallengeResponseReceived(IFoosPlayer challenger, bool accepted)
         {
             try
             {
@@ -128,7 +129,7 @@ namespace FoosNet.Game
                     OnPropertyChanged("CanAddPlayer");
                     StatusMessage = c_Accepted;
                 }
-                m_NetworkService.Respond(new ChallengeResponse(request.Challenger, accepted));
+                m_NetworkService.Respond(new ChallengeResponse(challenger, accepted));
             }
             catch (Exception ex)
             {

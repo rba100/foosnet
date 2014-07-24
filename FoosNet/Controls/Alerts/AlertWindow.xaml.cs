@@ -20,11 +20,11 @@ namespace FoosNet.Controls.Alerts
         private readonly string[] m_AlertTextSequence;
         private readonly Tuple<SolidColorBrush, SolidColorBrush> m_CancelledColors;
 
-        private readonly ChallengeRequest m_Challenge;
+        private readonly IFoosPlayer m_Challenger;
 
         private readonly Timer m_StrobeTimer;
         
-        public event Action<ChallengeRequest, bool> ChallengeResponseReceived = delegate {};
+        public event Action<IFoosPlayer, bool> ChallengeResponseReceived = delegate {};
         
         // Needed so we can close the other windows from the layer above
         public delegate void AlertClosedEventHandler();
@@ -51,7 +51,7 @@ namespace FoosNet.Controls.Alerts
         public AlertWindow(Tuple<SolidColorBrush, SolidColorBrush> [] alertColorSequence,
                            String [] alertTextSequence,
                            Tuple<SolidColorBrush, SolidColorBrush> cancelledColors,
-                           ChallengeRequest challenge,
+                           IFoosPlayer challenger,
                            double discTrayAnnoyanceChance)
         {
             InitializeComponent();
@@ -60,14 +60,14 @@ namespace FoosNet.Controls.Alerts
             m_AlertTextSequence = alertTextSequence;
             m_CancelledColors = cancelledColors;
 
-            m_Challenge = challenge;
+            m_Challenger = challenger;
 
             var random = new Random();
 
             m_StrobeTimer = new Timer {Interval = 1000 + random.Next(10)};
 
             DescriptionText.Text = "You have been challenged by " 
-                                    + m_Challenge.Challenger.DisplayName + "!";
+                                    + m_Challenger.DisplayName + "!";
 
             var currentFrame = 0;
             
@@ -113,7 +113,7 @@ namespace FoosNet.Controls.Alerts
         {
             m_StrobeTimer.Stop();
             
-            DescriptionText.Text =  m_Challenge.Challenger.DisplayName + " has cancelled" +
+            DescriptionText.Text =  m_Challenger.DisplayName + " has cancelled" +
                                     " the challenge.";
             
             AlertWindowElement.Background = m_CancelledColors.Item1;
@@ -127,12 +127,12 @@ namespace FoosNet.Controls.Alerts
 
         private void AcceptButton_OnClick(object sender, RoutedEventArgs e)
         {
-            ChallengeResponseReceived(m_Challenge, true);
+            ChallengeResponseReceived(m_Challenger, true);
         }
 
         private void DeclineButton_OnClick(object sender, RoutedEventArgs e)
         {
-            ChallengeResponseReceived(m_Challenge, false);
+            ChallengeResponseReceived(m_Challenger, false);
         }
 
         private void CloseButton_OnClick(object sender, RoutedEventArgs e)

@@ -13,28 +13,28 @@ namespace FoosNet.Controls.Alerts
     /// </summary>
     public partial class AlertBubble : Window
     {
-        private readonly ChallengeRequest m_Challenge;
+        private readonly IFoosPlayer m_Challenger;
         private int? m_AutoDeclineTimeLeft;
         private readonly Timer m_AutoDeclineTimer;
         private Timer m_ClosePopupTimer;
 
-        public event Action<ChallengeRequest, bool> ChallengeResponseReceived = delegate {};
+        public event Action<IFoosPlayer, bool> ChallengeResponseReceived = delegate {};
 
 
         /// <param name="autoDeclineTimeLeft">
         /// Time, in seconds, before the challenge is auto declined.
         /// If null, message will not be auto declined.
         /// </param>
-        public AlertBubble(ChallengeRequest challenge, int? autoDeclineTimeLeft)
+        public AlertBubble(IFoosPlayer challenger, int? autoDeclineTimeLeft)
         {
             InitializeComponent();
 
-            if (challenge == null) throw new ArgumentNullException("challenge");
+            if (challenger == null) throw new ArgumentNullException("challenger");
 
-            m_Challenge = challenge;
+            m_Challenger = challenger;
             m_AutoDeclineTimeLeft = autoDeclineTimeLeft;
 
-            SetDescriptionText(challenge, autoDeclineTimeLeft);
+            SetDescriptionText(challenger, autoDeclineTimeLeft);
 
             if (autoDeclineTimeLeft != null)
             {
@@ -44,7 +44,7 @@ namespace FoosNet.Controls.Alerts
                     m_AutoDeclineTimeLeft--;
 
                     Dispatcher.Invoke
-                        (() => SetDescriptionText(m_Challenge, 
+                        (() => SetDescriptionText(m_Challenger, 
                                                   m_AutoDeclineTimeLeft));
 
                     if (m_AutoDeclineTimeLeft == 0)
@@ -65,10 +65,10 @@ namespace FoosNet.Controls.Alerts
         /// <param name="autoDeclineTimeLeft">
         /// If null, auto decline message will not be shown
         /// </param>
-        private void SetDescriptionText(ChallengeRequest challenge,
+        private void SetDescriptionText(IFoosPlayer challenger,
                                         int? autoDeclineTimeLeft)
         {
-            DescriptionText.Text = challenge.Challenger.DisplayName + 
+            DescriptionText.Text = challenger.DisplayName + 
                                    " challenged you to a match!";
 
             if (autoDeclineTimeLeft != null)
@@ -93,7 +93,7 @@ namespace FoosNet.Controls.Alerts
 
             AlertBubbleBorder.Background = Brushes.Gray;
 
-            DescriptionText.Text = m_Challenge.Challenger.DisplayName +
+            DescriptionText.Text = m_Challenger.DisplayName +
                                    " cancelled the challenge.";
 
             AcceptButton.IsEnabled = false;
@@ -103,13 +103,13 @@ namespace FoosNet.Controls.Alerts
         private void Decline()
         {
             AlertBubbleBorder.Background = Brushes.Gray;
-            ChallengeResponseReceived(m_Challenge, false);
+            ChallengeResponseReceived(m_Challenger, false);
         }
 
         private void Accept()
         {
             AlertBubbleBorder.Background = Brushes.Green;
-            ChallengeResponseReceived(m_Challenge, true);
+            ChallengeResponseReceived(m_Challenger, true);
         }
 
         private void AcceptButton_OnClick(object sender, RoutedEventArgs e)

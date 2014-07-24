@@ -8,9 +8,9 @@ namespace FoosNet.Controls.Alerts
     {
         private AlertBubble m_AlertBubble;
 
-        public void ShowChallengeAlert(ChallengeRequest foosChallenge)
+        public void ShowChallengeAlert(IFoosPlayer challenger)
         {
-            m_AlertBubble = new AlertBubble(foosChallenge, 30)
+            m_AlertBubble = new AlertBubble(challenger, 30)
             {
                 Top = Screen.PrimaryScreen.WorkingArea.Height - 200,
                 Left = Screen.PrimaryScreen.WorkingArea.Width - 300
@@ -19,12 +19,12 @@ namespace FoosNet.Controls.Alerts
             m_AlertBubble.Show();
         }
 
-        private void AlertBubbleOnChallengeResponseReceived(ChallengeRequest request, bool accepted)
+        private void AlertBubbleOnChallengeResponseReceived(IFoosPlayer challenger, bool accepted)
         {
-            if (ChallengeResponseReceived != null) ChallengeResponseReceived(request, accepted);
+            if (ChallengeResponseReceived != null) ChallengeResponseReceived(challenger, accepted);
         }
 
-        public event Action<ChallengeRequest, bool> ChallengeResponseReceived;
+        public event Action<IFoosPlayer, bool> ChallengeResponseReceived;
 
         public void CancelChallengeAlert()
         {
