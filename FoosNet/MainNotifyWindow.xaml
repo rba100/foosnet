@@ -117,29 +117,7 @@
                     </TextBlock>
 
                     <TextBlock Grid.Column="1" VerticalAlignment="Center" TextAlignment="Right" Text="{Binding Path=GameManager.StatusMessage}" FontWeight="DemiBold" Foreground="Gray" Height="16" Margin="0,4,0,5" Width="130"/>
-                    <!--<Image Margin="5,0" Grid.Row="1" Name="TableStatusImage" MouseDown="TableStatusImage_OnMouseDown">
-                        <Image.Style>
-                            <Style TargetType="{x:Type Image}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsTableFree}" Value="false">
-                                        <Setter Property="Source" Value="Images/TableBusy.png"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsTableFree}" Value="true">
-                                        <Setter Property="Source" Value="Images/TableFreeNoGrass.png"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Image.Style>
-                    </Image>--><!--
-                    <Popup Name="FoosTablePopup" Placement="Left" MouseDown="FoosTablePopup_OnMouseDown" MouseEnter="FoosTablePopup_OnMouseEnter"
-                        PlacementTarget="{Binding ElementName=TableStatusImage}">
-                        <Border Background="WhiteSmoke" BorderBrush="DarkGray" BorderThickness="1" Width="160" Height="120">
-                            <Grid>
-                                <controls:Spinner Width="16" Height="16" ></controls:Spinner>
-                                <Image Name="FoosTableImage" Width="160" Height="120"></Image>
-                            </Grid>
-                        </Border>
-                    </Popup>-->
+                    
                 </Grid>
 
                 <Border Name="FoosTableImageBorder" Visibility="Collapsed" Grid.Row="2" Background="WhiteSmoke" BorderBrush="DarkGray" BorderThickness="1" Width="160" Height="120">
