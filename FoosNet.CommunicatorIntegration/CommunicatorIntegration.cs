@@ -12,7 +12,7 @@ using FoosNet.Network;
 // 
 // throws CommunicatorNotOpenException, CommunicatorNotLoggedInToRedgateException on instantiation
 // 
- 
+
 namespace FoosNet.CommunicatorIntegration
 {
     public class CommunicatorIntegration
@@ -20,7 +20,7 @@ namespace FoosNet.CommunicatorIntegration
         private readonly Messenger m_Messenger;
         private readonly string m_ServiceID;
 
-        private Dictionary<string, IMessengerContact> m_SubscribedContacts; 
+        private Dictionary<string, IMessengerContact> m_SubscribedContacts;
 
         public CommunicatorIntegration()
         {
@@ -32,7 +32,7 @@ namespace FoosNet.CommunicatorIntegration
             {
                 throw new CommunicatorNotOpenException();
             }
-            
+
             m_ServiceID = m_Messenger.MyServiceId;
 
             try
@@ -66,19 +66,37 @@ namespace FoosNet.CommunicatorIntegration
 
         public Status StatusOfRedgateEmail(string email)
         {
-            IMessengerContact contact = GetContactByRedGateEmail(email);
-            return MistatusToFoosStatus(contact.Status);
+            try
+            {
+                IMessengerContact contact = GetContactByRedGateEmail(email);
+                return MistatusToFoosStatus(contact.Status);
+            }
+            catch
+            {
+                return Status.Unknown;
+            }
         }
 
         public string FriendlyName(string email)
         {
-            IMessengerContact contact = GetContactByRedGateEmail(email);
-            return contact.FriendlyName;
+            try
+            {
+                IMessengerContact contact = GetContactByRedGateEmail(email);
+                return contact.FriendlyName;
+            }
+            catch
+            {
+                return email;
+            }
         }
 
         public void OpenConversationWithRedgateEmail(string email)
         {
-            m_Messenger.InstantMessage(GetContactByRedGateEmail(email));
+            try
+            {
+                m_Messenger.InstantMessage(GetContactByRedGateEmail(email));
+            }
+            catch { }
         }
 
         private IMessengerConversationWndAdvanced OpenConversationWithRedgateEmailInternal(string email)
@@ -92,10 +110,17 @@ namespace FoosNet.CommunicatorIntegration
             wnd.SendText(initialMessage);
             return wnd;
         }
-        
+
         public void StatusChangedSubscribeEmail(string email)
         {
-            m_SubscribedContacts[email.ToLower()] = GetContactByRedGateEmail(email.ToLower());
+            try
+            {
+                m_SubscribedContacts[email.ToLower()] = GetContactByRedGateEmail(email.ToLower());
+            }
+            catch
+            {
+                
+            }
         }
 
         public void StatusChangedUnsubscribeEmail(string email)

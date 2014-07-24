@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Configuration;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -32,15 +33,53 @@ namespace FoosNet
         private readonly FoosPlayerListItem m_Self;
         private CommunicatorIntegration.CommunicatorIntegration m_Communicator;
 
-        public ObservableCollection<FoosPlayerListItem> FoosPlayers
+        public NotifyWindowViewModel()
         {
-            get { return m_FoosPlayers; }
-            set
+            // Load settings
+            var endpoint = ConfigurationManager.AppSettings["networkServiceEndpoint"];
+            var savedPriorities = Settings.Default.Priorities ?? new StringCollection();
+            m_DesiredPlayerOrder = savedPriorities.Cast<string>().ToList();
+            UseMinimalAlerts = Settings.Default.UseMinimalAlerts;
+
+            m_PlayerProcessors = new List<IPlayerTransformation>();
+            var localEmail = Environment.UserName + "@" + Environment.UserDomainName + ".com";
+            m_Self = new FoosPlayerListItem(localEmail, Status.Available, 1) { DisplayName = "You" };
+
+            try
             {
-                m_FoosPlayers = value;
-                OnPropertyChanged();
+                m_Communicator = new CommunicatorIntegration.CommunicatorIntegration();
+                m_PlayerProcessors.Add(new CommunicatorPlayerFilter(m_Communicator));
+                m_Communicator.StatusChanged += CommunicatorOnStatusChanged;
+                localEmail = m_Communicator.GetLocalUserEmail();
             }
+            catch
+            {
+                // If Communicator isn't working, process player names as best we can from email address
+                m_PlayerProcessors.Add(new DefaultNameTransformation());
+                m_PlayerProcessors.Add(new StatusToUnknownTransformation());
+                m_Communicator = null;
+            }
+
+            // nasty hack to support WPF designer
+            if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
+            {
+                m_NetworkService = new TestFoosNetworkService();
+            }
+            else
+            {
+                m_NetworkService = new FoosNetworkService(endpoint, localEmail, TimeSpan.FromMinutes(1));
+            }
+
+            m_FoosPlayers.CollectionChanged += FoosPlayersOnCollectionChanged;
+            m_NetworkService.PlayersDiscovered += NetworkServiceOnPlayersDiscovered;
+            m_NetworkService.GameStarting += NetworkServiceOnGameStarting;
+            m_NetworkService.TableStatusChanged += NetworkServiceOnTableStatusChanged;
+
+            GameManager = new GameManager(m_NetworkService, this, m_FoosPlayers, m_Self);
+            GameManager.PropertyChanged += GameManagerOnPropertyChanged;
+            GameManager.OnError += GameManagerOnOnError;
         }
+
         #region Commands
 
         //ShowSettingsCommand
@@ -115,7 +154,7 @@ namespace FoosNet
             var players = list.Cast<FoosPlayerListItem>().ToList();
             foreach (var p in players)
             {
-                m_Communicator.OpenConversationWithRedgateEmail(p.Email);
+                if (m_Communicator != null) m_Communicator.OpenConversationWithRedgateEmail(p.Email);
             }
         }
 
@@ -188,6 +227,17 @@ namespace FoosNet
         }
         #endregion
 
+        #region Properties
+        public ObservableCollection<FoosPlayerListItem> FoosPlayers
+        {
+            get { return m_FoosPlayers; }
+            set
+            {
+                m_FoosPlayers = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool UseMinimalAlerts
         {
             get { return m_UseMinimalAlerts; }
@@ -222,49 +272,9 @@ namespace FoosNet
                 OnPropertyChanged();
             }
         }
+#endregion
 
-        public NotifyWindowViewModel()
-        {
-            var endpoint = ConfigurationManager.AppSettings["networkServiceEndpoint"];
-            UseMinimalAlerts = Settings.Default.UseMinimalAlerts;
-
-            m_PlayerProcessors = new List<IPlayerTransformation>();
-            var localEmail = Environment.UserName + "@" + Environment.UserDomainName + ".com";
-            m_Self = new FoosPlayerListItem(localEmail, Status.Available, 1) { DisplayName = "You" };
-
-            try
-            {
-                m_Communicator = new CommunicatorIntegration.CommunicatorIntegration();
-                m_PlayerProcessors.Add(new CommunicatorPlayerFilter(m_Communicator));
-                m_Communicator.StatusChanged += CommunicatorOnStatusChanged;
-                localEmail = m_Communicator.GetLocalUserEmail();
-            }
-            catch
-            {
-                // If Communicator isn't working, process player names as best we can from email address
-                m_PlayerProcessors.Add(new DefaultNameTransformation());
-                m_PlayerProcessors.Add(new StatusToUnknownTransformation());
-                m_Communicator = null;
-            }
-
-            // nasty hack to support WPF designer
-            if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
-            {
-                m_NetworkService = new TestFoosNetworkService();
-            }
-            else
-            {
-                m_NetworkService = new FoosNetworkService(endpoint, localEmail, TimeSpan.FromMinutes(1));
-            }
-
-            m_NetworkService.PlayersDiscovered += NetworkServiceOnPlayersDiscovered;
-            m_NetworkService.GameStarting += NetworkServiceOnGameStarting;
-            m_NetworkService.TableStatusChanged += NetworkServiceOnTableStatusChanged;
-
-            GameManager = new GameManager(m_NetworkService, this, m_FoosPlayers, m_Self);
-            GameManager.PropertyChanged += GameManagerOnPropertyChanged;
-            GameManager.OnError += GameManagerOnOnError;
-        }
+        #region EventHandlers
 
         private void NetworkServiceOnTableStatusChanged(bool free)
         {
@@ -325,18 +335,92 @@ namespace FoosNet
 
             Application.Current.Dispatcher.Invoke(() =>
             {
-                var toRemove = m_FoosPlayers.Where(p => newPlayerList.All(q => q.Email != p.Email)).ToList();
-                foreach (var foosPlayerListItem in toRemove)
+                lock (m_FoosPlayers)
                 {
-                    m_FoosPlayers.Remove(foosPlayerListItem);
-                    GameManager.RemovePlayer(foosPlayerListItem);
-                }
-                foreach (var foosPlayer in newPlayerList.Where(p => m_FoosPlayers.All(q => q.Email != p.Email)))
-                {
-                    m_FoosPlayers.Add(new FoosPlayerListItem(foosPlayer));
+                    var toRemove = m_FoosPlayers.Where(p => newPlayerList.All(q => q.Email != p.Email)).ToList();
+                    foreach (var foosPlayerListItem in toRemove)
+                    {
+                        m_FoosPlayers.Remove(foosPlayerListItem);
+                        GameManager.RemovePlayer(foosPlayerListItem);
+                    }
+                    foreach (var foosPlayer in newPlayerList.Where(p => m_FoosPlayers.All(q => q.Email != p.Email)))
+                    {
+                        m_NewPlayerFound = true;
+                        m_FoosPlayers.Add(new FoosPlayerListItem(foosPlayer));
+                    }
+                    SortPlayers();
                 }
             });
         }
+
+        #endregion
+
+        #region Sorting
+        private void SortPlayers()
+        {
+            m_Sorting = true;
+            var sorted = m_FoosPlayers.OrderBy(p => p.Priority).ToArray();
+            for (int i = sorted.Length - 1; i >= 0; i--)
+            {
+                var currentIndex = m_FoosPlayers.IndexOf(sorted[i]);
+                if (currentIndex != i) m_FoosPlayers.Move(currentIndex, i);
+            }
+            m_Sorting = false;
+        }
+
+        private bool m_Sorting;
+        private readonly List<string> m_DesiredPlayerOrder;
+
+        private bool m_NewPlayerFound;
+        private void FoosPlayersOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (m_Sorting) return;
+            var item = (e.NewItems != null && e.NewItems.Count > 0 ? e.NewItems[0] : null) as FoosPlayerListItem;
+            if (item == null) return;
+            if (m_NewPlayerFound)
+            {
+                m_NewPlayerFound = false;
+                var index = m_DesiredPlayerOrder.IndexOf(item.Email);
+                if (index == -1)
+                {
+                    m_DesiredPlayerOrder.Add(item.Email);
+                    item.Priority = m_DesiredPlayerOrder.Count - 1;
+                }
+                else
+                {
+                    item.Priority = index;
+                }
+            }
+            else // The user re-ordered the list and we should adjust desired order
+            {
+                switch (e.Action)
+                {
+                    case NotifyCollectionChangedAction.Add:
+                        m_DesiredPlayerOrder.RemoveAll(s => s == item.Email);
+                        if (e.NewStartingIndex == 0)
+                        {
+                            m_DesiredPlayerOrder.Insert(0, item.Email);
+                        }
+                        else
+                        {
+                            var precedingItem = m_FoosPlayers.ElementAt(e.NewStartingIndex - 1);
+                            var precedingIndex = m_DesiredPlayerOrder.IndexOf(precedingItem.Email);
+                            m_DesiredPlayerOrder.Insert(precedingIndex + 1, item.Email);
+                        }
+                        break;
+                }
+
+                foreach (var player in FoosPlayers)
+                {
+                    player.Priority = m_DesiredPlayerOrder.IndexOf(player.Email);
+                }
+            }
+            if (Settings.Default.Priorities == null) Settings.Default.Priorities = new StringCollection();
+            else Settings.Default.Priorities.Clear();
+            Settings.Default.Priorities.AddRange(m_DesiredPlayerOrder.ToArray());
+            Settings.Default.Save();
+        }
+        #endregion
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

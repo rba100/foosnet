@@ -19,6 +19,7 @@ namespace FoosNet.PlayerFilters
                     sb.Append(char.ToUpper(nameParts[i][0]));
                     if(nameParts[i].Length>1) sb.Append(nameParts[i].Substring(1));
                 }
+                if (emailParts.Length > 1 && !emailParts[1].Equals("red-gate.com")) sb.Append(String.Format(" ({0})", emailParts[1]));
                 player.DisplayName = sb.ToString();
             }
             return player;

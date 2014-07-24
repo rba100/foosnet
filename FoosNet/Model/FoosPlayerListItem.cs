@@ -15,6 +15,7 @@ namespace FoosNet.Model
         private GameState m_GameState;
         public string Email { get; set; }
         public volatile int InviteMarker = 0;
+        private int m_Priority = int.MaxValue;
 
         public string DisplayName
         {
@@ -38,7 +39,11 @@ namespace FoosNet.Model
             }
         }
 
-        public int Priority { get; set; }
+        public int Priority
+        {
+            get { return m_Priority; }
+            set { m_Priority = value; }
+        }
 
         public GameState GameState
         {
