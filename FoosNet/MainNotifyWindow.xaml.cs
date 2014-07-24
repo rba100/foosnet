@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Timers;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using FoosNet.Views;
@@ -315,6 +316,11 @@ namespace FoosNet
             {  
                 DragMove();
             }
+        }
+
+        private void ListBox_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            (sender as ListBox).SelectedItems.Clear();
         }
     }
 }

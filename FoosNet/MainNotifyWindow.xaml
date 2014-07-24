@@ -162,7 +162,8 @@
                                   Grid.Column="0" 
                                   dragDrop:DragDrop.IsDragSource="True"
                                   dragDrop:DragDrop.IsDropTarget="True"
-                                  ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+                                  ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                                  Mouse.MouseDown="ListBox_MouseDown">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
