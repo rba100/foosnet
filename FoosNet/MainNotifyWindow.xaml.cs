@@ -53,11 +53,21 @@ namespace FoosNet
         private System.Windows.Forms.ContextMenu GetSystrayContextMenu()
         {
             var menu = new System.Windows.Forms.ContextMenu();
+
             var exit = new System.Windows.Forms.MenuItem("Exit", (sender, args) =>
             {
                 m_ExtendedNotifyIcon.Dispose(); // So that the icon disappears and it looks like the app closed quickly.
                 Close(); // Takes about two seconds to close.
             });
+
+            var settings = new System.Windows.Forms.MenuItem("Settings", (sender, args) =>
+            {
+                var vm = (DataContext as NotifyWindowViewModel);
+                if (vm != null) vm.IsShowSettings = true;
+                extendedNotifyIcon_OnShowWindow();
+            });
+
+            menu.MenuItems.Add(settings);
             menu.MenuItems.Add(exit);
             return menu;
         }
