@@ -3,8 +3,6 @@ using FoosNet.Network;
 
 namespace FoosNet.Controls.Alerts
 {
-    public enum AlertType { Full, Minimal }
-
     /// <summary>
     /// Interface for the alerter which pops up on a player's screen when 
     /// somebody challenges them. Only one challenge can be active at a time.
