@@ -205,7 +205,7 @@
                                                 </Style>
                                             </Image.Style>
                                         </Image>
-                                        <Image Grid.Column="2" Width="16" Height="16" Source="/Images/unknown.png">
+                                        <Image Grid.Column="2" Width="16" Height="16" Source="/Images/timeout.png" ToolTip="Time out">
                                             <Image.Style>
                                                 <Style TargetType="Image">
                                                     <Setter Property="Visibility" Value="Collapsed"/>

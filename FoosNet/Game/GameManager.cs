@@ -79,8 +79,7 @@ namespace FoosNet.Game
             {
                 if (challengeResponse.Accepted)
                 {
-                    // TODO: reply to the user to say 'sorry, you're not in this game'
-                    //m_NetworkService.UnChallenge(challengeResponse.Player);
+                    m_NetworkService.CancelGame(new[] { challengeResponse.Player });
                 }
             }
         }
@@ -275,6 +274,7 @@ namespace FoosNet.Game
             {
                 player.GameState = GameState.Timeout;
                 lock (m_PlayerLineUp) m_PlayerLineUp.RemoveAll(p => p.Email.Equals(player.Email));
+                m_NetworkService.CancelGame(new[] { player });
             }
         }
 
