@@ -128,11 +128,32 @@
                     
                 </Grid>
 
-                <Border Name="FoosTableImageBorder" Visibility="Collapsed" Grid.Row="2" Background="WhiteSmoke" BorderBrush="DarkGray" BorderThickness="1" Width="160" Height="120">
-                    <Grid>
-                        <controls:Spinner Width="16" Height="16" ></controls:Spinner>
-                        <Image Name="FoosTableImage" Width="160" Height="120" MouseDown="FoosTableImage_OnMouseDown"></Image>
-                    </Grid>
+                <Border Name="FoosTableImageBorder"
+                        Visibility="Collapsed"
+                        Grid.Row="2"
+                        Margin="0, 0, 0, 10"
+                        BorderThickness="5"
+                        Width="214"
+                        Height="162"
+                        Background="WhiteSmoke">
+                        <Grid>
+                            <controls:Spinner Width="16" Height="16" />
+                            <Image Name="FoosTableImage" Width="206" Height="154" 
+                                   MouseDown="FoosTableImage_OnMouseDown"/>
+                        </Grid>
+
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsTableFree}" Value="false">
+                                    <Setter Property="BorderBrush" Value="#FFDD9C9C"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsTableFree}" Value="true">
+                                    <Setter Property="BorderBrush" Value="#FF9FCC9F"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
                 </Border>
 
                 <Grid Grid.Row="3" Margin="10,0,10,10">
