@@ -296,7 +296,9 @@ namespace FoosNet.Game
 
         public void RemovePlayer(IFoosPlayer player)
         {
-            if (!IsGameReadyToStart) StatusMessage = c_CustomGame;
+            if (!IsGameReadyToStart && m_IsOrganisingGame) StatusMessage = c_CustomGame;
+            if (m_HasAcceptedRemoteGame && player.Email.Equals(m_CurrentChallenger.Email, StringComparison.InvariantCultureIgnoreCase)) Reset(false);
+
             lock (m_PlayerLineUp)
             {
                 m_PlayerLineUp.RemoveAll(p => p.Email.Equals(player.Email, StringComparison.InvariantCultureIgnoreCase));
