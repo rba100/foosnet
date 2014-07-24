@@ -25,13 +25,13 @@ namespace FoosNet {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Full")]
-        public string AlertType {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseMinimalAlerts {
             get {
-                return ((string)(this["AlertType"]));
+                return ((bool)(this["UseMinimalAlerts"]));
             }
             set {
-                this["AlertType"] = value;
+                this["UseMinimalAlerts"] = value;
             }
         }
     }

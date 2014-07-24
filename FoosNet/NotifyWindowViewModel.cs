@@ -58,7 +58,8 @@ namespace FoosNet
         {
             if (m_IsShowSettings)
             {
-                // Save
+                Settings.Default.UseMinimalAlerts = m_UseMinimalAlerts;
+                Settings.Default.Save();
             }
             IsShowSettings = !IsShowSettings;
         }
@@ -225,6 +226,7 @@ namespace FoosNet
         public NotifyWindowViewModel()
         {
             var endpoint = ConfigurationManager.AppSettings["networkServiceEndpoint"];
+            UseMinimalAlerts = Settings.Default.UseMinimalAlerts;
 
             m_PlayerProcessors = new List<IPlayerTransformation>();
             var localEmail = Environment.UserName + "@" + Environment.UserDomainName + ".com";
