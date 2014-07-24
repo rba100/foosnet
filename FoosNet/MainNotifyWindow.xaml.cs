@@ -319,20 +319,17 @@ namespace FoosNet
             }
         }
 
-         private void ListBox_MouseDown(object sender, MouseButtonEventArgs e)
+        private void ListBox_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            (sender as ListBox).SelectedItem = null;
             (sender as ListBox).SelectedItems.Clear();
         }
+
         private void FoosPlayersList_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var vm = (DataContext as NotifyWindowViewModel);
             if (vm != null) vm.ChatToSelectedPlayer(FoosPlayersList.SelectedItems);
         }
 
-        private void FoosPlayersList_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (Keyboard.Modifiers == ModifierKeys.Control) return;
-            FoosPlayersList.SelectedItems.Clear();
-        }
     }
 }
