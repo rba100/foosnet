@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using Emgu.CV;
 using Emgu.CV.Structure;
 
@@ -9,8 +8,7 @@ namespace FoosNet.Vision
     {
         private TableUsage m_TableUsage = TableUsage.Unknown;
         private TableUsage m_PreviousTableUsage = TableUsage.Unknown;
-        private IImageStream m_ImageStream;
-        private Timer m_CheckPitchStatusTimer;
+        private readonly IImageStream m_ImageStream;
         private Image<Bgr, byte> m_DebugImage;
         private Image<Bgr, byte> m_Previousimage;
 

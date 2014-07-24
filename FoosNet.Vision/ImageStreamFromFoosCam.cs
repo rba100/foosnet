@@ -11,7 +11,7 @@ namespace FoosNet.Vision
     public class ImageStreamFromFoosCam : IImageStream
     {
         private Image<Bgr, byte> m_LatestImage;
-        private Timer m_GetNextImageTimer;
+        private readonly Timer m_GetNextImageTimer;
 
         public Image<Bgr, byte> LatestImage
         {
