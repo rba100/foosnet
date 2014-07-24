@@ -20,8 +20,16 @@ namespace FoosNet.CommunicatorIntegration
             var player = m_KnownPlayers.FirstOrDefault(p => p.Email == inputPlayer.Email);
             var known = player != null;
             if (!known) player = inputPlayer;
-            player.Status = m_CommunicatorIntegration.StatusOfRedgateEmail(player.Email);
-            player.DisplayName = m_CommunicatorIntegration.FriendlyName(player.Email);
+            try
+            {
+                player.Status = m_CommunicatorIntegration.StatusOfRedgateEmail(player.Email);
+                player.DisplayName = m_CommunicatorIntegration.FriendlyName(player.Email);
+            }
+            catch
+            {
+                player.Status = Status.Unknown;
+                player.DisplayName = player.Email;
+            }
 
             if(!known) m_CommunicatorIntegration.StatusChangedSubscribeEmail(player.Email);
             return player;

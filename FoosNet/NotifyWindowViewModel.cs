@@ -180,7 +180,7 @@ namespace FoosNet
             ConfigureAlert();
 
             m_PlayerProcessors = new List<IPlayerTransformation>();
-            string localEmail = Environment.UserName + "@red-gate.com";
+            string localEmail = Environment.UserName + "@" + Environment.UserDomainName + ".com";
             m_Self = new FoosPlayerListItem(localEmail, Status.Available, 1) { DisplayName = "You" };
 
             try
