@@ -15,9 +15,9 @@ namespace FoosNet
 
     public partial class MainNotifyWindow : Window
     {
-        private Controls.ExtendedNotifyIcon extendedNotifyIcon; // global class scope for the icon as it needs to exist foer the lifetime of the window
-        private Storyboard gridFadeInStoryBoard;
-        private Storyboard gridFadeOutStoryBoard;
+        private readonly Controls.ExtendedNotifyIcon m_ExtendedNotifyIcon; // global class scope for the icon as it needs to exist foer the lifetime of the window
+        private readonly Storyboard m_GridFadeInStoryBoard;
+        private readonly Storyboard m_GridFadeOutStoryBoard;
         private Timer m_ImageUpdateTimer;
         //private Point startPoint;
 
@@ -27,10 +27,10 @@ namespace FoosNet
         public MainNotifyWindow()
         {
             // Create a manager (ExtendedNotifyIcon) for handling interaction with the notification icon and wire up events. 
-            extendedNotifyIcon = new Controls.ExtendedNotifyIcon();
-            extendedNotifyIcon.MouseLeave += extendedNotifyIcon_OnHideWindow;
-            extendedNotifyIcon.MouseMove += extendedNotifyIcon_OnShowWindow;
-            extendedNotifyIcon.targetNotifyIcon.ContextMenu = GetSystrayContextMenu();
+            m_ExtendedNotifyIcon = new Controls.ExtendedNotifyIcon();
+            m_ExtendedNotifyIcon.MouseLeave += extendedNotifyIcon_OnHideWindow;
+            m_ExtendedNotifyIcon.MouseMove += extendedNotifyIcon_OnShowWindow;
+            m_ExtendedNotifyIcon.targetNotifyIcon.ContextMenu = GetSystrayContextMenu();
             SetNotifyIcon("Red");
 
             InitializeComponent();
@@ -41,10 +41,10 @@ namespace FoosNet
             uiGridMain.Opacity = 0;
 
             // Locate these storyboards and "cache" them - we only ever want to find these once for performance reasons
-            gridFadeOutStoryBoard = (Storyboard)this.TryFindResource("gridFadeOutStoryBoard");
-            gridFadeOutStoryBoard.Completed += gridFadeOutStoryBoard_Completed;
-            gridFadeInStoryBoard = (Storyboard)TryFindResource("gridFadeInStoryBoard");
-            gridFadeInStoryBoard.Completed += gridFadeInStoryBoard_Completed;
+            m_GridFadeOutStoryBoard = (Storyboard)this.TryFindResource("gridFadeOutStoryBoard");
+            m_GridFadeOutStoryBoard.Completed += gridFadeOutStoryBoard_Completed;
+            m_GridFadeInStoryBoard = (Storyboard)TryFindResource("gridFadeInStoryBoard");
+            m_GridFadeInStoryBoard.Completed += gridFadeInStoryBoard_Completed;
 
             var vm = this.DataContext as NotifyWindowViewModel;
             vm.PropertyChanged += Vm_PropertyChanged;
@@ -55,7 +55,7 @@ namespace FoosNet
             var menu = new System.Windows.Forms.ContextMenu();
             var exit = new System.Windows.Forms.MenuItem("Exit", (sender, args) =>
             {
-                extendedNotifyIcon.Dispose(); // So that the icon disappears and it looks like the app closed quickly.
+                m_ExtendedNotifyIcon.Dispose(); // So that the icon disappears and it looks like the app closed quickly.
                 Close(); // Takes about two seconds to close.
             });
             menu.MenuItems.Add(exit);
@@ -77,8 +77,8 @@ namespace FoosNet
         /// <param name="iconPrefix"></param>
         private void SetNotifyIcon(string iconPrefix)
         {
-            System.IO.Stream iconStream = Application.GetResourceStream(new Uri("pack://application:,,/Images/" + iconPrefix + "Orb.ico")).Stream;
-            extendedNotifyIcon.targetNotifyIcon.Icon = new System.Drawing.Icon(iconStream);
+            Stream iconStream = Application.GetResourceStream(new Uri("pack://application:,,/Images/" + iconPrefix + "Orb.ico")).Stream;
+            m_ExtendedNotifyIcon.targetNotifyIcon.Icon = new System.Drawing.Icon(iconStream);
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace FoosNet
         /// </summary>
         void extendedNotifyIcon_OnShowWindow()
         {
-            gridFadeOutStoryBoard.Stop();
+            m_GridFadeOutStoryBoard.Stop();
             this.Opacity = 1; // Show the window (backing)
             this.Topmost = true; // Very rarely, the window seems to get "buried" behind others, this seems to resolve the problem
             if (uiGridMain.Opacity > 0 && uiGridMain.Opacity < 1) // If its animating, just set it directly to visible (avoids flicker and keeps the UX slick)
@@ -104,8 +104,9 @@ namespace FoosNet
             }
             else if (uiGridMain.Opacity == 0)
             {
-                gridFadeInStoryBoard.Begin();  // If it is in a fully hidden state, begin the animation to show the window
+                m_GridFadeInStoryBoard.Begin();  // If it is in a fully hidden state, begin the animation to show the window
             }
+
         }
 
         /// <summary>
@@ -118,16 +119,17 @@ namespace FoosNet
             // if (FoosTablePopup.IsOpen) return;
             if (Mouse.LeftButton.HasFlag(MouseButtonState.Pressed)) return; // Drag and drop hack
 
-            gridFadeInStoryBoard.Stop(); // Stop the fade in storyboard if running.
+            m_GridFadeInStoryBoard.Stop(); // Stop the fade in storyboard if running.
 
             // Only start fading out if fully faded in, otherwise you get a flicker effect in the UX because the animation resets the opacity
             if (uiGridMain.Opacity == 1 && this.Opacity == 1)
-                gridFadeOutStoryBoard.Begin();
+                m_GridFadeOutStoryBoard.Begin();
             else // Just hide the window and grid
             {
                 uiGridMain.Opacity = 0;
                 this.Opacity = 0;
             }
+
         }
 
         /// <summary>
@@ -137,11 +139,11 @@ namespace FoosNet
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void uiWindowMainNotification_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        private void uiWindowMainNotification_MouseEnter(object sender, MouseEventArgs e)
         {
             // Cancel the mouse leave event from firing, stop the fade out storyboard from running and enusre the grid is fully visible
-            extendedNotifyIcon.StopMouseLeaveEventFromFiring();
-            gridFadeOutStoryBoard.Stop();
+            m_ExtendedNotifyIcon.StopMouseLeaveEventFromFiring();
+            m_GridFadeOutStoryBoard.Stop();
             uiGridMain.Opacity = 1;
         }
 
@@ -150,7 +152,7 @@ namespace FoosNet
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void uiWindowMainNotification_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        private void uiWindowMainNotification_MouseLeave(object sender, MouseEventArgs e)
         {
             extendedNotifyIcon_OnHideWindow();
         }
@@ -163,16 +165,22 @@ namespace FoosNet
         void gridFadeOutStoryBoard_Completed(object sender, EventArgs e)
         {
             this.Opacity = 0;
+            StopTableImageAutoUpdate();
         }
 
         /// <summary>
-        /// Once the grid fades out, set the backing window to "visible"
+        /// Once the grid fades in, set the backing window to "visible"
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         void gridFadeInStoryBoard_Completed(object sender, EventArgs e)
         {
             this.Opacity = 1;
+            
+            if (FoosTableImageBorder.Visibility == Visibility.Visible)
+            {
+                StartTableImageAutoUpdate();
+            }
         }
 
         /// <summary>
@@ -195,7 +203,7 @@ namespace FoosNet
         /// <param name="e"></param>
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            extendedNotifyIcon.Dispose();
+            m_ExtendedNotifyIcon.Dispose();
             this.Close();
         }
 
@@ -226,19 +234,32 @@ namespace FoosNet
         {
             FoosTableImageBorder.Visibility = Visibility.Visible;
             UpdateFoosTableImageSource();
-
-            m_ImageUpdateTimer = new Timer {Interval = 5000};
-
-            m_ImageUpdateTimer.Elapsed += 
-                (s, e) => Dispatcher.Invoke(UpdateFoosTableImageSource);
-
-            m_ImageUpdateTimer.Start();
+            StartTableImageAutoUpdate();
         }
 
         private void HideTableImage()
         {
-            m_ImageUpdateTimer.Stop();
             FoosTableImageBorder.Visibility = Visibility.Collapsed;
+            StopTableImageAutoUpdate();
+        }
+        
+        private void StartTableImageAutoUpdate()
+        {
+            if (m_ImageUpdateTimer == null) { 
+                m_ImageUpdateTimer = new Timer {Interval = 5000};
+
+                m_ImageUpdateTimer.Elapsed +=
+                    (s, e) => Dispatcher.Invoke(UpdateFoosTableImageSource);
+            }
+
+            m_ImageUpdateTimer.Start();
+        }
+
+        private void StopTableImageAutoUpdate()
+        {
+            if (m_ImageUpdateTimer != null) { 
+                m_ImageUpdateTimer.Stop();
+            }
         }
 
         private async void UpdateFoosTableImageSource()
