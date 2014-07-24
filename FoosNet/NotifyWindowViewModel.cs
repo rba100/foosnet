@@ -42,6 +42,22 @@ namespace FoosNet
         }
         #region Commands
 
+        //ShowSettingsCommand
+
+        private ICommand m_ShowSettingsCommand;
+        public ICommand ShowSettingsCommand
+        {
+            get
+            {
+                return m_ShowSettingsCommand ?? (m_ShowSettingsCommand = new SimpleCommand(ShowSettings));
+            }
+        }
+
+        private void ShowSettings(object obj)
+        {
+           
+        }
+
         private ICommand m_ChallengeSelectedPlayer;
         public ICommand ChallengeSelectedPlayer
         {
