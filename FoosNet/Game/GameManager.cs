@@ -162,7 +162,7 @@ namespace FoosNet.Game
         public bool HasAcceptedRemoteGame { get { return m_HasAcceptedRemoteGame; } set { m_HasAcceptedRemoteGame = value; OnPropertyChanged(); } }
         public bool CanAddPlayer { get { return !IsGameReadyToStart && !m_HasAcceptedRemoteGame; } }
         public int FreeSlots { get { return Math.Min(c_PlayersPerGame - m_PlayerLineUp.Count, 3); } }
-        public bool CanCreateGameAuto { get { return !m_IsOrganisingGame; } }
+        public bool CanCreateGameAuto { get { return !m_IsOrganisingGame && !m_HasAcceptedRemoteGame; } }
 
         public string StatusMessage
         {
