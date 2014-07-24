@@ -144,6 +144,8 @@ namespace FoosNet.CommunicatorIntegration
                     return Status.Available;
                 case MISTATUS.MISTATUS_OFFLINE:
                     return Status.Offline;
+                case MISTATUS.MISTATUS_UNKNOWN:
+                    return Status.Unknown;
                 default:
                     return Status.Busy;
             }

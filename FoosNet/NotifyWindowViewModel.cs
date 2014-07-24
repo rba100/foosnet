@@ -80,7 +80,10 @@ namespace FoosNet
 
         private bool CanChatToSelectedPlayer(object arg)
         {
-            return m_Communicator != null;
+            var list = (arg as IList);
+            if (list == null) return false;
+            var players = list.Cast<FoosPlayerListItem>().ToList();
+            return m_Communicator != null && players.All(p=>p.Status!= Status.Unknown);
         }
 
         private void ChatToSelectedPlayer(object obj)
@@ -180,7 +183,7 @@ namespace FoosNet
             ConfigureAlert();
 
             m_PlayerProcessors = new List<IPlayerTransformation>();
-            string localEmail = Environment.UserName + "@" + Environment.UserDomainName + ".com";
+            var localEmail = Environment.UserName + "@" + Environment.UserDomainName + ".com";
             m_Self = new FoosPlayerListItem(localEmail, Status.Available, 1) { DisplayName = "You" };
 
             try
