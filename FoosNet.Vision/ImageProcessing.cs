@@ -64,13 +64,13 @@ namespace FoosNet.Vision
 
                 if (contourCount > 4)
                 {
-                    if (actionCentreLeft < 350 && actionCentreTop < 300) return 0.9;
-                    if (actionCentreLeft < 400 && actionCentreTop < 350) return 0.8;
+                    if (actionCentreLeft < 350 && actionCentreTop < 300 && actionCentreLeft > 50) return 0.9;
+                    if (actionCentreLeft < 400 && actionCentreTop < 350 && actionCentreLeft > 50) return 0.8;
                 }
                 else
                 {
-                    if (actionCentreLeft < 350 && actionCentreTop < 300) return 0.8;
-                    if (actionCentreLeft < 400 && actionCentreTop < 350) return 0.7;
+                    if (actionCentreLeft < 350 && actionCentreTop < 300 && actionCentreLeft > 50) return 0.8;
+                    if (actionCentreLeft < 400 && actionCentreTop < 350 && actionCentreLeft > 50) return 0.7;
                 }
             }
 
