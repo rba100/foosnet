@@ -264,13 +264,13 @@
                                     <MenuItem Header="Send invite"
                                               Command="{Binding ChallengeSelectedPlayer}">
                                         <MenuItem.Icon>
-                                            <Image Width="16" Height="16" Source="/FoosNet;component/Images/plus.png"></Image>
+                                            <controls:AutoGreyableImage Width="16" Height="16" Source="/FoosNet;component/Images/plus.png"></controls:AutoGreyableImage>
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <MenuItem Header="Start conversation"
                                               Command="{Binding ChatToSelectedPlayerCommand}">
                                         <MenuItem.Icon>
-                                            <Image Width="16" Height="16" Source="/FoosNet;component/Images/chat.png"></Image>
+                                            <controls:AutoGreyableImage Width="16" Height="16" Source="/FoosNet;component/Images/chat.png"></controls:AutoGreyableImage>
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <ContextMenu.ItemContainerStyle>
