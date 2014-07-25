@@ -179,6 +179,7 @@
                                   Grid.Column="0" 
                                   dragDrop:DragDrop.IsDragSource="True"
                                   dragDrop:DragDrop.IsDropTarget="True"
+                                  ScrollViewer.VerticalScrollBarVisibility="Visible"
                                   ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                                   PreviewMouseLeftButtonDown="FoosPlayersList_OnPreviewMouseLeftButtonDown">
                             <ListView.ItemContainerStyle>
@@ -191,7 +192,7 @@
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="21"/>
-                                            <ColumnDefinition Width="165"/>
+                                            <ColumnDefinition Width="149"/>
                                             <ColumnDefinition Width="20"/>
                                         </Grid.ColumnDefinitions>
                                         <Image UseLayoutRounding="True"  Grid.Column="0" Width="16" Height="16" Margin="0,0" Source="{Binding Status, Converter = {StaticResource StatusConverter}}"></Image>
