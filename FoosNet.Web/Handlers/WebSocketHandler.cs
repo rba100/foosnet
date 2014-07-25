@@ -88,14 +88,11 @@ namespace FoosNet.Web.Handlers
             SendTo(challengedBy, new { type = "response", player = m_Email, response = response });
         }
 
-        private void Gametime(string[] otherPlayers)
+        private void Gametime(string[] players)
         {
-            var allPlayers = new string[otherPlayers.Length + 1];
-            allPlayers[0] = m_Email;
-            otherPlayers.CopyTo(allPlayers, 1);
-            foreach (var player in otherPlayers)
+            foreach (var player in players)
             {
-                SendTo(player, new { type = "gametime", players = allPlayers });
+                SendTo(player, new { type = "gametime", players = players });
             }
         }
 
