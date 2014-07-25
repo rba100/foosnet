@@ -6,7 +6,7 @@ using System.Windows.Media.Imaging;
 
 namespace FoosNet.Controls
 {
-        /// <summary>
+    /// <summary>
     /// Class used to have an image that is able to be gray when the control is not enabled.
     /// Author: Thomas LEBRUN (http://blogs.developpeur.org/tom)
     /// </summary>
