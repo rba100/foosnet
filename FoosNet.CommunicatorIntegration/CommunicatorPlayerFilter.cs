@@ -23,7 +23,8 @@ namespace FoosNet.CommunicatorIntegration
             try
             {
                 player.Status = m_CommunicatorIntegration.StatusOfRedgateEmail(player.Email);
-                player.DisplayName = m_CommunicatorIntegration.FriendlyName(player.Email);
+                if (player.Status != Status.Unknown)
+                    player.DisplayName = m_CommunicatorIntegration.FriendlyName(player.Email);
             }
             catch
             {
