@@ -56,7 +56,7 @@ namespace FoosNet
             InitSystrayIcon();
             Task.Factory.StartNew(() =>
             {
-                Thread.Sleep(TimeSpan.FromSeconds(2));
+                Thread.Sleep(TimeSpan.FromSeconds(3));
                 if (IsMouseOver) return;
                 Dispatcher.BeginInvoke(new Action(extendedNotifyIcon_OnHideWindow));
             });
