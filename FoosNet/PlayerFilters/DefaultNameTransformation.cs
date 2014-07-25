@@ -8,18 +8,18 @@ namespace FoosNet.PlayerFilters
     {
         public IFoosPlayer Process(IFoosPlayer player)
         {
-            var emailParts = player.Email.Split(new[] {'@'}, StringSplitOptions.RemoveEmptyEntries);
+            var emailParts = player.Email.Split(new[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
             if (emailParts.Length > 0)
             {
-                var nameParts = emailParts[0].Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
+                var nameParts = emailParts[0].Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
                 var sb = new StringBuilder();
                 for (int i = 0; i < nameParts.Length; i++)
                 {
                     if (i != 0) sb.Append(" ");
                     sb.Append(char.ToUpper(nameParts[i][0]));
-                    if(nameParts[i].Length>1) sb.Append(nameParts[i].Substring(1));
+                    if (nameParts[i].Length > 1) sb.Append(nameParts[i].Substring(1));
                 }
-                if (emailParts.Length > 1 && !emailParts[1].Equals("red-gate.com", StringComparison.OrdinalIgnoreCase)) sb.Append(String.Format(" ({0})", emailParts[1]));
+                if (emailParts.Length > 1 && !emailParts[1].Equals("red-gate.com", StringComparison.OrdinalIgnoreCase)) sb.Append(String.Format(" ({0})", emailParts[1].Replace(".com", String.Empty)));
                 player.DisplayName = sb.ToString();
             }
             return player;
