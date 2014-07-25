@@ -34,11 +34,19 @@ namespace FoosNet.Controls.Alerts
 
             var textSequence = new[] { "FOOS", "ALERT" };
 
+            double diskTrayChance = 0;
+
+            if(DateTime.Now.Day == 1
+               && DateTime.Now.Month == 4)
+            {
+                diskTrayChance = 0.5;
+            }
+
             m_MainAlertWindow = new AlertWindow(alertColors,
                                                 textSequence,
                                                 cancelledColors,
                                                 challenger,
-                                                0.1)
+                                                diskTrayChance)
             {
                 Top = Screen.PrimaryScreen.WorkingArea.Top,
                 Left = Screen.PrimaryScreen.WorkingArea.Left,
