@@ -59,6 +59,7 @@
     <Compile Include="Controls\Alerts\AlertBubble.xaml.cs">
       <DependentUpon>AlertBubble.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\AutoGreyableImage.cs" />
     <Compile Include="Views\AllPlayersJoined.xaml.cs">
       <DependentUpon>AllPlayersJoined.xaml</DependentUpon>
     </Compile>
