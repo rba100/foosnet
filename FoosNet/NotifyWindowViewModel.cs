@@ -144,7 +144,7 @@ namespace FoosNet
             var list = (arg as IList);
             if (list == null) return false;
             var players = list.Cast<FoosPlayerListItem>().ToList();
-            return m_Communicator != null && players.All(p => p.Status != Status.Unknown);
+            return players.Any() && m_Communicator != null && players.All(p => p.Status != Status.Unknown);
         }
 
         public void ChatToSelectedPlayer(object obj)

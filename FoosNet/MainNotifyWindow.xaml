@@ -98,25 +98,41 @@
                         <ColumnDefinition Width="42*"/>
                         <ColumnDefinition Width="65*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Padding="5" HorizontalAlignment="Left" TextAlignment="Center"
-                               MouseDown="TableStatusImage_OnMouseDown" Height="27" Width="78" FontWeight="DemiBold">
-                        <TextBlock.Style>
-                            <Style TargetType="TextBlock">
+                    <Border Grid.Column="0" BorderThickness="1">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="BorderBrush" Value="Transparent"/>
                                 <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                                    </Trigger>
                                     <DataTrigger Binding="{Binding IsTableFree}" Value="false">
-                                        <Setter Property="Text" Value="Table busy"/>
-                                        <Setter Property="Foreground" Value="DarkRed"/>
                                         <Setter Property="Background" Value="#FFDD9C9C"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IsTableFree}" Value="true">
-                                        <Setter Property="Text" Value="Table free"/>
-                                        <Setter Property="Foreground" Value="ForestGreen"/>
                                         <Setter Property="Background" Value="#FF9FCC9F"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
+                        </Border.Style>
+                        <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Left" TextAlignment="Center" Padding="5"
+                               MouseDown="TableStatusImage_OnMouseDown" Height="27" Width="78" FontWeight="DemiBold">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsTableFree}" Value="false">
+                                            <Setter Property="Text" Value="Table busy"/>
+                                            <Setter Property="Foreground" Value="DarkRed"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsTableFree}" Value="true">
+                                            <Setter Property="Text" Value="Table free"/>
+                                            <Setter Property="Foreground" Value="ForestGreen"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Border>
 
                     <TextBlock Grid.Column="1" VerticalAlignment="Center" TextAlignment="Right" Text="{Binding Path=GameManager.StatusMessage}" FontWeight="DemiBold" Foreground="Gray" Height="16" Margin="0,4,0,5" Width="130"/>
 
