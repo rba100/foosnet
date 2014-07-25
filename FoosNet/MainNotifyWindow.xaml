@@ -6,6 +6,7 @@
     x:Class="FoosNet.MainNotifyWindow" x:Name="uiMainNotifyWindow"
     Title="" Height="502" Width="256"
     ShowInTaskbar="False"
+    Loaded="MainNotifyWindow_OnLoaded"
     WindowStyle="None" 
     AllowsTransparency="True" 
     ResizeMode="NoResize"

@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using System.IO;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -17,7 +19,7 @@ namespace FoosNet
 
     public partial class MainNotifyWindow : Window
     {
-        private readonly Controls.ExtendedNotifyIcon m_ExtendedNotifyIcon; // global class scope for the icon as it needs to exist foer the lifetime of the window
+        private Controls.ExtendedNotifyIcon m_ExtendedNotifyIcon; // global class scope for the icon as it needs to exist foer the lifetime of the window
         private readonly Storyboard m_GridFadeInStoryBoard;
         private readonly Storyboard m_GridFadeOutStoryBoard;
         private Timer m_ImageUpdateTimer;
@@ -28,13 +30,7 @@ namespace FoosNet
         /// </summary>
         public MainNotifyWindow()
         {
-            // Create a manager (ExtendedNotifyIcon) for handling interaction with the notification icon and wire up events. 
             m_ExtendedNotifyIcon = new Controls.ExtendedNotifyIcon();
-            m_ExtendedNotifyIcon.MouseLeave += extendedNotifyIcon_OnHideWindow;
-            m_ExtendedNotifyIcon.MouseMove += extendedNotifyIcon_OnShowWindow;
-            m_ExtendedNotifyIcon.targetNotifyIcon.ContextMenu = GetSystrayContextMenu();
-            SetNotifyIcon("Red");
-
             InitializeComponent();
 
             // Set the startup position and the startup state to "not visible"
@@ -52,6 +48,26 @@ namespace FoosNet
             vm.PropertyChanged += Vm_PropertyChanged;
 
             MouseDown += Window_MouseDown;
+        }
+
+        private void MainNotifyWindow_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            extendedNotifyIcon_OnShowWindow();
+            InitSystrayIcon();
+            Task.Factory.StartNew(() =>
+            {
+                Thread.Sleep(TimeSpan.FromSeconds(2));
+                if (IsMouseOver) return;
+                Dispatcher.BeginInvoke(new Action(extendedNotifyIcon_OnHideWindow));
+            });
+        }
+
+        private void InitSystrayIcon()
+        {
+            m_ExtendedNotifyIcon.MouseLeave += extendedNotifyIcon_OnHideWindow;
+            m_ExtendedNotifyIcon.MouseMove += extendedNotifyIcon_OnShowWindow;
+            m_ExtendedNotifyIcon.targetNotifyIcon.ContextMenu = GetSystrayContextMenu();
+            SetNotifyIcon("Red");
         }
 
         private System.Windows.Forms.ContextMenu GetSystrayContextMenu()
@@ -120,7 +136,6 @@ namespace FoosNet
             {
                 m_GridFadeInStoryBoard.Begin();  // If it is in a fully hidden state, begin the animation to show the window
             }
-
         }
 
         /// <summary>
@@ -330,6 +345,5 @@ namespace FoosNet
             var vm = (DataContext as NotifyWindowViewModel);
             if (vm != null) vm.ChatToSelectedPlayer(FoosPlayersList.SelectedItems);
         }
-
     }
 }
