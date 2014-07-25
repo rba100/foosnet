@@ -42,6 +42,8 @@ namespace FoosNet
             UseMinimalAlerts = Settings.Default.UseMinimalAlerts;
 
             m_PlayerProcessors = new List<IPlayerTransformation>();
+            m_PlayerProcessors.Add(new DefaultNameTransformation());
+
             var localEmail = Environment.UserName + "@" + Environment.UserDomainName + ".com";
             m_Self = new FoosPlayerListItem(localEmail, Status.Available, 1) { DisplayName = "You" };
 
@@ -55,7 +57,6 @@ namespace FoosNet
             catch
             {
                 // If Communicator isn't working, process player names as best we can from email address
-                m_PlayerProcessors.Add(new DefaultNameTransformation());
                 m_PlayerProcessors.Add(new StatusToUnknownTransformation());
                 m_Communicator = null;
             }

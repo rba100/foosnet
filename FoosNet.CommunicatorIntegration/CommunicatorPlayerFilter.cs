@@ -28,7 +28,6 @@ namespace FoosNet.CommunicatorIntegration
             catch
             {
                 player.Status = Status.Unknown;
-                player.DisplayName = player.Email;
             }
 
             if(!known) m_CommunicatorIntegration.StatusChangedSubscribeEmail(player.Email);
