@@ -67,7 +67,7 @@ namespace FoosNet
             m_ExtendedNotifyIcon.MouseLeave += extendedNotifyIcon_OnHideWindow;
             m_ExtendedNotifyIcon.MouseMove += extendedNotifyIcon_OnShowWindow;
             m_ExtendedNotifyIcon.targetNotifyIcon.ContextMenu = GetSystrayContextMenu();
-            SetNotifyIcon("Red");
+            UpdateIcon();
         }
 
         private System.Windows.Forms.ContextMenu GetSystrayContextMenu()
@@ -94,11 +94,16 @@ namespace FoosNet
 
         private void Vm_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var vm = sender as NotifyWindowViewModel;
             if (e.PropertyName == "IsTableFree")
             {
-                SetNotifyIcon(vm.IsTableFree ? "Green" : "Red");
+                Dispatcher.BeginInvoke(new Action(UpdateIcon));
             }
+        }
+
+        private void UpdateIcon()
+        {
+            var vm = DataContext as NotifyWindowViewModel;
+            SetNotifyIcon(vm != null && vm.IsTableFree ? "Green" : "Red");
         }
 
         /// <summary>
