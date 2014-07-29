@@ -44,7 +44,7 @@ namespace FoosNet
             m_PlayerProcessors = new List<IPlayerTransformation>();
             m_PlayerProcessors.Add(new DefaultNameTransformation());
 
-            var localEmail = Environment.UserName + "@" + Environment.UserDomainName + ".com";
+            var localEmail = (Environment.UserName + "@" + Environment.UserDomainName + ".com").ToLowerInvariant();
             m_Self = new FoosPlayerListItem(localEmail, Status.Available, 1) { DisplayName = "You" };
 
             try
@@ -309,6 +309,8 @@ namespace FoosNet
                 var gogoWindow = new AllPlayersJoined(players);
                 gogoWindow.Show();
             }));
+
+            GameManager.Reset(false);
         }
 
         private void GameManagerOnOnError(object sender, ErrorEventArgs errorEventArgs)

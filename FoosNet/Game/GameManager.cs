@@ -212,7 +212,7 @@ namespace FoosNet.Game
                     if (sendCancel) m_NetworkService.Respond(new ChallengeResponse(m_CurrentChallenger, false));
                     m_CurrentChallenger = null;
                 }
-                else if (m_IsOrganisingGame)
+                else if (m_IsOrganisingGame && sendCancel)
                 {
                     m_NetworkService.CancelGame(m_PlayerLineUp.Where(p => p != m_Self).ToArray());
                 }
