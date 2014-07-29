@@ -294,8 +294,21 @@ namespace FoosNet
 
         private void NetworkServiceOnGameStarting(GameStartingMessage gameStartingMessage)
         {
-            var gogoWindow = new AllPlayersJoined(gameStartingMessage.Players);
-            gogoWindow.Show();
+            var players = new List<IFoosPlayer>(gameStartingMessage.Players);
+            var defaultNamer = new DefaultNameTransformation();
+            foreach (var player in players)
+            {
+                var knownPlayer =
+                    m_FoosPlayers.FirstOrDefault(p => p.Email.Equals(player.Email, StringComparison.OrdinalIgnoreCase));
+                if (knownPlayer != null) player.DisplayName = knownPlayer.DisplayName;
+                else defaultNamer.Process(player);
+            }
+
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                var gogoWindow = new AllPlayersJoined(players);
+                gogoWindow.Show();
+            }));
         }
 
         private void GameManagerOnOnError(object sender, ErrorEventArgs errorEventArgs)

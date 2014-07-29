@@ -91,7 +91,7 @@ namespace FoosNet.Network
                     if (PlayersDiscovered != null) PlayersDiscovered(new PlayerDiscoveryMessage(((DynamicJsonArray) m.players).Cast<string>().Select(p => new LivePlayer(p))));
                     break;
                 case "gametime":
-                    if (GameStarting != null) GameStarting(new GameStartingMessage(((DynamicJsonArray)m.players).Select(p => new LivePlayer((string)p))));
+                    if (GameStarting != null) GameStarting(new GameStartingMessage(((DynamicJsonArray)m.players).Cast<string>().Select(p => new LivePlayer(p))));
                     break;
                 case "tablestatus":
                     if (TableStatusChanged != null) TableStatusChanged(m.tablestatus == "Free");
