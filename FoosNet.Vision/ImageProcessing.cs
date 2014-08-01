@@ -14,7 +14,7 @@ namespace FoosNet.Vision
         /// <param name="img2">Previous image</param>
         /// <param name="debugImage">Debug image. Optional. Pass null if you don't care</param>
         /// <returns>Magnitude of difference. Roughly it's the probability</returns>
-        internal static double TableBusyProbability(Image<Bgr, byte> img1, Image<Bgr, byte> img2, Image<Bgr, byte> debugImage)
+        internal static float TableBusyProbability(Image<Bgr, byte> img1, Image<Bgr, byte> img2, Image<Bgr, byte> debugImage)
         {
             int threshold = 40;
             int contourThreshold = 70;
@@ -54,27 +54,32 @@ namespace FoosNet.Vision
                     }
                 }
 
+            float prob = 0;
+
             if (contourCount > 0)
             {
                 float actionCentreLeft = contourLeftTotal / contourCount;
                 float actionCentreTop = contourTopTotal / contourCount;
 
+                float distToCentre = (float)Math.Sqrt((actionCentreLeft - 200) * (actionCentreLeft - 200) + (actionCentreTop - 300) * (actionCentreTop - 300));
+
                 if (debugImage != null)
                     debugImage.Draw(new CircleF(new PointF(actionCentreLeft, actionCentreTop), 8), new Bgr(0, 100, 200), 3);
 
-                if (contourCount > 4)
+                const float maxDist = 300f;
+                if (distToCentre > maxDist) prob = 0;
+
+                if (contourCount > 2)
                 {
-                    if (actionCentreLeft < 350 && actionCentreTop < 300 && actionCentreLeft > 50) return 0.9;
-                    if (actionCentreLeft < 400 && actionCentreTop < 350 && actionCentreLeft > 50) return 0.8;
+                    prob = 1f - (distToCentre / maxDist);
                 }
                 else
                 {
-                    if (actionCentreLeft < 350 && actionCentreTop < 300 && actionCentreLeft > 50) return 0.8;
-                    if (actionCentreLeft < 400 && actionCentreTop < 350 && actionCentreLeft > 50) return 0.7;
+                    prob = (1f - (distToCentre / maxDist)) / 1.3f;
                 }
             }
 
-            return 0.0;
+            return prob;
         }
     }
 }

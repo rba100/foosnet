@@ -18,7 +18,7 @@ namespace FoosNet.Vision
             m_ImageStream.LatestImageAvailable += LatestImageAvailable;
         }
 
-        private double m_SEMA = 0.0f;
+        private double m_SEMA = 0.5f;
         private const double RATE = 0.15f;
 
         private void LatestImageAvailable(object state, Image<Bgr, byte> image)
@@ -31,7 +31,7 @@ namespace FoosNet.Vision
                 double tableBusyProb = ImageProcessing.TableBusyProbability(image, m_Previousimage, m_DebugImage);
                 m_SEMA = (m_SEMA * (1f - RATE)) + (tableBusyProb * RATE);
 
-                if (m_SEMA > 0.4) m_TableUsage = TableUsage.Busy;
+                if (m_SEMA > 0.5) m_TableUsage = TableUsage.Busy;
                 else m_TableUsage = TableUsage.Free;
             }
             m_Previousimage = image.Clone();

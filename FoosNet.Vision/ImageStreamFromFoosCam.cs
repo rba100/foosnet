@@ -8,10 +8,10 @@ using System.Net;
 
 namespace FoosNet.Vision
 {
-    public class ImageStreamFromFoosCam : IImageStream
+    public class ImageStreamFromFoosCam : IImageStream, IDisposable
     {
         private Image<Bgr, byte> m_LatestImage;
-        private readonly Timer m_GetNextImageTimer;
+        private Timer m_GetNextImageTimer;
 
         public Image<Bgr, byte> LatestImage
         {
@@ -21,6 +21,11 @@ namespace FoosNet.Vision
                     RetrieveNextImage(false);
                 return m_LatestImage;
             }
+        }
+
+        public void Dispose()
+        {
+            m_GetNextImageTimer = null;
         }
 
         public event EventHandler<Image<Bgr, byte>> LatestImageAvailable;
