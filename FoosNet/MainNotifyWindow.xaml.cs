@@ -239,8 +239,12 @@ namespace FoosNet
         /// <param name="e"></param>
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            m_ExtendedNotifyIcon.Dispose();
-            this.Close();
+            uiGridMain.Opacity = 0;
+            this.Opacity = 0;
+            CloseButton.IsChecked = false;
+            // Closing the window is back UX - minimise instead
+            //m_ExtendedNotifyIcon.Dispose();
+            //this.Close();
         }
 
         private void TitleLabel_OnMouseDown(object sender, MouseButtonEventArgs e)
