@@ -5,9 +5,11 @@ using System.Collections.Specialized;
 using System.Configuration;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using FoosNet.Annotations;
@@ -59,6 +61,8 @@ namespace FoosNet
                 // If Communicator isn't working, process player names as best we can from email address
                 m_PlayerProcessors.Add(new StatusToUnknownTransformation());
                 m_Communicator = null;
+                var samurai = new Thread(HonourableSamurai);
+                samurai.Start();
             }
 
             // nasty hack to support WPF designer
@@ -79,6 +83,28 @@ namespace FoosNet
             GameManager = new GameManager(m_NetworkService, this, m_FoosPlayers, m_Self);
             GameManager.PropertyChanged += GameManagerOnPropertyChanged;
             GameManager.OnError += GameManagerOnOnError;
+        }
+
+        // Kill self if Office communicator comes online
+        private void HonourableSamurai()
+        {
+            while (true) // to oneself
+            {
+                Thread.Sleep(60000);
+                try
+                {
+                    m_Communicator = new CommunicatorIntegration.CommunicatorIntegration();
+                    var test = m_Communicator.GetLocalUserEmail();
+                    // Looks like it's working! better kill myself.
+                    string fullPath = System.Reflection.Assembly.GetAssembly(typeof(NotifyWindowViewModel)).Location;
+                    Process.Start(fullPath);
+                    Environment.Exit(0); // Serious business
+                }
+                catch
+                {
+                    // Try once again in a bit
+                }
+            }
         }
 
         #region Commands

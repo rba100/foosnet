@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
-	<Product Id="*" Name="FoosNet" Language="1033" Version="1.0.14.0" Manufacturer="Red Gate" UpgradeCode="1e6db7a7-6f5a-460a-9f07-53cd2e97431a">
+	<Product Id="*" Name="FoosNet" Language="1033" Version="1.0.15.0" Manufacturer="Red Gate" UpgradeCode="1e6db7a7-6f5a-460a-9f07-53cd2e97431a">
     
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" InstallPrivileges="elevated" />
     <Icon Id="icon" SourceFile="$(var.SolutionDir)\FoosNet\Images\Icons\Icon-Small@2x.ico" />
